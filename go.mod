@@ -1,4 +1,4 @@
-module fours/be-common-mdl
+module github.com/Mobility-Development-Team/be-common-mdl
 
 go 1.17
 

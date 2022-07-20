@@ -1,6 +1,6 @@
 package generic_json
 
-import "fours/be-common-mdl/custom_types/intstring"
+import "github.com/Mobility-Development-Team/be-common-mdl/custom_types/intstring"
 
 // JsonObject A simple wrapper type that provides methods to access a generic
 // map[string]interface{} result obtained by encoding/json unmarshal

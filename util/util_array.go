@@ -1,6 +1,6 @@
 package util
 
-import "fours/be-common-mdl/custom_types/intstring"
+import "github.com/Mobility-Development-Team/be-common-mdl/custom_types/intstring"
 
 // DiffStrSlice check the difference between two given string slices
 func DiffStrSlice(a, b []string) []string {
