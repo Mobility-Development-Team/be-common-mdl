@@ -56,6 +56,11 @@ func (i IntString) Value() (driver.Value, error) {
 	return int64(i), nil
 }
 
+func (i *IntString) ShouldScan(value interface{}) *IntString {
+	i.Scan(value)
+	return i
+}
+
 func (i *IntString) Scan(value interface{}) error {
 	switch v := value.(type) {
 	case nil:
@@ -90,4 +95,13 @@ func (i *IntString) Scan(value interface{}) error {
 
 func (i IntString) String() string {
 	return strconv.FormatInt(int64(i), 10)
+}
+
+// A quick function for compatibility of legacy code
+func ConvertToIntSlice(values []IntString) []int {
+	result := make([]int, len(values))
+	for i, value := range values {
+		result[i] = int(value)
+	}
+	return result
 }
