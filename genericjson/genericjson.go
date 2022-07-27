@@ -1,22 +1,22 @@
-package generic_json
+package genericjson
 
-import "github.com/Mobility-Development-Team/be-common-mdl/custom_types/intstring"
+import "github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
-// JsonObject A simple wrapper type that provides methods to access a generic
+// Object A simple wrapper type that provides methods to access a generic
 // map[string]interface{} result obtained by encoding/json unmarshal
-type JsonObject map[string]interface{}
+type Object map[string]interface{}
 
-func (j JsonObject) HasKey(key string) bool {
+func (j Object) HasKey(key string) bool {
 	_, ok := j[key]
 	return ok
 }
 
-func (j JsonObject) ShouldGetString(key string) string {
+func (j Object) ShouldGetString(key string) string {
 	value, _ := j.GetString(key)
 	return value
 }
 
-func (j JsonObject) GetString(key string) (string, bool) {
+func (j Object) GetString(key string) (string, bool) {
 	obj, ok := j[key]
 	if !ok {
 		return "", false
@@ -25,12 +25,12 @@ func (j JsonObject) GetString(key string) (string, bool) {
 	return result, ok
 }
 
-func (j JsonObject) ShouldGetBool(key string) bool {
+func (j Object) ShouldGetBool(key string) bool {
 	value, _ := j.GetBool(key)
 	return value
 }
 
-func (j JsonObject) GetBool(key string) (bool, bool) {
+func (j Object) GetBool(key string) (bool, bool) {
 	obj, ok := j[key]
 	if !ok {
 		return false, false
@@ -39,12 +39,12 @@ func (j JsonObject) GetBool(key string) (bool, bool) {
 	return result, ok
 }
 
-func (j JsonObject) ShouldGetNumber(key string) float64 {
+func (j Object) ShouldGetNumber(key string) float64 {
 	value, _ := j.GetNumber(key)
 	return value
 }
 
-func (j JsonObject) GetNumber(key string) (float64, bool) {
+func (j Object) GetNumber(key string) (float64, bool) {
 	obj, ok := j[key]
 	if !ok {
 		return 0, false
@@ -53,12 +53,12 @@ func (j JsonObject) GetNumber(key string) (float64, bool) {
 	return result, ok
 }
 
-func (j JsonObject) ShouldGetIntString(key string) intstring.IntString {
+func (j Object) ShouldGetIntString(key string) intstring.IntString {
 	value, _ := j.GetIntString(key)
 	return value
 }
 
-func (j JsonObject) GetIntString(key string) (intstring.IntString, bool) {
+func (j Object) GetIntString(key string) (intstring.IntString, bool) {
 	var result intstring.IntString
 	obj, ok := j[key]
 	if !ok {
@@ -77,12 +77,12 @@ func (j JsonObject) GetIntString(key string) (intstring.IntString, bool) {
 	return result, ok
 }
 
-func (j JsonObject) ShouldGetArray(key string) JsonArray {
+func (j Object) ShouldGetArray(key string) Array {
 	value, _ := j.GetArray(key)
 	return value
 }
 
-func (j JsonObject) GetArray(key string) (jsonArr JsonArray, success bool) {
+func (j Object) GetArray(key string) (jsonArr Array, success bool) {
 	obj, ok := j[key]
 	if !ok {
 		return
@@ -94,12 +94,12 @@ func (j JsonObject) GetArray(key string) (jsonArr JsonArray, success bool) {
 	return result, ok
 }
 
-func (j JsonObject) ShouldGetObj(key string) JsonObject {
+func (j Object) ShouldGetObj(key string) Object {
 	value, _ := j.GetObj(key)
 	return value
 }
 
-func (j JsonObject) GetObj(key string) (jsonObj JsonObject, success bool) {
+func (j Object) GetObj(key string) (jsonObj Object, success bool) {
 	obj, ok := j[key]
 	if !ok {
 		return
@@ -111,12 +111,12 @@ func (j JsonObject) GetObj(key string) (jsonObj JsonObject, success bool) {
 	return result, true
 }
 
-// JsonArray A simple wrapper type that provides methods to access a generic
+// Array A simple wrapper type that provides methods to access a generic
 // []interface{} result obtained by encoding/json unmarshal
 // The array must have no mixed type
-type JsonArray []interface{}
+type Array []interface{}
 
-func (j JsonArray) GetStringArray() (arr []string, success bool) {
+func (j Array) GetStringArray() (arr []string, success bool) {
 	for _, obj := range j {
 		result, ok := obj.(string)
 		if !ok {
@@ -127,7 +127,7 @@ func (j JsonArray) GetStringArray() (arr []string, success bool) {
 	return arr, true
 }
 
-func (j JsonArray) GetBoolArray() (arr []bool, success bool) {
+func (j Array) GetBoolArray() (arr []bool, success bool) {
 	for _, obj := range j {
 		result, ok := obj.(bool)
 		if !ok {
@@ -138,7 +138,7 @@ func (j JsonArray) GetBoolArray() (arr []bool, success bool) {
 	return arr, true
 }
 
-func (j JsonArray) GetNumberArray() (arr []float64, success bool) {
+func (j Array) GetNumberArray() (arr []float64, success bool) {
 	for _, obj := range j {
 		result, ok := obj.(float64)
 		if !ok {
@@ -149,7 +149,7 @@ func (j JsonArray) GetNumberArray() (arr []float64, success bool) {
 	return arr, true
 }
 
-func (j JsonArray) GetIntStringArray() (arr []intstring.IntString, success bool) {
+func (j Array) GetIntStringArray() (arr []intstring.IntString, success bool) {
 	for _, obj := range j {
 		var result intstring.IntString
 		s, ok := obj.(string)
@@ -169,7 +169,7 @@ func (j JsonArray) GetIntStringArray() (arr []intstring.IntString, success bool)
 	return arr, true
 }
 
-func (j JsonArray) GetArrayArray() (arr []JsonArray, success bool) {
+func (j Array) GetArrayArray() (arr []Array, success bool) {
 	for _, obj := range j {
 		result, ok := obj.([]interface{})
 		if !ok {
@@ -180,7 +180,7 @@ func (j JsonArray) GetArrayArray() (arr []JsonArray, success bool) {
 	return arr, true
 }
 
-func (j JsonArray) GetObjectArray() (arr []JsonObject, success bool) {
+func (j Array) GetObjectArray() (arr []Object, success bool) {
 	for _, obj := range j {
 		result, ok := obj.(map[string]interface{})
 		if !ok {

@@ -1,11 +1,12 @@
-package util
+package timeutil
 
 import (
 	"errors"
 	"fmt"
-	logger "github.com/sirupsen/logrus"
 	"regexp"
 	"time"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 // ValidateDateStringFormat check if the given Date value is in 'yyyy-mm-dd' format

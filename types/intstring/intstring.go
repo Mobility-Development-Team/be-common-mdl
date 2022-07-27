@@ -12,7 +12,7 @@ import (
 
 type IntString int
 
-func ToIntString(str string) IntString {
+func FromString(str string) IntString {
 	c, err := strconv.Atoi(str)
 	if err != nil {
 		return 0
@@ -98,7 +98,7 @@ func (i IntString) String() string {
 }
 
 // A quick function for compatibility of legacy code
-func ConvertToIntSlice(values []IntString) []int {
+func ToIntSlice(values []IntString) []int {
 	result := make([]int, len(values))
 	for i, value := range values {
 		result[i] = int(value)

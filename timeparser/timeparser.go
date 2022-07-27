@@ -1,11 +1,12 @@
-package time_parser
+package timeparser
 
 import (
 	"errors"
 	"fmt"
-	logger "github.com/sirupsen/logrus"
 	"regexp"
 	"time"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 func ValidateDateStringFormat(date string) bool {

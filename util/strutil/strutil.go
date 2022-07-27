@@ -1,4 +1,4 @@
-package util
+package strutil
 
 // StrOrEmpty Returns the string pointed by a string pointer str,
 // if str is nil, return empty string "" instead

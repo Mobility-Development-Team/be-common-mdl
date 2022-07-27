@@ -4,14 +4,15 @@ import (
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
+	"strconv"
+
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
-	"strconv"
 )
 
 type FloatString float64
 
-func ToFloatString(str string) FloatString {
+func FromString(str string) FloatString {
 	c, err := strconv.ParseFloat(str, 64)
 	if err != nil {
 		return 0

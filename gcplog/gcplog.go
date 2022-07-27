@@ -1,8 +1,9 @@
-package gcp_log
+package gcplog
 
 import (
-	logger "github.com/sirupsen/logrus"
 	"time"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 const (

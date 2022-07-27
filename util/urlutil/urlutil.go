@@ -1,8 +1,9 @@
-package util
+package urlutil
 
 import (
-	logger "github.com/sirupsen/logrus"
 	"net/url"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 // GetUrlWithQuery Gets an url with GET parameters appended to path. Returns empty string if it fails or path is not valid

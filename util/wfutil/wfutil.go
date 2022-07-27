@@ -1,4 +1,4 @@
-package util
+package wfutil
 
 import (
 	"regexp"
