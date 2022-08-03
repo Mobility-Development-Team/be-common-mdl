@@ -62,6 +62,7 @@ const (
 
 	TaskStatusDraft              = "DRAFT"
 	TaskStatusWorkInProgress     = "WORK_IN_PROGRESS"
+	TaskStatusFurtherFollowUp    = "FURTHER_FOLLOW_UP"
 	TaskStatusInAwaitingApproval = "AWAITING_APPROVAL"
 	TaskStatusCompleted          = "COMPLETED"
 )
