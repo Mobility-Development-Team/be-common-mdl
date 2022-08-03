@@ -55,6 +55,17 @@ type GetAllTasksCriteria struct {
 	TaskStatuses []string             `json:"taskStatuses"`
 }
 
+const (
+	TaskSearchTypeCreated  = "CREATED"
+	TaskSearchTypeAssigned = "ASSIGNED"
+	TaskSearchTypeAll      = "ALL"
+
+	TaskStatusDraft              = "DRAFT"
+	TaskStatusWorkInProgress     = "WORK_IN_PROGRESS"
+	TaskStatusInAwaitingApproval = "AWAITING_APPROVAL"
+	TaskStatusCompleted          = "COMPLETED"
+)
+
 func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, error) {
 	if cri.SiteWalkId == nil && cri.ContractId == nil && cri.SearchType == "" {
 		return nil, errors.New("invalid parameters: no search constraint")
