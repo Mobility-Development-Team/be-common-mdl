@@ -12,6 +12,20 @@ import (
 // map[string]interface{} result obtained by encoding/json unmarshal
 type Object map[string]interface{}
 
+// Initialize a new Object, optionally with some exisiting `obj`
+// `obj` can be any type that can be marshalled into a json object with keys and values.
+// If multiple `obj` are given, they are merged together in the order they are given.
+// If merge fails, error is logged instead of returning/panicking
+func NewObject(obj ...interface{}) Object {
+	newObj := make(Object)
+	for _, o := range obj {
+		if err := newObj.Merge(o); err != nil {
+			logger.Error("[genericjson][Object][NewObject] Failed to merge, ignoring: ", err)
+		}
+	}
+	return newObj
+}
+
 func (j Object) HasKey(key string) bool {
 	_, ok := j[key]
 	return ok
@@ -120,7 +134,8 @@ func (j Object) GetObj(key string) (jsonObj Object, success bool) {
 // Merge an arbitrary object to this Object
 //
 // Keys and values of `obj` are written to this Object, overwritting exisiting keys if applicable
-// `obj` must be able to be marshalled as a map[string]interface{}
+// `obj` must be able to be marshalled as a map[string]interface{} and will be marshalled/unmarshalled on each
+// merge regardless of its originally type. This is to ensure that all the values are compatible with encoding/json
 func (j *Object) Merge(obj interface{}) error {
 	b, err := json.Marshal(obj)
 	if err != nil {
