@@ -1,6 +1,12 @@
 package genericjson
 
-import "github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+	logger "github.com/sirupsen/logrus"
+)
 
 // Object A simple wrapper type that provides methods to access a generic
 // map[string]interface{} result obtained by encoding/json unmarshal
@@ -109,6 +115,34 @@ func (j Object) GetObj(key string) (jsonObj Object, success bool) {
 		return
 	}
 	return result, true
+}
+
+// Merge an arbitrary object to this Object
+//
+// Keys and values of `obj` are written to this Object, overwritting exisiting keys if applicable
+// `obj` must be able to be marshalled as a map[string]interface{}
+func (j *Object) Merge(obj interface{}) error {
+	b, err := json.Marshal(obj)
+	if err != nil {
+		return err
+	}
+	var objMap map[string]interface{}
+	if err := json.Unmarshal(b, &objMap); err != nil {
+		return fmt.Errorf("unable to marshal object as map[string]interface{}: %w", err)
+	}
+	if *j == nil {
+		*j = make(Object)
+	}
+	for k, v := range objMap {
+		(*j)[k] = v
+	}
+	return nil
+}
+
+func (j *Object) ShouldMerge(obj interface{}) {
+	if err := j.Merge(obj); err != nil {
+		logger.Debug("[genericjson][Object][ShouldMerge] Failed to merge, ignoring: ", err)
+	}
 }
 
 // Array A simple wrapper type that provides methods to access a generic
