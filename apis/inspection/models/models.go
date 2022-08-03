@@ -86,3 +86,28 @@ type SiteWalk struct {
 	// Locations                    []location.SiteWalkLocation       `json:"-" gorm:"foreignKey:SiteWalkId"`
 	// SiteWalkTypes                []SiteWalkType                    `json:"siteWalkTypes" gorm:"foreignKey:SiteWalkId"`
 }
+
+// Some fields are commented out due to not being used
+// uncomment the fields and add the corresponding structure if necessary
+type TaskDisplay struct {
+	model.Model
+	Title               string               `json:"title"`
+	Purpose             string               `json:"purpose"`
+	TaskType            string               `json:"taskType"`
+	TaskStatus          string               `json:"taskStatus"`
+	ContentOfTask       string               `json:"contentOfTask"`
+	SuggestedFollowUp   string               `json:"suggestedFollowUp"`
+	AnticipatedCompDate string               `json:"anticipatedCompDate"`
+	TaskDueDate         string               `json:"taskDueDate"`
+	DaysToDue           int                  `json:"daysToDue"`
+	HasOverdue          bool                 `json:"hasOverdue"`
+	IsManualCompletion  bool                 `json:"isManualCompletion"`
+	DueType             string               `json:"dueType"`
+	FollowUpCompDate    string               `json:"followUpCompDate"`
+	MediaBatchRefUuid   string               `json:"mediaBatchRefUuid"`
+	SiteWalkId          *intstring.IntString `json:"siteWalkId"`
+	ContractRefId       *intstring.IntString `json:"contractId"`
+	Media               []model.MediaParam   `json:"media" gorm:"-"` // Media accepts both array of string or struct during json unmarshal
+	// FollowUpUsers       []FindingFollowUpUserDisplay `json:"followUpUsers"`
+	// Hashtags            HashtagDisplay               `json:"hashtags"`
+}

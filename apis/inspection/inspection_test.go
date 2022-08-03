@@ -50,3 +50,43 @@ func TestFindUserPendingAppointments(t *testing.T) {
 		})
 	}
 }
+
+func TestGetAllTasks(t *testing.T) {
+	v := viper.New()
+	v.Set("apis.internal.inspection.module.url.base", "https://dev.api.fours.app/inspection/api")
+	apis.Init(v)
+	tk := "" // Dev token here
+	type args struct {
+		cri GetAllTasksCriteria
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Test searchType, taskStatuses",
+			args: args{
+				cri: GetAllTasksCriteria{
+					SearchType: "ASSIGNED",
+					TaskStatuses: []string{
+						"WORK_IN_PROGRESS",
+						"FURTHER_FOLLOW_UP",
+						"AWAITING_APPROVAL",
+					},
+				},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetAllTasks(tk, tt.args.cri)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetAllTasks() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			fmt.Printf("GetAllTasks() got = %v\n", got)
+		})
+	}
+}
