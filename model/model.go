@@ -134,6 +134,26 @@ func (m *Model) ShouldAddSystemFields(c *gin.Context) {
 	}
 }
 
+// Attempts to parse and extract userRefKey from CreatedByDisplay and UpdatedByDisplay
+// and set to their corresponding fields. Useful after a json unmarshal during internal calls
+func (m *Model) ShouldAddSystemFieldsFromDisplay() *Model {
+	switch createdBy := m.CreatedByDisplay.(type) {
+	case string:
+		m.CreatedBy = createdBy
+	case map[string]interface{}:
+		m.CreatedBy = genericjson.Object(createdBy).ShouldGetString("userRefKey")
+	}
+	switch updatedBy := m.UpdatedByDisplay.(type) {
+	case string:
+		m.UpdatedBy = &updatedBy
+	case map[string]interface{}:
+		if value, ok := genericjson.Object(updatedBy).GetString("userRefKey"); ok {
+			m.UpdatedBy = &value
+		}
+	}
+	return m
+}
+
 func (ui *UserInfo) IsEmpty() bool {
 	return reflect.DeepEqual(ui, UserInfo{})
 }

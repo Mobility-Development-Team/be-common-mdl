@@ -91,5 +91,8 @@ func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, erro
 		logger.Error("[FindAllTasks] Unmarshal err:", err)
 		return nil, err
 	}
+	for i := range resp.Payload.Tasks {
+		resp.Payload.Tasks[i].ShouldAddSystemFieldsFromDisplay()
+	}
 	return resp.Payload.Tasks, nil
 }
