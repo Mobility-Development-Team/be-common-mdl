@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/apis/system/models"
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
@@ -19,6 +20,8 @@ const (
 	getOneContract      = "%s/contracts/%s"
 	getAllLocations     = "%s/locations/all"
 	getSupportInfo      = "%s/config/supportinfo"
+	getAllOneContract   = "%s/contracts/%s"
+	getContractParties  = "%s/parties/assoc/%s?groupBy=party"
 )
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract, error) {
@@ -110,4 +113,23 @@ func GetSupportInfo() (map[string]string, error) {
 		return nil, err
 	}
 	return resp.Payload, nil
+}
+
+func GetContractParties(tk string, contractId intstring.IntString) (map[string]models.ContractParty, error) {
+	resp := struct {
+		Payload map[string]models.ContractParty `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getContractParties, apis.V().GetString(apiSystemMdlUrlBase), contractId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
 }
