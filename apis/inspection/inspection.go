@@ -17,6 +17,9 @@ import (
 const (
 	apiInspectionMdlUrlBase    = "apis.internal.inspection.module.url.base"
 	getUserPendingAppointments = "%s/inspection/tasks/appointments/pending/current"
+	getSiteWalkInfo            = "%s/inspection/tasks/%s"
+	registerAttachment         = "%s/inspection/tasks/attachments"
+	getSiteWalkActivityLog     = "%s/inspection/tasks/activities/all"
 	getAllTasks                = "%s/tasks/all"
 )
 
@@ -95,4 +98,74 @@ func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, erro
 		resp.Payload.Tasks[i].ShouldAddSystemFieldsFromDisplay()
 	}
 	return resp.Payload.Tasks, nil
+}
+
+func GetSiteWalkDetail(tk string, siteWalkId intstring.IntString) (*models.SiteWalk, error) {
+	resp := struct {
+		Payload *models.SiteWalk `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getSiteWalkInfo, apis.V().GetString(apiInspectionMdlUrlBase), siteWalkId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func RegisterAttachment(tk string, attachment models.Attachment) (interface{}, error) {
+	resp := struct {
+		Payload interface{} `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).
+		SetBody(attachment).
+		Post(fmt.Sprintf(registerAttachment, apis.V().GetString(apiInspectionMdlUrlBase)))
+	if err != nil {
+		return nil, err
+	}
+	if result.StatusCode() != 201 {
+		return nil, fmt.Errorf("inspection module returned status code not 201: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetSiteWalkActivityLog(tk string, siteWalkId, checklistId *intstring.IntString) ([]models.ActivityLog, error) {
+	resp := struct {
+		Payload []models.ActivityLog `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().
+		SetAuthToken(tk).
+		SetBody(struct {
+			SiteWalkId  *intstring.IntString `json:"siteWalkId,omitempty"`
+			ChecklistId *intstring.IntString `json:"checklistId,omitempty"`
+			Descending  bool                 `json:"descending"`
+		}{
+			SiteWalkId:  siteWalkId,
+			ChecklistId: checklistId,
+			Descending:  false,
+		}).
+		Post(fmt.Sprintf(getSiteWalkActivityLog, apis.V().GetString(apiInspectionMdlUrlBase)))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
 }
