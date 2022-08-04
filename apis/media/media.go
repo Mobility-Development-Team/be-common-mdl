@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
@@ -22,6 +23,15 @@ const (
 	uploadSitePlanPicture = "%s/file/upload/siteplan"
 	cloneMediaToBatch     = "%s/media/batch/clone"
 	sendCloudMessage      = "%s/fcm/messaging"
+	uploadUrlBase         = "%s/file/upload/%s/%s"
+
+	previewFolderName   = "preview"
+	publishedFolderName = "publish"
+)
+
+const (
+	ReportTypeSiteWalk = "siteWalk"
+	ReportTypeRat      = "rat"
 )
 
 type CloneOpts struct {
@@ -257,4 +267,40 @@ func UploadSitePlanPicture(tk string, fileName string, imgBytes []byte) (*string
 		return nil, err
 	}
 	return resp.Payload, nil
+}
+
+// Uploads a site walk report
+// contractId must be specified
+// If publish mode is false  fileName will be used as file name instead
+// If publish mode is true, the fileName specified would be ignored by the media module
+func UploadReport(tk string, file io.Reader, reportType string, contractId intstring.IntString, fileName string, publish bool) (string, error) {
+	client := resty.New()
+	var resp struct {
+		Payload string `json:"payload"`
+	}
+	var reqUri string
+	if publish {
+		reqUri = fmt.Sprintf(uploadUrlBase, apis.V().GetString(apiMediaMdlUrlBase), reportType, publishedFolderName)
+	} else {
+		reqUri = fmt.Sprintf(uploadUrlBase, apis.V().GetString(apiMediaMdlUrlBase), reportType, previewFolderName)
+	}
+	// The filename specified here would only be used when it is in preview mode (publish == false)
+	fileName = fmt.Sprintf("preview-file-%s.pdf", fileName)
+	result, err := client.R().SetAuthToken(tk).
+		SetFileReader("file", fileName, file).
+		SetFormData(map[string]string{
+			"contractId": contractId.String(),
+		}).
+		Post(reqUri)
+	if err != nil {
+		return "", err
+	}
+	if !result.IsSuccess() {
+		return "", fmt.Errorf("media module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return "", err
+	}
+	return resp.Payload, err
 }
