@@ -119,10 +119,6 @@ type (
 		SiteWalkId    *intstring.IntString `json:"siteWalkId"`
 		ChecklistId   *intstring.IntString `json:"checklistId"`
 	}
-	MediaParam struct {
-		Id                   string `json:"id"`
-		FirebaseUrlThumbnail string `json:"firebaseUrlThumbnail"`
-	}
 	ChecklistItem struct {
 		model.Model
 		Uuid                      string               `json:"uuid"`
@@ -133,7 +129,7 @@ type (
 		ResponsedByDisplay        *model.UserInfo      `json:"responsedBy" `
 		Remark                    *string              `json:"remark"`
 		ChecklistId               *intstring.IntString `json:"checklistId"`
-		ChecklistItemMediaDisplay []MediaParam         `json:"checklistItemMedia"`
+		ChecklistItemMediaDisplay []model.MediaParam   `json:"checklistItemMedia"`
 	}
 	Checklist struct {
 		model.Model
@@ -254,7 +250,7 @@ type (
 		Title      string              `json:"title" gorm:"not null"`
 		Remark     *string             `json:"remark"`
 		SiteWalkId intstring.IntString `json:"siteWalkId"`
-		Media      []MediaParam        `json:"media" gorm:"-"`
+		Media      []model.MediaParam  `json:"media" gorm:"-"`
 	}
 	NcFindingDisplay struct {
 		model.Model
@@ -273,7 +269,7 @@ type (
 		MediaBatchRefUuid   string                       `json:"mediaBatchRefUuid"`
 		SiteWalkId          *intstring.IntString         `json:"siteWalkId"`
 		ContractRefId       *intstring.IntString         `json:"contractId"`
-		Media               []MediaParam                 `json:"media" gorm:"-"`
+		Media               []model.MediaParam           `json:"media" gorm:"-"`
 		// Hashtags            HashtagDisplay               `json:"hashtags"`
 	}
 	FindingFollowUpUserDisplay struct {
