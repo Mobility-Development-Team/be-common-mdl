@@ -178,6 +178,7 @@ type (
 		NcFindings          []NcFindingDisplay      `json:"ncFindings"`
 		RatChecklist        *RatChecklistDisplay    `json:"ratChecklist"`
 		Contract            ContractInfoDisplay     `json:"contract"`
+		SiteWalkTypes       []SiteWalkType          `json:"siteWalkTypes"`
 	}
 	ContractInfoDisplay struct {
 		ContractNo   string `json:"contractNo"`
@@ -306,3 +307,10 @@ type (
 		ActivityType string               `json:"activityType"`
 	}
 )
+
+type SiteWalkType struct {
+	model.Model
+	ContractRefId intstring.IntString `json:"contractRefId"`
+	SiteWalkType  string              `json:"siteWalkType"`
+	SiteWalkId    intstring.IntString `json:"siteWalkId"`
+}
