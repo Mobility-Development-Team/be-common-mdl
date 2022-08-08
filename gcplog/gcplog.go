@@ -1,6 +1,7 @@
 package gcplog
 
 import (
+	"os"
 	"time"
 
 	logger "github.com/sirupsen/logrus"
@@ -31,6 +32,20 @@ var LogLevelMap = map[logger.Level]string{
 
 type gcpFormatter struct {
 	jsonFormatter logger.JSONFormatter
+}
+
+func InitLogger(debug bool) {
+	if _, ok := os.LookupEnv("K_SERVICE"); ok {
+		logger.Info("[initLogger] K_SERVICE set, GCP environment detected, hooking logging logic...")
+		logger.SetFormatter(NewGCPFormatter())
+		logger.Info("[initLogger] Logging logic redirected.")
+	} else {
+		logger.Info("[initLogger] K_SERVICE not set, not in GCP environment, using normal logging.")
+	}
+	if debug {
+		logger.SetLevel(logger.DebugLevel)
+		logger.Debug("[initLogger] Enabled debug logging.")
+	}
 }
 
 func NewGCPFormatter() *gcpFormatter {
