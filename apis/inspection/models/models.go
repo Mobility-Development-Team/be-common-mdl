@@ -314,3 +314,122 @@ type SiteWalkType struct {
 	SiteWalkType  string              `json:"siteWalkType"`
 	SiteWalkId    intstring.IntString `json:"siteWalkId"`
 }
+
+type (
+	SitePlanDisplay struct {
+		model.Model
+		ImagePreview     string                `json:"imagePreview"`
+		PrevImagePreview string                `json:"prevImagePreview"`
+		OriginalImageUrl string                `json:"sitePlanPictureUrl"`
+		SiteWalkId       intstring.IntString   `json:"siteWalkId"`
+		General          SitePlanDetailDisplay `json:"general"`
+		NonCompliance    SitePlanDetailDisplay `json:"nc"`
+	}
+
+	SitePlanDetailDisplay struct {
+		Arrows []ArrowDisplay `json:"arrows"`
+		Pins   []PinDisplay   `json:"points"`
+	}
+
+	ArrowDisplay struct {
+		Id            intstring.IntString  `json:"id,omitempty"`
+		RefUuid       string               `json:"_id"`
+		AxisX         float64              `json:"x"`
+		AxisY         float64              `json:"y"`
+		IsDisplay     *bool                `json:"isDisplay"`
+		Rotation      float64              `json:"rotation"`
+		Fill          string               `json:"fill"`
+		Stroke        string               `json:"stroke"`
+		Points        []int                `json:"points"`
+		PointerLength float64              `json:"pointerLength"`
+		PointerWidth  float64              `json:"pointerWidth"`
+		StrokeWidth   int                  `json:"strokeWidth"`
+		Name          string               `json:"name"`
+		Draggable     bool                 `json:"draggable"`
+		FindingRefId  *intstring.IntString `json:"findingRefId"`
+		SitePlanId    intstring.IntString  `json:"sitePlanId"`
+	}
+
+	PinDisplay struct {
+		Id                  intstring.IntString  `json:"id,omitempty"`
+		AxisX               float64              `json:"x"`
+		AxisY               float64              `json:"y"`
+		PinKey              string               `json:"key"`
+		IsDisplay           *bool                `json:"isDisplay"`
+		RefUuid             string               `json:"_id"`
+		Fill                string               `json:"fill"`
+		Stroke              string               `json:"stroke"`
+		Width               float64              `json:"width"`
+		Height              float64              `json:"height"`
+		Title               string               `json:"title"`
+		Media               []model.MediaParam   `json:"media"`
+		Content             string               `json:"content"`
+		Suggested           string               `json:"suggested"`
+		Purpose             string               `json:"purpose"`
+		AnticipatedCompDate string               `json:"anticipatedCompletionDate"`
+		Remark              string               `json:"remark"`
+		Status              string               `json:"status"`
+		FindingType         string               `json:"findingType"`
+		FindingRefId        *intstring.IntString `json:"findingRefId"`
+	}
+)
+
+type (
+	FollowUpTaskDisplay struct {
+		FollowUpTaskBase
+		TaskActions      []FollowUpTaskActionDisplay  `json:"actions"`
+		TaskComments     []FollowUpTaskCommentDisplay `json:"comments"`
+		TaskActivityLogs []TaskActivityLogDisplay     `json:"logs"`
+		AllowNewAction   bool                         `json:"allowNewAction"`
+	}
+	FollowUpTaskBase struct {
+		model.Model
+		TaskParentType              *string              `json:"taskParentType"`
+		TaskParentRefId             *intstring.IntString `json:"taskParentRefId"`
+		TaskParentMediaBatchRefUuid string               `json:"taskParentMediaBatchRefUuid"`
+	}
+	FollowUpTaskActionDisplay struct {
+		FollowUpTaskActionBase
+		Seq                 int             `json:"seq"`
+		AnticipatedCompDate string          `json:"anticipatedCompDate"`
+		SubmittedByUser     *model.UserInfo `json:"submittedByUser"`
+		// Media               []model.MediaParam `json:"media"`
+		FollowUpUserMedia []model.MediaParam `json:"followUpUserMedia"`
+		ApproverMedia     []model.MediaParam `json:"approverMedia"`
+	}
+	FollowUpTaskActionBase struct {
+		model.Model
+		ActionStatus          string              `json:"actionStatus"`
+		SubmittedByUserId     intstring.IntString `json:"submittedByUserId"`
+		SubmittedByUserRefKey string              `json:"submittedByUserRefKey"`
+		TaskDueDate           *time.Time          `json:"taskDueDate"`
+		IsOverdue             bool                `json:"isOverdue"`
+		FollowUpRemark        string              `json:"followUpRemark"`
+		ApprovalRemark        *string             `json:"approvalRemark"`
+		FollowUpTaskId        intstring.IntString `json:"followUpTaskId"`
+		WorkflowRefUuid       *string             `json:"workflowRefUuid"`
+	}
+	FollowUpTaskComment struct {
+		model.Model
+		CommentByUserId     intstring.IntString `json:"commentByUserId"`
+		CommentByUserRefKey string              `json:"commentByUserRefKey"`
+		CommentMessage      string              `json:"commentMessage"`
+		FollowUpTaskId      intstring.IntString `json:"followUpTaskId"`
+	}
+	FollowUpTaskCommentDisplay struct {
+		FollowUpTaskComment
+		CommentByUser *model.UserInfo `json:"commentByUser"`
+	}
+	TaskActivityLogDisplay struct {
+		Id              intstring.IntString  `gorm:"primaryKey" json:"id,omitempty"`
+		CreatedAt       time.Time            `json:"createdAt"`
+		CreatedBy       string               `json:"createdBy" gorm:"column:created_by"`
+		ActorUserId     *intstring.IntString `json:"-"`
+		ActorUserRefKey *string              `json:"-"`
+		Actor           *model.UserInfo      `json:"actor"`
+		Message         *string              `json:"message"`
+		MessageZh       *string              `json:"messageZh"`
+		ActivityType    string               `json:"activityType"`
+		TaskId          intstring.IntString  `json:"taskId"`
+	}
+)

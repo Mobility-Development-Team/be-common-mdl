@@ -21,6 +21,8 @@ const (
 	registerAttachment         = "%s/inspection/tasks/attachments"
 	getSiteWalkActivityLog     = "%s/inspection/tasks/activities/all"
 	getAllTasks                = "%s/tasks/all"
+	getSitePlanBySiteWalkId    = "%s/inspection/tasks/siteplans/latest"
+	getFollowUpByParentRefIds  = "%s/tasks/followup/tasks/all/many"
 )
 
 // Gets all appointments requiring the user's attention
@@ -70,6 +72,65 @@ const (
 	TaskStatusCompleted          = "COMPLETED"
 )
 
+func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*models.SitePlanDisplay, error) {
+	client := resty.New()
+	result, err := client.R().
+		SetAuthToken(tk).
+		SetBody(map[string]interface{}{
+			"siteWalkId": siteWalkId,
+		}).
+		Post(fmt.Sprintf(getSitePlanBySiteWalkId, apis.V().GetString(apiInspectionMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetSitePlan] err: ", err)
+		return nil, err
+	}
+	var resp struct {
+		response.Response
+		Payload *models.SitePlanDisplay `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		logger.Error("[GetSitePlan] Unmarshal err:", err)
+		return nil, err
+	}
+	resp.Payload.ShouldAddSystemFieldsFromDisplay()
+	return resp.Payload, nil
+}
+
+func GetLatestTasksByParentRefIds(tk string, taskParentRefIds ...intstring.IntString) (map[intstring.IntString]*models.FollowUpTaskDisplay, error) {
+	if len(taskParentRefIds) == 0 {
+		return map[intstring.IntString]*models.FollowUpTaskDisplay{}, nil
+	}
+	client := resty.New()
+	result, err := client.R().
+		SetAuthToken(tk).
+		SetBody(map[string]interface{}{
+			"taskParentRefIds": taskParentRefIds,
+		}).
+		Post(fmt.Sprintf(getFollowUpByParentRefIds, apis.V().GetString(apiInspectionMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetLatestTasksByParentRefIds] err: ", err)
+		return nil, err
+	}
+	var resp struct {
+		response.Response
+		Payload map[intstring.IntString]*models.FollowUpTaskDisplay `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		logger.Error("[GetLatestTasksByParentRefIds] Unmarshal err:", err)
+		return nil, err
+	}
+	for _, k := range resp.Payload {
+		k.ShouldAddSystemFieldsFromDisplay()
+	}
+	return resp.Payload, nil
+}
+
 func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, error) {
 	if cri.SiteWalkId == nil && cri.ContractId == nil && cri.SearchType == "" {
 		return nil, errors.New("invalid parameters: no search constraint")
@@ -89,6 +150,9 @@ func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, erro
 			Tasks      []models.TaskDisplay `json:"tasks"`
 			TotalCount int                  `json:"totalCount"`
 		} `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
 	}
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		logger.Error("[FindAllTasks] Unmarshal err:", err)

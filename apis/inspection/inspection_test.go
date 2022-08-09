@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 	"github.com/spf13/viper"
 )
 
@@ -87,6 +88,72 @@ func TestGetAllTasks(t *testing.T) {
 				return
 			}
 			fmt.Printf("GetAllTasks() got = %v\n", got)
+		})
+	}
+}
+
+func TestGetLatestTasksByParentRefIds(t *testing.T) {
+	v := viper.New()
+	v.Set("apis.internal.inspection.module.url.base", "https://dev.api.fours.app/inspection/api")
+	apis.Init(v)
+	tk := "" // Dev token here
+	type args struct {
+		taskParentRefIds []intstring.IntString
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Test 1",
+			args: args{
+				taskParentRefIds: []intstring.IntString{514},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetLatestTasksByParentRefIds(tk, tt.args.taskParentRefIds...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetLatestTasksByParentRefIds() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			fmt.Printf("GetLatestTasksByParentRefIds() got = %v\n", got)
+		})
+	}
+}
+
+func TestGetSitePlanBySiteWalkId(t *testing.T) {
+	v := viper.New()
+	v.Set("apis.internal.inspection.module.url.base", "https://dev.api.fours.app/inspection/api")
+	apis.Init(v)
+	tk := "" // Dev token here
+	type args struct {
+		siteWalkId intstring.IntString
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Test 1",
+			args: args{
+				siteWalkId: 520,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetSitePlanBySiteWalkId(tk, tt.args.siteWalkId)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetSitePlanBySiteWalkId() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			fmt.Printf("GetSitePlanBySiteWalkId() got = %v\n", got)
 		})
 	}
 }
