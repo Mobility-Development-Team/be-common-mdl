@@ -3,6 +3,7 @@ package strutil
 import (
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // StrOrEmpty Returns the string pointed by a string pointer str,
@@ -36,4 +37,40 @@ func StrOrEmptyFromInterface(obj interface{}) string {
 		return ""
 	}
 	return fmt.Sprint(value.Interface())
+}
+
+// A Less(i,j) function used by sort.Slice for ordering numbers before other strings
+//  1. Number always go first and can be sorted in descending order provided by numberDesc
+//  2. Other strings come after and can be sorted in desceding order provided by strDesc
+//  3. If emptyStrLast is true, empty strings are put to the end of the list regardless of sort order
+func CmpNumberFirst(str1 string, str2 string, numberDesc, strDesc, emptyStrLast bool) bool {
+	num1Valid := false
+	num1, err := strconv.Atoi(str1)
+	if err == nil {
+		num1Valid = true
+	}
+	num2Valid := false
+	num2, err := strconv.Atoi(str2)
+	if err == nil {
+		num2Valid = true
+	}
+	switch {
+	case num1Valid && num2Valid:
+		// Both are numbers
+		// Sort in numerical order
+		return numberDesc != (num1 < num2)
+	case !num1Valid && !num2Valid:
+		// Both are string
+		// Check if special handling needed for empty string
+		if emptyStrLast && (str1 == "" || str2 == "") {
+			// Empty string goes last
+			return str1 != ""
+		}
+		// Sort in string order
+		return strDesc != (str1 < str2)
+	default:
+		// Some of them is number
+		// The one that is number goes first
+		return num1Valid
+	}
 }
