@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
-	"github.com/Mobility-Development-Team/be-common-mdl/apis/notification/models"
 	"github.com/Mobility-Development-Team/be-common-mdl/apis/user"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
@@ -39,8 +38,8 @@ func FilterSelfFromUserIds(c *gin.Context, ids []intstring.IntString) []intstrin
 	return result
 }
 
-func NewNotification(contractId *intstring.IntString, templateType string, templateParams ...interface{}) *models.Notification {
-	return &models.Notification{
+func NewNotification(contractId *intstring.IntString, templateType string, templateParams ...interface{}) *Notification {
+	return &Notification{
 		NotificationType: notificationTypeSystem,
 		TemplateType:     templateType,
 		ContractID:       contractId,
@@ -48,8 +47,8 @@ func NewNotification(contractId *intstring.IntString, templateType string, templ
 	}
 }
 
-func CreateNotifications(tk string, notifications ...*models.Notification) error {
-	validNotifications := make([]*models.Notification, 0, len(notifications))
+func CreateNotifications(tk string, notifications ...*Notification) error {
+	validNotifications := make([]*Notification, 0, len(notifications))
 	for _, noti := range notifications {
 		if noti == nil {
 			logger.Warn("[CreateNotification] Skipped: notifcation is nil.")

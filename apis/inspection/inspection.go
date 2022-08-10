@@ -7,7 +7,6 @@ import (
 	"strconv"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
-	"github.com/Mobility-Development-Team/be-common-mdl/apis/inspection/models"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 	"github.com/go-resty/resty/v2"
@@ -29,7 +28,7 @@ const (
 //
 // Setting isSimple to ture skip preloading of some fields, setting it to false ensures the appointment is fully populated.
 // However, the nested fields inside the sitewalk object is never fully populated
-func FindUserPendingAppointments(tk string, userRefKey string, isSimple bool) ([]models.Appointment, error) {
+func FindUserPendingAppointments(tk string, userRefKey string, isSimple bool) ([]Appointment, error) {
 	client := resty.New()
 	result, err := client.R().
 		SetAuthToken(tk).
@@ -41,7 +40,7 @@ func FindUserPendingAppointments(tk string, userRefKey string, isSimple bool) ([
 	}
 	type respType struct {
 		response.Response
-		Payload []models.Appointment `json:"payload"`
+		Payload []Appointment `json:"payload"`
 	}
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
@@ -72,7 +71,7 @@ const (
 	TaskStatusCompleted          = "COMPLETED"
 )
 
-func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*models.SitePlanDisplay, error) {
+func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*SitePlanDisplay, error) {
 	client := resty.New()
 	result, err := client.R().
 		SetAuthToken(tk).
@@ -86,7 +85,7 @@ func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*models
 	}
 	var resp struct {
 		response.Response
-		Payload *models.SitePlanDisplay `json:"payload"`
+		Payload *SitePlanDisplay `json:"payload"`
 	}
 	if !result.IsSuccess() {
 		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
@@ -99,9 +98,9 @@ func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*models
 	return resp.Payload, nil
 }
 
-func GetLatestTasksByParentRefIds(tk string, taskParentRefIds ...intstring.IntString) (map[intstring.IntString]*models.FollowUpTaskDisplay, error) {
+func GetLatestTasksByParentRefIds(tk string, taskParentRefIds ...intstring.IntString) (map[intstring.IntString]*FollowUpTaskDisplay, error) {
 	if len(taskParentRefIds) == 0 {
-		return map[intstring.IntString]*models.FollowUpTaskDisplay{}, nil
+		return map[intstring.IntString]*FollowUpTaskDisplay{}, nil
 	}
 	client := resty.New()
 	result, err := client.R().
@@ -116,7 +115,7 @@ func GetLatestTasksByParentRefIds(tk string, taskParentRefIds ...intstring.IntSt
 	}
 	var resp struct {
 		response.Response
-		Payload map[intstring.IntString]*models.FollowUpTaskDisplay `json:"payload"`
+		Payload map[intstring.IntString]*FollowUpTaskDisplay `json:"payload"`
 	}
 	if !result.IsSuccess() {
 		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
@@ -131,7 +130,7 @@ func GetLatestTasksByParentRefIds(tk string, taskParentRefIds ...intstring.IntSt
 	return resp.Payload, nil
 }
 
-func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, error) {
+func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]TaskDisplay, error) {
 	if cri.SiteWalkId == nil && cri.ContractId == nil && cri.SearchType == "" {
 		return nil, errors.New("invalid parameters: no search constraint")
 	}
@@ -147,8 +146,8 @@ func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, erro
 	var resp struct {
 		response.Response
 		Payload struct {
-			Tasks      []models.TaskDisplay `json:"tasks"`
-			TotalCount int                  `json:"totalCount"`
+			Tasks      []TaskDisplay `json:"tasks"`
+			TotalCount int           `json:"totalCount"`
 		} `json:"payload"`
 	}
 	if !result.IsSuccess() {
@@ -164,9 +163,9 @@ func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]models.TaskDisplay, erro
 	return resp.Payload.Tasks, nil
 }
 
-func GetSiteWalkDetail(tk string, siteWalkId intstring.IntString) (*models.SiteWalk, error) {
+func GetSiteWalkDetail(tk string, siteWalkId intstring.IntString) (*SiteWalk, error) {
 	resp := struct {
-		Payload *models.SiteWalk `json:"payload"`
+		Payload *SiteWalk `json:"payload"`
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getSiteWalkInfo, apis.V().GetString(apiInspectionMdlUrlBase), siteWalkId))
@@ -183,7 +182,7 @@ func GetSiteWalkDetail(tk string, siteWalkId intstring.IntString) (*models.SiteW
 	return resp.Payload, err
 }
 
-func RegisterAttachment(tk string, attachment models.Attachment) (interface{}, error) {
+func RegisterAttachment(tk string, attachment Attachment) (interface{}, error) {
 	resp := struct {
 		Payload interface{} `json:"payload"`
 	}{}
@@ -204,9 +203,9 @@ func RegisterAttachment(tk string, attachment models.Attachment) (interface{}, e
 	return resp.Payload, err
 }
 
-func GetSiteWalkActivityLog(tk string, siteWalkId, checklistId *intstring.IntString) ([]models.ActivityLog, error) {
+func GetSiteWalkActivityLog(tk string, siteWalkId, checklistId *intstring.IntString) ([]ActivityLog, error) {
 	resp := struct {
-		Payload []models.ActivityLog `json:"payload"`
+		Payload []ActivityLog `json:"payload"`
 	}{}
 	client := resty.New()
 	result, err := client.R().

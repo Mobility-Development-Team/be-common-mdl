@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
-	"github.com/Mobility-Development-Team/be-common-mdl/apis/system/models"
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
@@ -115,9 +114,9 @@ func GetSupportInfo() (map[string]string, error) {
 	return resp.Payload, nil
 }
 
-func GetContractParties(tk string, contractId intstring.IntString) (map[string]models.ContractParty, error) {
+func GetContractParties(tk string, contractId intstring.IntString) (map[string]ContractParty, error) {
 	resp := struct {
-		Payload map[string]models.ContractParty `json:"payload"`
+		Payload map[string]ContractParty `json:"payload"`
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getContractParties, apis.V().GetString(apiSystemMdlUrlBase), contractId))

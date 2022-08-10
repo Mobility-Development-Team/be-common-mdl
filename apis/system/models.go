@@ -1,4 +1,4 @@
-package models
+package system
 
 import "github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 

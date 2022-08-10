@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
-	"github.com/Mobility-Development-Team/be-common-mdl/apis/workflow/models"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 
 	"github.com/go-resty/resty/v2"
@@ -19,11 +18,11 @@ const (
 	submitWorkflowAction  = "%s/workflows/tasks"
 )
 
-func CreateWorkflow(tk string, action models.WorkFlowCreateParam) (*models.WorkflowView, error) {
+func CreateWorkflow(tk string, action WorkFlowCreateParam) (*WorkflowView, error) {
 	type (
 		respType struct {
 			response.Response
-			Payload *models.WorkflowView `json:"payload"`
+			Payload *WorkflowView `json:"payload"`
 		}
 	)
 	client := resty.New()
@@ -43,11 +42,11 @@ func CreateWorkflow(tk string, action models.WorkFlowCreateParam) (*models.Workf
 	return resp.Payload, nil
 }
 
-func GetLatestWorkflowTask(tk, workflowUuid string) (*models.WorkflowView, error) {
+func GetLatestWorkflowTask(tk, workflowUuid string) (*WorkflowView, error) {
 	type (
 		respType struct {
 			response.Response
-			Payload []models.WorkflowView `json:"payload"`
+			Payload []WorkflowView `json:"payload"`
 		}
 	)
 	client := resty.New()
@@ -74,14 +73,14 @@ func GetLatestWorkflowTask(tk, workflowUuid string) (*models.WorkflowView, error
 }
 
 type WorkflowActionParam struct {
-	models.TaskParam
+	TaskParam
 	SelectedAction string `json:"selectedAction"`
 }
 
-func SubmitWorkflowAction(tk string, actions []WorkflowActionParam) (map[string][]models.ActionView, error) {
+func SubmitWorkflowAction(tk string, actions []WorkflowActionParam) (map[string][]ActionView, error) {
 	var resp struct {
 		response.Response
-		Payload map[string][]models.ActionView `json:"payload"`
+		Payload map[string][]ActionView `json:"payload"`
 	}
 	client := resty.New()
 	result, err := client.R().
