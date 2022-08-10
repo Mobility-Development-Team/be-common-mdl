@@ -49,12 +49,28 @@ func NewNotification(contractId *intstring.IntString, templateType string, templ
 }
 
 func CreateNotifications(tk string, notifications ...*models.Notification) error {
-	if len(notifications) == 0 {
-		logger.Debug("[CreateNotification]: No notifications to create.")
+	validNotifications := make([]*models.Notification, 0, len(notifications))
+	for _, noti := range notifications {
+		if noti == nil {
+			logger.Warn("[CreateNotification] Skipped: notifcation is nil.")
+			continue
+		}
+		if noti.TemplateType == "" {
+			logger.Warn("[CreateNotification] Skipped: notifcation does not have a templateType: ", *noti)
+			continue
+		}
+		if len(noti.Recipients.Groups) == 0 && len(noti.Recipients.Users) == 0 {
+			logger.Debug("[CreateNotification] Notification has no recipents, ignoring: ", noti.TemplateType)
+			continue
+		}
+		validNotifications = append(validNotifications, noti)
+	}
+	if len(validNotifications) == 0 {
+		logger.Debug("[CreateNotification] No notifications to create.")
 		return nil
 	}
-	logger.Debugf("[CreateNotification]: Creating %d notification(s).", len(notifications))
-	return createOneOrManyNotifications(tk, notifications)
+	logger.Debugf("[CreateNotification] Creating %d notification(s).", len(validNotifications))
+	return createOneOrManyNotifications(tk, validNotifications)
 }
 
 func createOneOrManyNotifications(tk string, body interface{}) error {
