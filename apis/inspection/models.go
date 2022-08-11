@@ -5,6 +5,7 @@ import (
 
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+	"github.com/Mobility-Development-Team/be-common-mdl/util/strutil"
 )
 
 type (
@@ -286,6 +287,15 @@ type (
 		FollowUpUserPosition       *string             `json:"followUpUserPosition"`
 	}
 )
+
+func (ud FindingFollowUpUserDisplay) GetAvailableName() string {
+	return model.GetAvailableName(
+		strutil.StrOrEmpty(ud.FollowUpUserDisplayName),
+		strutil.StrOrEmpty(ud.FollowUpUserFirstName),
+		strutil.StrOrEmpty(ud.FollowUpUserLastName),
+		strutil.StrOrEmpty(ud.FollowUpUserEmail),
+	)
+}
 
 type (
 	Attachment struct {
