@@ -33,6 +33,7 @@ type (
 	Action struct {
 		ActionID    string `json:"actionId"`
 		ActionLabel string `json:"actionLabel"`
+		ActionType  string `json:"actionType"`
 	}
 	MailTemplate interface {
 		Id() string
@@ -87,10 +88,16 @@ func (n *Notification) AddGroupRecipient(gid ...intstring.IntString) *Notificati
 	return n
 }
 
-func (n *Notification) AddAction(actionId, actionLabel interface{}) *Notification {
+// optActionType is optional. If given, the first given value is set as the actionType
+func (n *Notification) AddAction(actionId, actionLabel interface{}, optActionType ...interface{}) *Notification {
+	actionType := ""
+	if len(optActionType) > 0 {
+		actionType = strutil.StrOrEmptyFromInterface(optActionType[0])
+	}
 	n.Actions = append(n.Actions, Action{
 		ActionID:    strutil.StrOrEmptyFromInterface(actionId),
 		ActionLabel: strutil.StrOrNotProvided(strutil.StrOrEmptyFromInterface(actionLabel)),
+		ActionType:  actionType,
 	})
 	return n
 }
