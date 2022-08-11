@@ -1,10 +1,8 @@
 package genericjson
 
 import (
-	"encoding/json"
-	"fmt"
-
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+	"github.com/Mobility-Development-Team/be-common-mdl/util/jsonutil"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -137,13 +135,9 @@ func (j Object) GetObj(key string) (jsonObj Object, success bool) {
 // `obj` must be able to be marshalled as a map[string]interface{} and will be marshalled/unmarshalled on each
 // merge regardless of its originally type. This is to ensure that all the values are compatible with encoding/json
 func (j *Object) Merge(obj interface{}) error {
-	b, err := json.Marshal(obj)
-	if err != nil {
-		return err
-	}
 	var objMap map[string]interface{}
-	if err := json.Unmarshal(b, &objMap); err != nil {
-		return fmt.Errorf("unable to marshal object as map[string]interface{}: %w", err)
+	if err := jsonutil.MarshalInto(obj, &objMap); err != nil {
+		return err
 	}
 	if *j == nil {
 		*j = make(Object)
