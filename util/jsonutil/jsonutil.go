@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+
+	logger "github.com/sirupsen/logrus"
 )
 
 // Convert a json compatible struct/map into another object.
@@ -19,4 +21,11 @@ func MarshalInto(src, dest interface{}) error {
 		return fmt.Errorf("unable to marshal object type %v into %v: %w", reflect.TypeOf(src), reflect.TypeOf(dest), err)
 	}
 	return nil
+}
+
+// Same as MarshalInto but logs the error as warning instead of returning it
+func ShouldMarshalInto(src, dest interface{}) {
+	if err := MarshalInto(src, dest); err != nil {
+		logger.Warn("[ShouldMarshalInto] Unable to marshal types: ", err)
+	}
 }
