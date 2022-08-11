@@ -98,7 +98,7 @@ func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*SitePl
 	return resp.Payload, nil
 }
 
-func GetLatestTasksByParentRefIds(tk string, taskParentRefIds ...intstring.IntString) (map[intstring.IntString]*FollowUpTaskDisplay, error) {
+func GetLatestFollowUpTasksByParentRefIds(tk string, taskParentRefIds ...intstring.IntString) (map[intstring.IntString]*FollowUpTaskDisplay, error) {
 	if len(taskParentRefIds) == 0 {
 		return map[intstring.IntString]*FollowUpTaskDisplay{}, nil
 	}

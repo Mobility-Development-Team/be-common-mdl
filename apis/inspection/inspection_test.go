@@ -115,7 +115,7 @@ func TestGetLatestTasksByParentRefIds(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetLatestTasksByParentRefIds(tk, tt.args.taskParentRefIds...)
+			got, err := GetLatestFollowUpTasksByParentRefIds(tk, tt.args.taskParentRefIds...)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetLatestTasksByParentRefIds() error = %v, wantErr %v", err, tt.wantErr)
 				return
