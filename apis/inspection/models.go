@@ -179,7 +179,7 @@ type (
 		NcFindings          []NcFindingDisplay      `json:"ncFindings"`
 		RatChecklist        *RatChecklistDisplay    `json:"ratChecklist"`
 		Contract            ContractInfoDisplay     `json:"contract"`
-		SiteWalkTypes       []SiteWalkType          `json:"siteWalkTypes"`
+		SiteWalkTypes       []string                `json:"siteWalkTypes"`
 	}
 	ContractInfoDisplay struct {
 		ContractNo   string `json:"contractNo"`
