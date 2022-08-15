@@ -17,12 +17,12 @@ const (
 	generateRATSiteWalk       = "%s/documents/inspection/sitewalk/rat/generate"
 )
 
-func GenerateSiteWalk(tk string, siteWalk intstring.IntString) (string, error) {
-	return generateReportSiteWalk(tk, generateSiteWalk, siteWalk, true)
+func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
+	return generateReportSiteWalk(tk, generateSiteWalk, siteWalkId, true)
 }
 
-func GenerateRAT(tk string, siteWalk intstring.IntString) (string, error) {
-	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalk, true)
+func GenerateRAT(tk string, siteWalkId intstring.IntString) (string, error) {
+	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalkId, true)
 }
 
 func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish bool) (string, error) {
