@@ -14,22 +14,28 @@ import (
 const (
 	apiNotificationMdlUrlBase = "apis.internal.document.module.url.base"
 	generateSiteWalk          = "%s/documents/inspection/sitewalk/report/generate"
+	generateRATSiteWalk       = "%s/documents/inspection/sitewalk/rat/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalk intstring.IntString) (string, error) {
+	return generateReportSiteWalk(tk, generateSiteWalk, siteWalk, true)
+}
+
+func GenerateRAT(tk string, siteWalk intstring.IntString) (string, error) {
+	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalk, true)
+}
+
+func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish bool) (string, error) {
 	client := resty.New()
 	var resp struct {
 		Payload struct {
 			Url string `json:"url"`
 		} `json:"payload"`
 	}
-	result, err := client.R().SetAuthToken(tk).SetBody(struct {
-		Id      string `json:"id"`
-		Publish bool   `json:"publish"`
-	}{
-		Id:      siteWalk.String(),
-		Publish: true,
-	}).Post(fmt.Sprintf(generateSiteWalk, apis.V().GetString(apiNotificationMdlUrlBase)))
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+		"id":      id,
+		"publish": publish,
+	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(apiNotificationMdlUrlBase)))
 	if err != nil {
 		return "", err
 	}
