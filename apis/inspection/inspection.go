@@ -59,18 +59,6 @@ type GetAllTasksCriteria struct {
 	TaskStatuses []string             `json:"taskStatuses"`
 }
 
-const (
-	TaskSearchTypeCreated  = "CREATED"
-	TaskSearchTypeAssigned = "ASSIGNED"
-	TaskSearchTypeAll      = "ALL"
-
-	TaskStatusDraft              = "DRAFT"
-	TaskStatusWorkInProgress     = "WORK_IN_PROGRESS"
-	TaskStatusFurtherFollowUp    = "FURTHER_FOLLOW_UP"
-	TaskStatusInAwaitingApproval = "AWAITING_APPROVAL"
-	TaskStatusCompleted          = "COMPLETED"
-)
-
 func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*SitePlanDisplay, error) {
 	client := resty.New()
 	result, err := client.R().
