@@ -16,6 +16,7 @@ const (
 	TaskStatusFurtherFollowUp    = "FURTHER_FOLLOW_UP"
 	TaskStatusInAwaitingApproval = "AWAITING_APPROVAL"
 	TaskStatusCompleted          = "COMPLETED"
+	TaskStatusRecordOnly         = "RECORD_ONLY"
 
 	TaskActionStatusWorkInProgress     = "WORK_IN_PROGRESS"
 	TaskActionStatusInAwaitingApproval = "AWAITING_APPROVAL"
