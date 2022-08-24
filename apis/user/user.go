@@ -153,7 +153,7 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 	return result, nil
 }
 
-func PopulateModelUserDisplay(tk string, models []*model.Model) error {
+func PopulateModelUserDisplay(tk string, models ...*model.Model) error {
 	userInfos := make([]*model.UserInfo, 0, len(models)*2)
 	for _, m := range models {
 		if m.CreatedBy != "" {
