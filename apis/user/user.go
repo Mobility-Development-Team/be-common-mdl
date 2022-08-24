@@ -153,8 +153,29 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 	return result, nil
 }
 
+func PopulateModelUserDisplay(tk string, models []*model.Model) error {
+	userInfos := make([]*model.UserInfo, 0, len(models)*2)
+	for _, m := range models {
+		if m.CreatedBy != "" {
+			u := &model.UserInfo{
+				UserRefKey: m.CreatedBy,
+			}
+			m.CreatedByDisplay = u
+			userInfos = append(userInfos, u)
+		}
+		if m.UpdatedBy != nil {
+			u := &model.UserInfo{
+				UserRefKey: *m.UpdatedBy,
+			}
+			m.UpdatedByDisplay = u
+			userInfos = append(userInfos, u)
+		}
+	}
+	return PopulateUserInfo(tk, userInfos)
+}
+
 // PopulateUserInfo Gets all users in userInfo, replace them with the updated version
-// It tries to look for the records by either id or userKeyRef
+// It tries to look for the records by either userKeyRef or id
 func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 	var ids []intstring.IntString
 	var keyRefs []string
@@ -178,24 +199,17 @@ func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 	if err != nil {
 		return err
 	}
-	updateCount := 0
 	for _, updated := range updatedInfos {
-		// Always try id first
-		if hit, ok := idMap[updated.Id]; ok {
-			*hit = updated
-			updateCount++
-			continue
-		}
+		// Always try refKey first
 		if hit, ok := keyRefMap[updated.UserRefKey]; ok {
 			*hit = updated
-			updateCount++
+			continue
+		}
+		if hit, ok := idMap[updated.Id]; ok {
+			*hit = updated
 			continue
 		}
 		logger.Warnf("[PopulateUserInfo] Skipped mapping, userInfo does not have the related record, id=%s refKey=%s", updated.Id, updated.UserRefKey)
-	}
-	// Simple check for possible broken data
-	if updateCount > len(userInfo) {
-		logger.Warn("[PopulateUserInfo] Some user information updated more than once, might indicate broken or duplicated ids")
 	}
 	return nil
 }
