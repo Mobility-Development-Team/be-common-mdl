@@ -23,7 +23,7 @@ type (
 		CreatedBy        string              `json:"-" gorm:"column:created_by;<-:create"`
 		CreatedByDisplay interface{}         `json:"createdBy" gorm:"-" `
 		UpdatedAt        time.Time           `json:"updatedAt"`
-		UpdatedBy        *string             `json:"-" gorm:"column:updated_by"`
+		UpdatedBy        *string             `json:"-" gorm:"column:updated_by;<-:update"`
 		UpdatedByDisplay interface{}         `json:"updatedBy" gorm:"-" `
 	}
 	UserInfo struct {
@@ -129,9 +129,11 @@ func (m *Model) ShouldAddUpdatedBy(c *gin.Context) {
 
 func (m *Model) ShouldAddSystemFields(c *gin.Context) {
 	m.ShouldAddCreatedBy(c)
-	if m.Id != 0 {
-		m.ShouldAddUpdatedBy(c)
-	}
+	m.ShouldAddUpdatedBy(c)
+	// This is now controlled by declared update permission
+	// if m.Id != 0 {
+	// 	m.ShouldAddUpdatedBy(c)
+	// }
 }
 
 // Attempts to parse and extract userRefKey from CreatedByDisplay and UpdatedByDisplay
