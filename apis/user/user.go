@@ -107,6 +107,9 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.UserInfo, e
 }
 
 func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.UserInfo, error) {
+	if len(ids) == 0 && len(userKeyRefs) == 0 {
+		return []model.UserInfo{}, nil
+	}
 	client := resty.New()
 	body := map[string]interface{}{
 		"ids":         ids,
