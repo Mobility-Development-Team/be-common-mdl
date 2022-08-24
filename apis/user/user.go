@@ -159,13 +159,11 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 func PopulateModelUserDisplay(tk string, models ...*model.Model) error {
 	userInfos := make([]*model.UserInfo, 0, len(models)*2)
 	for _, m := range models {
-		if m.CreatedBy != "" {
-			u := &model.UserInfo{
-				UserRefKey: m.CreatedBy,
-			}
-			m.CreatedByDisplay = u
-			userInfos = append(userInfos, u)
+		u := &model.UserInfo{
+			UserRefKey: m.CreatedBy,
 		}
+		m.CreatedByDisplay = u
+		userInfos = append(userInfos, u)
 		if m.UpdatedBy != nil {
 			u := &model.UserInfo{
 				UserRefKey: *m.UpdatedBy,
