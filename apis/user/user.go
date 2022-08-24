@@ -2,6 +2,7 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"sync"
@@ -120,6 +121,9 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	)
 	if err != nil {
 		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
 	}
 	type respType struct {
 		response.Response
