@@ -174,6 +174,12 @@ func PopulateModelUserDisplay(tk string, models ...*model.Model) error {
 	return PopulateUserInfo(tk, userInfos)
 }
 
+func ShouldPopulateModelUserDisplay(tk string, models ...*model.Model) {
+	if err := PopulateModelUserDisplay(tk, models...); err != nil {
+		logger.Error("[ShouldPopulateModelUserDisplay] Failed getting user, ignoring ", err)
+	}
+}
+
 // PopulateUserInfo Gets all users in userInfo, replace them with the updated version
 // It tries to look for the records by either userKeyRef or id
 func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
