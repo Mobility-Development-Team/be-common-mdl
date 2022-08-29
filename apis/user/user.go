@@ -227,7 +227,6 @@ func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 			}
 			*userInfo = updated
 		}
-		logger.Warnf("[PopulateUserInfo] Skipped mapping, userInfo does not have the related record, id=%s refKey=%s", updated.Id, updated.UserRefKey)
 	}
 	return nil
 }
