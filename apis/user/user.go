@@ -190,20 +190,24 @@ func ShouldPopulateModelUserDisplay(tk string, models ...*model.Model) {
 func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 	var ids []intstring.IntString
 	var keyRefs []string
-	idMap := map[intstring.IntString]*model.UserInfo{}
-	keyRefMap := map[string]*model.UserInfo{}
+	idMap := map[intstring.IntString][]*model.UserInfo{}
+	keyRefMap := map[string][]*model.UserInfo{}
 	for _, info := range userInfo {
 		if info == nil {
 			logger.Warn("[PopulateUserInfo] Got a nil userInfo, ignoring...")
 			continue
 		}
 		if info.Id > 0 {
-			idMap[info.Id] = info
-			ids = append(ids, info.Id)
+			if _, ok := idMap[info.Id]; !ok {
+				ids = append(ids, info.Id)
+			}
+			idMap[info.Id] = append(idMap[info.Id], info)
 		}
 		if info.UserRefKey != "" {
-			keyRefMap[info.UserRefKey] = info
-			keyRefs = append(keyRefs, info.UserRefKey)
+			if _, ok := keyRefMap[info.UserRefKey]; !ok {
+				keyRefs = append(keyRefs, info.UserRefKey)
+			}
+			keyRefMap[info.UserRefKey] = append(keyRefMap[info.UserRefKey], info)
 		}
 	}
 	updatedInfos, err := GetUsersByIds(tk, ids, keyRefs)
@@ -211,14 +215,17 @@ func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 		return err
 	}
 	for _, updated := range updatedInfos {
-		// Always try refKey first
-		if hit, ok := keyRefMap[updated.UserRefKey]; ok {
-			*hit = updated
-			continue
+		for _, userInfo := range idMap[updated.Id] {
+			if userInfo == nil {
+				continue
+			}
+			*userInfo = updated
 		}
-		if hit, ok := idMap[updated.Id]; ok {
-			*hit = updated
-			continue
+		for _, userInfo := range keyRefMap[updated.UserRefKey] {
+			if userInfo == nil {
+				continue
+			}
+			*userInfo = updated
 		}
 		logger.Warnf("[PopulateUserInfo] Skipped mapping, userInfo does not have the related record, id=%s refKey=%s", updated.Id, updated.UserRefKey)
 	}
