@@ -160,7 +160,11 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 	return result, nil
 }
 
-func PopulateModelUserDisplay(tk string, models ...*model.Model) error {
+// GenerateModelUserDisplay generates empty userInfo for the models and returns them in a single list.
+// The UserInfo are filled with the users' refKey only.
+//
+// To load the UserInfo with the correct values, call PopulateUserInfo() with the returned list
+func GenerateModelUserDisplay(models ...*model.Model) []*model.UserInfo {
 	userInfos := make([]*model.UserInfo, 0, len(models)*2)
 	for _, m := range models {
 		u := &model.UserInfo{
@@ -176,12 +180,20 @@ func PopulateModelUserDisplay(tk string, models ...*model.Model) error {
 			userInfos = append(userInfos, u)
 		}
 	}
-	return PopulateUserInfo(tk, userInfos)
+	return userInfos
+}
+
+func PopulateModelUserDisplay(tk string, models ...*model.Model) error {
+	return PopulateUserInfo(tk, GenerateModelUserDisplay(models...))
 }
 
 func ShouldPopulateModelUserDisplay(tk string, models ...*model.Model) {
-	if err := PopulateModelUserDisplay(tk, models...); err != nil {
-		logger.Error("[ShouldPopulateModelUserDisplay] Failed getting user, ignoring ", err)
+	ShouldPopulateUserInfo(tk, GenerateModelUserDisplay(models...))
+}
+
+func ShouldPopulateUserInfo(tk string, userInfo []*model.UserInfo) {
+	if err := PopulateUserInfo(tk, userInfo); err != nil {
+		logger.Error("[ShouldPopulateUserInfo] Failed getting user, ignoring ", err)
 	}
 }
 
