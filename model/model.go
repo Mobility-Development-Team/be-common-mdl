@@ -40,6 +40,18 @@ type (
 		ProfileIconUrl *string `json:"profileIconUrl"`
 		UserRefKey     string  `json:"userRefKey"`
 	}
+	PartyInfo struct {
+		Id            intstring.IntString `json:"id"`
+		PartyName     string              `json:"partyName"`
+		PartyNameZh   string              `json:"partyNameZh"`
+		Address       string              `json:"address"`
+		Email         string              `json:"email"`
+		Br            string              `json:"br"`
+		TradeCategory string              `json:"tradeCategory"`
+		PartyIconUrl  string              `json:"partyIconUrl"`
+		PartyPrefix   string              `json:"partyPrefix"`
+		SubconRefId   string              `json:"subconRefId"`
+	}
 	UserDisplay struct {
 		FirstName      string  `json:"firstName"`
 		LastName       string  `json:"lastName"`

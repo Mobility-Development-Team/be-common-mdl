@@ -21,6 +21,7 @@ const (
 	getSupportInfo      = "%s/config/supportinfo"
 	getAllOneContract   = "%s/contracts/%s"
 	getContractParties  = "%s/parties/assoc/%s?groupBy=party"
+	getManyParitesById  = "%s/parties/many"
 )
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract, error) {
@@ -37,6 +38,30 @@ func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract,
 		return nil, err
 	}
 	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+
+func GetMnayPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyInfo, error) {
+	var resp struct {
+		response.Response
+		Payload []*model.PartyInfo `json:"payload"`
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"ids": ids,
+		},
+	).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiSystemMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetMnayPartiesById] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
