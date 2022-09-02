@@ -73,6 +73,7 @@ type (
 	Contract struct {
 		ContractNo   string  `json:"contractNo"`
 		ContractDesc *string `json:"contractDesc"`
+		ProjectIdRef string  `json:"projectIdRef"`
 	}
 	MediaParam struct {
 		Id                   intstring.IntString `json:"id"`
