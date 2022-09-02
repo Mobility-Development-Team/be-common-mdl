@@ -108,3 +108,43 @@ func TestSorterNumberFirst(t *testing.T) {
 		})
 	}
 }
+
+func TestScreamCaseToLowerCamel(t *testing.T) {
+	type args struct {
+		scream string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "SCREAM_TEST",
+			args: args{
+				scream: "SCREAM_TEST",
+			},
+			want: "screamTest",
+		},
+		{
+			name: "SCREAM",
+			args: args{
+				scream: "SCREAM",
+			},
+			want: "scream",
+		},
+		{
+			name: "",
+			args: args{
+				scream: "",
+			},
+			want: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ScreamCaseToLowerCamel(tt.args.scream); got != tt.want {
+				t.Errorf("ScreamCaseToLowerCamel() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

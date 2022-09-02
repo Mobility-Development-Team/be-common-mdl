@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 // StrOrEmpty Returns the string pointed by a string pointer str,
@@ -72,5 +73,22 @@ func CmpNumberFirst(str1 string, str2 string, numberDesc, strDesc, emptyStrLast 
 		// Some of them is number
 		// The one that is number goes first
 		return num1Valid
+	}
+}
+
+// ScreamCaseToLowerCamel converts SCREAM_CASE to screamCase
+func ScreamCaseToLowerCamel(scream string) string {
+	words := strings.Split(scream, "_")
+	switch len(words) {
+	case 0:
+		return ""
+	case 1:
+		return strings.ToLower(words[0])
+	default:
+		words[0] = strings.ToLower(words[0])
+		for i := 1; i < len(words); i++ {
+			words[i] = strings.Title(strings.ToLower(words[i]))
+		}
+		return strings.Join(words, "")
 	}
 }
