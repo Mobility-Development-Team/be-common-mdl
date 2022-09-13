@@ -15,13 +15,14 @@ import (
 )
 
 const (
-	apiSystemMdlUrlBase = "apis.internal.system.module.url.base"
-	getOneContract      = "%s/contracts/%s"
-	getAllLocations     = "%s/locations/all"
-	getSupportInfo      = "%s/config/supportinfo"
-	getAllOneContract   = "%s/contracts/%s"
-	getContractParties  = "%s/parties/assoc/%s?groupBy=party"
-	getManyParitesById  = "%s/parties/many"
+	apiSystemMdlUrlBase   = "apis.internal.system.module.url.base"
+	getOneContract        = "%s/contracts/%s"
+	getAllLocations       = "%s/locations/all"
+	getSupportInfo        = "%s/config/supportinfo"
+	getAllOneContract     = "%s/contracts/%s"
+	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
+	getManyParitesById    = "%s/parties/many"
+	getContractUserByUids = "%s/parties/assoc/users"
 )
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract, error) {
@@ -57,6 +58,36 @@ func GetMnayPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyIn
 	).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetMnayPartiesById] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+
+type partyInfoWithType struct {
+	Info         model.PartyInfo `json:"info"`
+	PartyTypeRef string          `json:"partyType"`
+}
+
+func GetContractUserByUids(tk string, contractId intstring.IntString, uids ...intstring.IntString) (map[intstring.IntString]*partyInfoWithType, error) {
+	var resp struct {
+		response.Response
+		Payload map[intstring.IntString]*partyInfoWithType `json:"payload"`
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"contractId": contractId,
+			"uids":       uids,
+		},
+	).Post(fmt.Sprintf(getContractUserByUids, apis.V().GetString(apiSystemMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetContractUserByUids] err: ", err)
 		return nil, err
 	}
 	if !result.IsSuccess() {
