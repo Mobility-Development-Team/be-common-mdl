@@ -52,6 +52,15 @@ type (
 		PartyPrefix   string              `json:"partyPrefix"`
 		SubconRefId   string              `json:"subconRefId"`
 	}
+	GroupInfo struct {
+		Model
+		Uuid          string              `json:"uuid"`
+		Name          string              `json:"name"`
+		Status        string              `json:"status"`
+		ContractRefId intstring.IntString `json:"contractId"`
+		PartyRefId    intstring.IntString `json:"partyId"`
+		IsSystemGroup *bool               `json:"isSystemGroup"`
+	}
 	UserDisplay struct {
 		FirstName      string  `json:"firstName"`
 		LastName       string  `json:"lastName"`

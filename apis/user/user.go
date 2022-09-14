@@ -28,6 +28,7 @@ const (
 	apiUserMdlUrlBase  = "apis.internal.user.module.url.base"
 	getCurrentUserInfo = "%s/users/profile?isSimple=true"
 	getAllUserInfo     = "%s/users/all"
+	getAllGroupInfo    = "%s/groups/all"
 )
 
 // ShouldGetCurrentUserInfoFromContext Similar to GetCurrentUserInfoFromContext, but returns an empty value if it fails with an error message
@@ -96,6 +97,9 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.UserInfo, e
 	if err != nil {
 		return []model.UserInfo{}, err
 	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("user module returned status code: %d", result.StatusCode())
+	}
 	type respType struct {
 		response.Response
 		Payload []model.UserInfo `json:"payload"`
@@ -103,6 +107,26 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.UserInfo, e
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return []model.UserInfo{}, err
+	}
+	return resp.Payload, nil
+}
+
+func GetAllGroupInfo(tk string, body map[string]interface{}) ([]model.GroupInfo, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getAllGroupInfo, apis.V().GetString(apiUserMdlUrlBase)))
+	if err != nil {
+		return []model.GroupInfo{}, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("user module returned status code: %d", result.StatusCode())
+	}
+	type respType struct {
+		response.Response
+		Payload []model.GroupInfo `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return []model.GroupInfo{}, err
 	}
 	return resp.Payload, nil
 }
