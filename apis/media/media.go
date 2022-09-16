@@ -32,8 +32,8 @@ const (
 const (
 	ReportTypeSiteWalk          = "siteWalk"
 	ReportTypeRat               = "rat"
-	ReportTypePlantPermitCert   = "permits/plant/cert"
-	ReportTypePlantPermitReport = "permits/plant/report"
+	ReportTypePlantPermitCert   = "plantPermitCert"
+	ReportTypePlantPermitReport = "plantPermitReport"
 )
 
 type CloneOpts struct {
