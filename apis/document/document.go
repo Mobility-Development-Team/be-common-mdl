@@ -15,6 +15,7 @@ const (
 	apiNotificationMdlUrlBase = "apis.internal.document.module.url.base"
 	generateSiteWalk          = "%s/documents/inspection/sitewalk/report/generate"
 	generateRATSiteWalk       = "%s/documents/inspection/sitewalk/rat/generate"
+	generatePlantCertificate  = "%s/documents/machine/permits/plant/cert/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
@@ -36,6 +37,29 @@ func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish 
 		"id":      id,
 		"publish": publish,
 	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(apiNotificationMdlUrlBase)))
+	if err != nil {
+		return "", err
+	}
+	if result.StatusCode() != http.StatusCreated {
+		return "", fmt.Errorf("[GenerateSiteWalk] status code not 201: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return "", err
+	}
+	return resp.Payload.Url, nil
+}
+
+func GeneratePermitCertificate(tk string, permitMasterId intstring.IntString) (string, error) {
+	client := resty.New()
+	var resp struct {
+		Payload struct {
+			Url string `json:"url"`
+		} `json:"payload"`
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+		"permitMasterId": permitMasterId,
+	}).Post(fmt.Sprintf(generatePlantCertificate, apis.V().GetString(apiNotificationMdlUrlBase)))
 	if err != nil {
 		return "", err
 	}
