@@ -148,3 +148,43 @@ func TestScreamCaseToLowerCamel(t *testing.T) {
 		})
 	}
 }
+
+func TestScreamCaseToTitle(t *testing.T) {
+	type args struct {
+		scream string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "SCREAM_TEST",
+			args: args{
+				scream: "SCREAM_TEST",
+			},
+			want: "Scream Test",
+		},
+		{
+			name: "SCREAM",
+			args: args{
+				scream: "SCREAM",
+			},
+			want: "Scream",
+		},
+		{
+			name: "",
+			args: args{
+				scream: "",
+			},
+			want: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ScreamCaseToTitle(tt.args.scream); got != tt.want {
+				t.Errorf("TestScreamCaseToTitle() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

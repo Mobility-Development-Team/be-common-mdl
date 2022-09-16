@@ -92,3 +92,15 @@ func ScreamCaseToLowerCamel(scream string) string {
 		return strings.Join(words, "")
 	}
 }
+
+// ScreamCaseToTitle converts SCREAM_CASE to Scream Case
+func ScreamCaseToTitle(scream string) string {
+	words := strings.Split(scream, "_")
+	if len(words) == 0 {
+		return ""
+	}
+	for i := range words {
+		words[i] = strings.Title(strings.ToLower(words[i]))
+	}
+	return strings.Join(words, " ")
+}
