@@ -15,8 +15,8 @@ const (
 	apiNotificationMdlUrlBase = "apis.internal.document.module.url.base"
 	generateSiteWalk          = "%s/documents/inspection/sitewalk/report/generate"
 	generateRATSiteWalk       = "%s/documents/inspection/sitewalk/rat/generate"
-	generatePlantCertificate  = "%s/documents/machine/permits/plant/cert/generate"
-	generatePlantReport       = "%s/documents/machine/permits/plant/report/generate"
+	generatePlantCertificate  = "%s/documents/machine/permits/plantpermits/cert/generate"
+	generatePlantReport       = "%s/documents/machine/permits/plantpermits/report/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
