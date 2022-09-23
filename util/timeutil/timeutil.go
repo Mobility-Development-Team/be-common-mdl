@@ -16,6 +16,13 @@ func ValidateDateStringFormat(date string) bool {
 	return re.MatchString(date)
 }
 
+// ValidateTimeStringFormat check if the given Time value is in 'hh:mm' format
+func ValidateTimeStringFormat(time string) bool {
+	// format hh:mm
+	re := regexp.MustCompile("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")
+	return re.MatchString(time)
+}
+
 // ParseDateStringAsTime parse a single given date string in full format with either Day Start/ Day End
 func ParseDateStringAsTime(date string, isDayEnd bool) (dateTime time.Time, err error) {
 	t := "00:00"
@@ -31,6 +38,23 @@ func ParseDateStringAsTime(date string, isDayEnd bool) (dateTime time.Time, err 
 		return
 	}
 	dateTime, err = time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", date[:10], t), loc)
+	if err != nil {
+		return
+	}
+	return
+}
+
+// ParseDateStringAsTimeCustomTime parse a single given date string in full format with either Day Start/ Day End
+func ParseDateStringAsTimeCustomTime(dateStr, timeStr string) (dateTime time.Time, err error) {
+	if !ValidateDateStringFormat(dateStr) || !ValidateTimeStringFormat(timeStr) {
+		err = errors.New("invalid date, time format")
+		return
+	}
+	loc, err := time.LoadLocation("Asia/Hong_Kong")
+	if err != nil {
+		return
+	}
+	dateTime, err = time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", dateStr[:10], timeStr), loc)
 	if err != nil {
 		return
 	}
