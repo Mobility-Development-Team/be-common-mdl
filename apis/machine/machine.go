@@ -12,7 +12,31 @@ import (
 const (
 	apiMachineMdlUrlBase = "apis.internal.machine.module.url.base"
 	getOnePlantPermit    = "%s/permits/plantpermits/%s"
+	getOneAsset          = "%s/permits/assets/internal/getone"
 )
+
+func GetOneAsset(tk string, criteria Equipment, isSimple bool) (*Equipment, error) {
+	resp := struct {
+		Payload *Equipment `json:"payload"`
+	}{}
+	uri := getOneAsset
+	if isSimple {
+		uri += "?isSimple=true"
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(criteria).Post(fmt.Sprintf(uri, apis.V().GetString(apiMachineMdlUrlBase)))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
 
 func GetOnePlantPermit(tk string, permitMasterId intstring.IntString) (*PlantPermit, error) {
 	resp := struct {
@@ -24,7 +48,7 @@ func GetOnePlantPermit(tk string, permitMasterId intstring.IntString) (*PlantPer
 		return nil, err
 	}
 	if !result.IsSuccess() {
-		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
 	}
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {

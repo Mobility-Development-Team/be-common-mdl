@@ -10,6 +10,7 @@ import (
 type (
 	PlantPermit struct {
 		model.Model
+		MasterPermit
 		PlantType         string              `json:"plantType"`
 		PlantOwner        string              `json:"plantOwner"`
 		Manufacturer      string              `json:"manufacturer"`
@@ -20,24 +21,25 @@ type (
 		IsRental          bool                `json:"isRental"`
 		RejectionReason   string              `json:"rejectionReason"`
 		PermitMasterId    intstring.IntString `json:"permitMasterId"`
-		// Shadowing fields
-		CertExpiryDate string `json:"certExpiryDate"`
-		// From master permit's fields
-		PermitNo           string                `json:"permitNo"`
-		PermitType         string                `json:"permitType"`
-		PermitBatchRefUuid string                `json:"permitBatchRefUuid"`
-		PermitStatus       string                `json:"permitStatus"`
-		ContractRefId      intstring.IntString   `json:"contractId"`
-		Checklists         []Checklist           `json:"checklists"`
-		Participants       []Participant         `json:"participants"`
-		ApprovalFlow       []PlantPermitApproval `json:"approvalFlow"`
+		CertExpiryDate    string              `json:"certExpiryDate"`
 		// Custom fields
 		CurrentApprovalStage int `json:"currentApprovalStage"`
-		// Additional preloading fields (placeholders)
-		Logs        []interface{} `json:"logs"`
-		Attachments []interface{} `json:"attachments"`
 	}
-
+	MasterPermit struct {
+		model.Model
+		PermitNo           string              `json:"permitNo"`
+		PermitType         string              `json:"permitType"`
+		PermitBatchRefUuid string              `json:"permitBatchRefUuid"`
+		PermitStatus       string              `json:"permitStatus"`
+		ContractRefId      intstring.IntString `json:"contractId"`
+		WorkflowRefUuid    *string             `json:"workflowRefUuid"`
+		Checklists         []Checklist         `json:"checklists"`
+		Participants       []Participant       `json:"participants"`
+		ApprovalFlow       []PermitApproval    `json:"approvalFlow"`
+		Logs               []ActivityLog       `json:"logs"`
+		Attachments        []Attachment        `json:"attachments"`
+		ApprovalStage      *string             `json:"approvalStage"`
+	}
 	Checklist struct {
 		model.Model
 		TemplateRefKey       string              `json:"templateRefKey"`
@@ -48,6 +50,29 @@ type (
 		TemplateRefOwnerType string              `json:"templateRefOwnerType"`
 		Items                []ChecklistItem     `json:"items" gorm:"foreignKey:PermitChecklistId"`
 	}
+	Attachment struct {
+		model.Model
+		AttachmentName      string              `json:"attachmentName"`
+		AttachmentUrl       string              `json:"attachmentUrl"`
+		AttachmentType      string              `json:"attachmentType"`
+		AttachmentExtension string              `json:"attachmentExtension"`
+		AttachmentMimeType  string              `json:"attachmentMimeType"`
+		AttachmentGroupUuid string              `json:"attachmentGroupUuid"`
+		Version             int                 `json:"version"`
+		PermitMasterId      intstring.IntString `json:"permitMasterId"`
+	}
+	ActivityLog struct {
+		Id              intstring.IntString  `gorm:"primaryKey" json:"id"`
+		CreatedAt       time.Time            `json:"createdAt"`
+		CreatedBy       string               `json:"createdBy" gorm:"column:created_by"`
+		ActorUserId     *intstring.IntString `json:"-"`
+		ActorUserRefKey *string              `json:"-"`
+		Actor           *model.UserInfo      `json:"actor"`
+		Message         *string              `json:"message"`
+		MessageZh       *string              `json:"messageZh"`
+		ActivityType    string               `json:"activityType"`
+		PermitMasterId  intstring.IntString  `json:"permitMasterId"`
+	}
 
 	Participant struct {
 		model.UserInfo
@@ -57,7 +82,7 @@ type (
 		Party           *model.PartyInfo     `json:"party"`
 	}
 
-	PlantPermitApproval struct {
+	PermitApproval struct {
 		model.Model
 		SubmittedBy           *model.UserInfo `json:"submittedBy"`
 		SubmittedByActionType string          `json:"submittedByActionType"`
@@ -78,5 +103,19 @@ type (
 		PermitChecklistId     intstring.IntString `json:"permitChecklistId"`
 		ResponsedByUserRefKey string              `json:"responsedByUserRefKey"`
 		Media                 []model.MediaParam  `json:"media" gorm:"-"`
+	}
+
+	Equipment struct {
+		model.Model
+		Uuid              string         `json:"uuid"`
+		PlantType         string         `json:"plantType"`
+		PlantOwner        string         `json:"plantOwner"`
+		Manufacturer      string         `json:"manufacturer"`
+		ModelNo           string         `json:"modelNo"`
+		YearOfManufacture string         `json:"yearOfManufacture"`
+		CertExpiryDate    time.Time      `json:"certExpiryDate"`
+		SerialNo          string         `json:"serialNo"`
+		IsRental          *bool          `json:"isRental"`
+		Permits           []MasterPermit `json:"permits"`
 	}
 )
