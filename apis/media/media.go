@@ -309,7 +309,7 @@ func UploadReport(tk string, file io.Reader, reportType string, contractId intst
 }
 
 // UploadFile Uploads permit reference doc
-func UploadFile(tk string, file io.Reader, reportType string, contractId intstring.IntString) (string, error) {
+func UploadFile(tk string, fileBytes []byte, fileName string, reportType string, contractId intstring.IntString) (string, error) {
 	client := resty.New()
 	var resp struct {
 		Payload string `json:"payload"`
@@ -317,7 +317,8 @@ func UploadFile(tk string, file io.Reader, reportType string, contractId intstri
 	// The filename specified here would only be used when it is in preview mode (publish == false)
 	// fileName = fmt.Sprintf("preview-file-%s.pdf", fileName)
 	result, err := client.R().SetAuthToken(tk).
-		SetFileReader("file", "", file).
+		SetHeader("Content-Type", "multipart/form-data;charset=UTF-8").
+		SetFileReader("file", fileName, bytes.NewReader(fileBytes)).
 		SetFormData(map[string]string{
 			"contractId": contractId.String(),
 		}).
