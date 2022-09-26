@@ -115,7 +115,20 @@ type (
 		YearOfManufacture string         `json:"yearOfManufacture"`
 		CertExpiryDate    time.Time      `json:"certExpiryDate"`
 		SerialNo          string         `json:"serialNo"`
+		OwnerNo           string         `json:"ownerNo"`
 		IsRental          *bool          `json:"isRental"`
 		Permits           []MasterPermit `json:"permits"`
+	}
+
+	GetAllPermitOps struct {
+		GetApprovalStage bool `json:"getApprovalStage"`
+	}
+
+	PermitCriteria struct {
+		MasterPermit
+		ParticipantUserRefKeys []string            `json:"participantUserRefKeys"`
+		SearchType             string              `json:"searchType"`
+		PermitStatuses         []string            `json:"permitStatuses"`
+		ContractRefId          intstring.IntString `json:"contractId"`
 	}
 )
