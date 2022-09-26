@@ -24,6 +24,7 @@ const (
 	cloneMediaToBatch     = "%s/media/batch/clone"
 	sendCloudMessage      = "%s/fcm/messaging"
 	uploadUrlBase         = "%s/file/upload/%s/%s"
+	uploadFileUrlBase     = "%s/file/upload/%s"
 
 	previewFolderName   = "preview"
 	publishedFolderName = "publish"
@@ -271,7 +272,7 @@ func UploadSitePlanPicture(tk string, fileName string, imgBytes []byte) (*string
 	return resp.Payload, nil
 }
 
-// Uploads a site walk report
+// UploadReport Uploads a site walk report
 // contractId must be specified
 // If publish mode is false  fileName will be used as file name instead
 // If publish mode is true, the fileName specified would be ignored by the media module
@@ -294,6 +295,33 @@ func UploadReport(tk string, file io.Reader, reportType string, contractId intst
 			"contractId": contractId.String(),
 		}).
 		Post(reqUri)
+	if err != nil {
+		return "", err
+	}
+	if !result.IsSuccess() {
+		return "", fmt.Errorf("media module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return "", err
+	}
+	return resp.Payload, err
+}
+
+// UploadFile Uploads permit reference doc
+func UploadFile(tk string, file io.Reader, reportType string, contractId intstring.IntString) (string, error) {
+	client := resty.New()
+	var resp struct {
+		Payload string `json:"payload"`
+	}
+	// The filename specified here would only be used when it is in preview mode (publish == false)
+	// fileName = fmt.Sprintf("preview-file-%s.pdf", fileName)
+	result, err := client.R().SetAuthToken(tk).
+		SetFileReader("file", "", file).
+		SetFormData(map[string]string{
+			"contractId": contractId.String(),
+		}).
+		Post(fmt.Sprintf(uploadFileUrlBase, apis.V().GetString(apiMediaMdlUrlBase), reportType))
 	if err != nil {
 		return "", err
 	}
