@@ -88,6 +88,7 @@ type (
 		SubmittedByActionType string          `json:"submittedByActionType"`
 		IsCompleted           bool            `json:"isCompleted"`
 		IsRejected            bool            `json:"isRejected"`
+		IsCurrent             bool            `json:"isCurrent"`
 		SubmittedAt           *time.Time      `json:"submittedAt"`
 		Seq                   int             `json:"seq"`
 	}
