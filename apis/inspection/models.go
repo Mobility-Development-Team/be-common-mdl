@@ -1,6 +1,8 @@
 package inspection
 
 import (
+	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
@@ -179,7 +181,7 @@ type (
 		NcFindings          []NcFindingDisplay      `json:"ncFindings"`
 		RatChecklist        *RatChecklistDisplay    `json:"ratChecklist"`
 		Contract            ContractInfoDisplay     `json:"contract"`
-		SiteWalkTypes       []string                `json:"siteWalkTypes"`
+		SiteWalkTypes       []SiteWalkType          `json:"siteWalkTypes"`
 	}
 	ContractInfoDisplay struct {
 		ContractNo   string `json:"contractNo"`
@@ -318,11 +320,30 @@ type (
 	}
 )
 
+// Some API calls returns SiteWalkType as a string. Some fields might not be available
 type SiteWalkType struct {
 	model.Model
 	ContractRefId intstring.IntString `json:"contractRefId"`
 	SiteWalkType  string              `json:"siteWalkType"`
 	SiteWalkId    intstring.IntString `json:"siteWalkId"`
+}
+
+func (st *SiteWalkType) UnmarshalJSON(b []byte) error {
+	type alias SiteWalkType
+	var resultStruct alias
+	if err := json.Unmarshal(b, &resultStruct); err == nil {
+		// Unmarshal successful
+		*st = SiteWalkType(resultStruct)
+		return nil
+	}
+	var resultString string
+	if err := json.Unmarshal(b, &resultString); err != nil {
+		return errors.New("not a struct nor a string")
+	}
+	*st = SiteWalkType{
+		SiteWalkType: resultString,
+	}
+	return nil
 }
 
 type (
