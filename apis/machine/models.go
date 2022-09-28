@@ -123,6 +123,11 @@ type (
 
 	GetAllPermitOps struct {
 		GetApprovalStage bool `json:"getApprovalStage"`
+		// Additional filtering options that have less general uses
+		// Filter by multiple contract ids
+		ContractRefIds []intstring.IntString `json:"contractIds"`
+		// Filter by flow isCurrent and action_type
+		CurrentFlowActionTypes []string `json:"currentFlowActionType"`
 	}
 
 	PermitCriteria struct {
