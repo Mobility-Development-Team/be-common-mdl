@@ -114,7 +114,7 @@ type (
 		Manufacturer      string         `json:"manufacturer"`
 		ModelNo           string         `json:"modelNo"`
 		YearOfManufacture string         `json:"yearOfManufacture"`
-		CertExpiryDate    time.Time      `json:"certExpiryDate"`
+		CertExpiryDate    *time.Time     `json:"certExpiryDate"`
 		SerialNo          string         `json:"serialNo"`
 		OwnerNo           string         `json:"ownerNo"`
 		IsRental          *bool          `json:"isRental"`
