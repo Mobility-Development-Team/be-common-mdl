@@ -6,7 +6,7 @@ type Awaiter struct {
 	ch   chan struct{}
 }
 
-// Async executes the code in f() asynchronously as returns an Awaiter as promoise.
+// Async executes the code in f() asynchronously and returns an Awaiter as promoise.
 func Async(f func() (interface{}, error)) *Awaiter {
 	awaiter := &Awaiter{
 		ch: make(chan struct{}),
