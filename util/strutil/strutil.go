@@ -31,6 +31,14 @@ func EmptyOrDefault(str *string, defaultStr string) string {
 	return defaultStr
 }
 
+// EmptyOrDefaultPtr is the same as EmptyOrDefault except defaultStr is a pointer
+func EmptyOrDefaultPtr(str *string, defaultStr *string) *string {
+	if str != nil && *str != "" {
+		return str
+	}
+	return defaultStr
+}
+
 // NewPtr Copies str, and returns a pointer
 func NewPtr(str string) *string {
 	return &str
