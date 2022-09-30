@@ -10,10 +10,14 @@ import (
 // StrOrEmpty Returns the string pointed by a string pointer str,
 // if str is nil, return empty string "" instead
 func StrOrEmpty(str *string) string {
+	return StrOrDefault(str, "")
+}
+
+func StrOrDefault(str *string, defaultStr string) string {
 	if str != nil {
 		return *str
 	}
-	return ""
+	return defaultStr
 }
 
 // NewPtr Copies str, and returns a pointer
