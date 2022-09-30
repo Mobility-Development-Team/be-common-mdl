@@ -46,7 +46,7 @@ func ParseDateStringAsTime(date string, isDayEnd bool) (dateTime time.Time, err 
 
 // ParseDateStringAsTimeCustomTime parse a single given date string in full format with either Day Start/ Day End
 func ParseDateStringAsTimeCustomTime(dateStr, timeStr string) (dateTime time.Time, err error) {
-	if !ValidateDateStringFormat(dateStr) || !ValidateTimeStringFormat(timeStr) {
+	if !ValidateDateStringFormat(dateStr) || !ValidateTimeStringFormat(timeStr) || len(dateStr) < 10 {
 		err = errors.New("invalid date, time format")
 		return
 	}
