@@ -23,8 +23,10 @@ type (
 		CreatedBy        string              `json:"-" gorm:"column:created_by;<-:create"`
 		CreatedByDisplay interface{}         `json:"createdBy" gorm:"-" `
 		UpdatedAt        time.Time           `json:"updatedAt"`
-		UpdatedBy        *string             `json:"-" gorm:"column:updated_by;<-:update"`
-		UpdatedByDisplay interface{}         `json:"updatedBy" gorm:"-" `
+		// Field level permission `<-:update` is removed to workaround a gorm issue for assoication update
+		// See Model.BeforeCreate() below
+		UpdatedBy        *string     `json:"-" gorm:"column:updated_by"`
+		UpdatedByDisplay interface{} `json:"updatedBy" gorm:"-" `
 	}
 	UserInfo struct {
 		Model
@@ -125,6 +127,21 @@ func GetUserFromMap(userRefKey string, m map[string]UserInfo) *UserInfo {
 		return nil
 	}
 	return &u
+}
+
+// BeforeCreate is a hook for updating the UpdatedBy field when update is called in a Create context.
+//
+// Assoication updates are called internally by gorm with INSERT OR UPDATE for upsert
+// Therefore, field update permission will be ignored and all update hooks are not effective.
+//
+// To workaround this issue with setting UpdatedBy, we assume creating record with an Id is
+// always an update and clears the UpdatedBy field if set. This hook might be shadowed by
+// other model's custom hook if they also implement BeforeCreate.
+func (m *Model) BeforeCreate(tx *gorm.DB) (err error) {
+	if m.Id == 0 {
+		m.UpdatedBy = nil
+	}
+	return
 }
 
 func (m *Model) AfterFind(tx *gorm.DB) (err error) {
