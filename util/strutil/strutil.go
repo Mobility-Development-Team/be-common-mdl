@@ -13,8 +13,19 @@ func StrOrEmpty(str *string) string {
 	return StrOrDefault(str, "")
 }
 
+// StrOrEmpty Returns the string pointed by a string pointer str,
+// if str is nil, return defaultStr instead
 func StrOrDefault(str *string, defaultStr string) string {
 	if str != nil {
+		return *str
+	}
+	return defaultStr
+}
+
+// EmptyOrDefault is the same as StrOrDefault but defaultStr is
+// also returned when the string pointed by str is empty.
+func EmptyOrDefault(str *string, defaultStr string) string {
+	if str != nil && *str != "" {
 		return *str
 	}
 	return defaultStr
