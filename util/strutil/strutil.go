@@ -7,13 +7,13 @@ import (
 	"strings"
 )
 
-// StrOrEmpty Returns the string pointed by a string pointer str,
+// StrOrEmpty returns the string pointed by a string pointer str,
 // if str is nil, return empty string "" instead
 func StrOrEmpty(str *string) string {
 	return StrOrDefault(str, "")
 }
 
-// StrOrEmpty Returns the string pointed by a string pointer str,
+// StrOrEmpty returns the string pointed by a string pointer str,
 // if str is nil, return defaultStr instead
 func StrOrDefault(str *string, defaultStr string) string {
 	if str != nil {
@@ -22,26 +22,31 @@ func StrOrDefault(str *string, defaultStr string) string {
 	return defaultStr
 }
 
-// EmptyOrDefault is the same as StrOrDefault but defaultStr is
-// also returned when the string pointed by str is empty.
-func EmptyOrDefault(str *string, defaultStr string) string {
-	if str != nil && *str != "" {
+// StrOrDefaultWeak is the same as StrOrDefault but defaultStr is
+// also returned when the string pointed by str is empty ("").
+func StrOrDefaultWeak(str *string, defaultStr string) string {
+	if !IsEmpty(str) {
 		return *str
 	}
 	return defaultStr
 }
 
-// EmptyOrDefaultPtr is the same as EmptyOrDefault except defaultStr is a pointer
-func EmptyOrDefaultPtr(str *string, defaultStr *string) *string {
-	if str != nil && *str != "" {
+// StrOrDefaultWeakPtr is the same as StrOrDefaultWeak except defaultStr is a pointer
+func StrOrDefaultWeakPtr(str *string, defaultStr *string) *string {
+	if !IsEmpty(str) {
 		return str
 	}
 	return defaultStr
 }
 
-// NewPtr Copies str, and returns a pointer
+// NewPtr copies str, and returns a pointer
 func NewPtr(str string) *string {
 	return &str
+}
+
+// IsEmpty returns true if str is nil or ""
+func IsEmpty(str *string) bool {
+	return str == nil || *str == ""
 }
 
 func StrOrNotProvided(str string) string {
