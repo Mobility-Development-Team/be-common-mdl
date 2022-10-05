@@ -109,7 +109,7 @@ func GetIdFromInterface(obj interface{}) (intstring.IntString, error) {
 		return 0, errors.New("obj is not struct")
 	}
 	idField := objStruct.FieldByName("Id")
-	if idField.IsValid() {
+	if !idField.IsValid() {
 		return 0, errors.New("no field named 'Id'")
 	}
 	if id, ok := reflect.Indirect(idField).Interface().(intstring.IntString); !ok {
