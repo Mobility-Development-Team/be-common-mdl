@@ -119,6 +119,30 @@ func GetIdFromInterface(obj interface{}) (intstring.IntString, error) {
 	}
 }
 
+// GetIdsFromRecords attempts to get all the ids from the given slice
+//
+// All slice values must be structs with field ``Id`` of type intstring.IntString.
+// Any value failing to meet such requirement result in an error.
+func GetIdsFromRecords(slice interface{}) ([]intstring.IntString, error) {
+	if slice == nil {
+		return nil, errors.New("slice is nil")
+	}
+	sliceValue := reflect.Indirect(reflect.ValueOf(slice))
+	if sliceValue.Kind() != reflect.Slice && sliceValue.Kind() != reflect.Array {
+		return nil, errors.New("obj is not a slice or array")
+	}
+	sliceLen := sliceValue.Len()
+	ids := make([]intstring.IntString, sliceLen)
+	for i := 0; i < sliceLen; i++ {
+		id, err := GetIdFromInterface(sliceValue.Index(i).Interface())
+		if err != nil {
+			return nil, err
+		}
+		ids[i] = id
+	}
+	return ids, nil
+}
+
 // Attempts to set MediaRefInfo, ignores and logs a message if fails
 func (mp *MediaParam) ShouldSetRefInfo(refType string, obj interface{}) *MediaParam {
 	b, err := json.Marshal(obj)
