@@ -96,6 +96,29 @@ type (
 	}
 )
 
+// GetIdFromInterface attempts to get the Id field of obj
+//
+// obj must be a struct with field ``Id`` of type intstring.IntString,
+// embedding Model is not required as long as the requirement is met.
+func GetIdFromInterface(obj interface{}) (intstring.IntString, error) {
+	if obj == nil {
+		return 0, errors.New("obj is nil")
+	}
+	objStruct := reflect.Indirect(reflect.ValueOf(obj))
+	if objStruct.Kind() != reflect.Struct {
+		return 0, errors.New("obj is not struct")
+	}
+	idField := objStruct.FieldByName("Id")
+	if idField.IsValid() {
+		return 0, errors.New("no field named 'Id'")
+	}
+	if id, ok := reflect.Indirect(idField).Interface().(intstring.IntString); !ok {
+		return 0, errors.New("field is not of type 'intstring.IntString'")
+	} else {
+		return id, nil
+	}
+}
+
 // Attempts to set MediaRefInfo, ignores and logs a message if fails
 func (mp *MediaParam) ShouldSetRefInfo(refType string, obj interface{}) *MediaParam {
 	b, err := json.Marshal(obj)
