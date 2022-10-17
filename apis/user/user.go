@@ -28,6 +28,7 @@ const (
 	apiUserMdlUrlBase  = "apis.internal.user.module.url.base"
 	getCurrentUserInfo = "%s/users/profile?isSimple=true"
 	getAllUserInfo     = "%s/users/all"
+	getUserSignatures  = "%s/users/signatures"
 	getAllGroupInfo    = "%s/groups/all"
 )
 
@@ -182,6 +183,38 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 		result = &users[0]
 	}
 	return result, nil
+}
+
+// GetUserSignatures gets user signatures by given user ids
+//
+// Retuns a map[userId]sig where sig is a base64 encoded string of a png image.
+// sig is empty "" if the user has no signature saved.
+func GetUserSignatures(tk string, ids []intstring.IntString) (map[intstring.IntString]string, error) {
+	if len(ids) == 0 {
+		return map[intstring.IntString]string{}, nil
+	}
+	client := resty.New()
+	body := map[string]interface{}{
+		"ids": ids,
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
+		fmt.Sprintf(getUserSignatures, apis.V().GetString(apiUserMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	type respType struct {
+		response.Response
+		Payload map[intstring.IntString]string `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
 }
 
 // GenerateModelUserDisplay generates empty userInfo for the models and returns them in a single list.
