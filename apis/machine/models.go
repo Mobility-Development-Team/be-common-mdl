@@ -25,6 +25,21 @@ type (
 		// Custom fields
 		CurrentApprovalStage int `json:"currentApprovalStage"`
 	}
+	NCAPermit struct {
+		MasterPermit
+		WorkPeriodFromDate string              `json:"workPeriodFromDate"`
+		WorkPeriodFromTime string              `json:"workPeriodFromTime"`
+		WorkPeriodToDate   string              `json:"workPeriodToDate"`
+		WorkPeriodToTime   string              `json:"workPeriodToTime"`
+		Applicant          *ApplicantDisplay   `json:"applicant"`
+		WorkLocation       *string             `json:"workLocation"`
+		PermitMasterId     intstring.IntString `json:"permitMasterId"`
+		ConstructionWorks  []ConstructionWork  `json:"constructionWorks"`
+		PrescribedWorks    []PrescribedWork    `json:"prescribedWorks"`
+		ProjectPermitInfo  []ProjectPermitInfo `json:"projectPermitInfo"`
+		MechEquipments     []MechEquipment     `json:"mechEquipments"`
+		Workers            []Worker            `json:"workers"`
+	}
 	MasterPermit struct {
 		model.Model
 		PermitNo           string              `json:"permitNo"`
@@ -73,7 +88,6 @@ type (
 		ActivityType    string               `json:"activityType"`
 		PermitMasterId  intstring.IntString  `json:"permitMasterId"`
 	}
-
 	Participant struct {
 		model.UserInfo
 		ParticipantType string               `json:"participantType"`
@@ -81,7 +95,6 @@ type (
 		UserSource      string               `json:"userSource"`
 		Party           *model.PartyInfo     `json:"party"`
 	}
-
 	PermitApproval struct {
 		model.Model
 		SubmittedBy           *model.UserInfo `json:"submittedBy"`
@@ -92,7 +105,6 @@ type (
 		SubmittedAt           *time.Time      `json:"submittedAt"`
 		Seq                   int             `json:"seq"`
 	}
-
 	ChecklistItem struct {
 		model.Model
 		Seq                   int                 `json:"seq"`
@@ -105,7 +117,6 @@ type (
 		ResponsedByUserRefKey string              `json:"responsedByUserRefKey"`
 		Media                 []model.MediaParam  `json:"media" gorm:"-"`
 	}
-
 	Equipment struct {
 		model.Model
 		Uuid              string         `json:"uuid"`
@@ -120,7 +131,6 @@ type (
 		IsRental          *bool          `json:"isRental"`
 		Permits           []MasterPermit `json:"permits"`
 	}
-
 	GetAllPermitOps struct {
 		GetApprovalStage bool `json:"getApprovalStage"`
 		// Additional filtering options that have less general uses
@@ -129,12 +139,76 @@ type (
 		// Filter by flow isCurrent and action_type
 		CurrentFlowActionTypes []string `json:"currentFlowActionType"`
 	}
-
 	PermitCriteria struct {
 		MasterPermit
 		ParticipantUserRefKeys []string            `json:"participantUserRefKeys"`
 		SearchType             string              `json:"searchType"`
 		PermitStatuses         []string            `json:"permitStatuses"`
 		ContractRefId          intstring.IntString `json:"contractId"`
+	}
+	ApplicantDisplay struct {
+		DisplayName string  `json:"displayName"`
+		Position    *string `json:"position"`
+		ContactNo   *string `json:"contactNo"`
+		PartyName   string  `json:"partyName"`
+	}
+	ConstructionWork struct {
+		model.Model
+		ConstWork      *string              `json:"constWork"`
+		WorkLocation   *string              `json:"workLocation"`
+		NoiseControlId *intstring.IntString `json:"noiseControlId"`
+	}
+	MechEquipment struct {
+		model.Model
+		EquipGroupName *string              `json:"equipGroupName"`
+		EquipQty       *int                 `json:"equipQty"`
+		WorkLocation   *string              `json:"workLocation"`
+		NoiseControlId *intstring.IntString `json:"noiseControlId"`
+	}
+	PrescribedWork struct {
+		model.Model
+		Seq            int                  `json:"seq"`
+		IsSelected     *bool                `json:"isSelected"`
+		IdCode         string               `json:"idCode"`
+		DescriptionEn  *string              `json:"descriptionEn"`
+		DescriptionZh  *string              `json:"descriptionZh"`
+		NoiseControlId *intstring.IntString `json:"noiseControlId"`
+	}
+	ProjectPermitInfo struct {
+		model.Model
+		ProjectName    *string              `json:"projectName"`
+		PermitRefId    *intstring.IntString `json:"permitRefId"`
+		PermitRef      *Reference           `json:"permitRef"`
+		NoiseControlId *intstring.IntString `json:"noiseControlId"`
+	}
+	Worker struct {
+		model.Model
+		WorkerName     *string              `json:"workerName"`
+		GreenCardNo    *string              `json:"greenCardNo"`
+		NoiseControlId *intstring.IntString `json:"noiseControlId"`
+	}
+	Reference struct {
+		model.Model
+		RefNo             string              `json:"refNo"`
+		RefType           string              `json:"refType"`
+		FullAddress       string              `json:"fullAddress"`
+		Status            string              `json:"status"`
+		DocumentNo        string              `json:"documentNo"`
+		DocumentName      *string             `json:"documentName"`
+		DocumentUrl       *string             `json:"documentUrl"`
+		DocumentExtension *string             `json:"documentExtension"`
+		DocumentMimeType  *string             `json:"documentMimeType"`
+		ContractRefId     intstring.IntString `json:"contractRefId"`
+		ValidFrom         time.Time           `json:"validFrom"`
+		ValidTo           time.Time           `json:"validTo"`
+		ConstPeriods      []ConstPeriod       `json:"constPeriods"`
+		PrescribedWorks   []PrescribedWork    `json:"prescribedWorks"`
+	}
+	ConstPeriod struct {
+		model.Model
+		PeriodType   string              `json:"periodType"`
+		DurationFrom string              `json:"durationFrom"`
+		DurationTo   string              `json:"durationTo"`
+		PermitRefId  intstring.IntString `json:"permitRefId"`
 	}
 )
