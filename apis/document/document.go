@@ -17,6 +17,7 @@ const (
 	generateRATSiteWalk       = "%s/documents/inspection/sitewalk/rat/generate"
 	generatePlantCertificate  = "%s/documents/machine/permits/plantpermits/cert/generate"
 	generatePlantReport       = "%s/documents/machine/permits/plantpermits/report/generate"
+	generateNCAReport         = "%s/documents/machine/permits/nca/report/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
@@ -52,14 +53,18 @@ func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish 
 }
 
 func GeneratePermitCertificate(tk string, permitMasterId intstring.IntString) (string, error) {
-	return generatePlantPermitType(tk, generatePlantCertificate, permitMasterId, true)
+	return generatePermitType(tk, generatePlantCertificate, permitMasterId, true)
 }
 
 func GeneratePlantReport(tk string, permitMasterId intstring.IntString) (string, error) {
-	return generatePlantPermitType(tk, generatePlantReport, permitMasterId, true)
+	return generatePermitType(tk, generatePlantReport, permitMasterId, true)
 }
 
-func generatePlantPermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
+func GenerateNCAReport(tk string, permitMasterId intstring.IntString) (string, error) {
+	return generatePermitType(tk, generateNCAReport, permitMasterId, true)
+}
+
+func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
 	client := resty.New()
 	var resp struct {
 		Payload struct {
