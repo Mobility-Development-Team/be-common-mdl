@@ -16,6 +16,7 @@ const (
 	apiWorkflowMdlUrlBase = "apis.internal.workflow.module.url.base"
 	createWorkflow        = "%s/workflows"
 	deleteOneWorkflow     = "%s/workflows/%s"
+	deleteOneWorkflowUuid = "%s/workflows/uuid/%s"
 	getLatestWorkflow     = "%s/workflows/tasks/latest"
 	submitWorkflowAction  = "%s/workflows/tasks"
 )
@@ -23,6 +24,23 @@ const (
 func DeleteWorkflow(tk string, id intstring.IntString) error {
 	result, err := resty.New().R().SetAuthToken(tk).Delete(fmt.Sprintf(
 		deleteOneWorkflow, apis.V().GetString(apiWorkflowMdlUrlBase), id),
+	)
+	if err != nil {
+		return err
+	}
+	var resp response.Response
+	if err := json.Unmarshal(result.Body(), &resp); err != nil {
+		return err
+	}
+	if !result.IsSuccess() {
+		return fmt.Errorf("API returns status: %s message: %s %s", result.Status(), resp.MsgCode, resp.Message)
+	}
+	return nil
+}
+
+func DeleteWorkflowUuid(tk string, uuid string) error {
+	result, err := resty.New().R().SetAuthToken(tk).Delete(fmt.Sprintf(
+		deleteOneWorkflowUuid, apis.V().GetString(apiWorkflowMdlUrlBase), uuid),
 	)
 	if err != nil {
 		return err
