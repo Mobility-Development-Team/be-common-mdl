@@ -6,6 +6,7 @@ import (
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
+	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
 	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
@@ -14,9 +15,27 @@ import (
 const (
 	apiWorkflowMdlUrlBase = "apis.internal.workflow.module.url.base"
 	createWorkflow        = "%s/workflows"
+	deleteOneWorkflow     = "%s/workflows/%s"
 	getLatestWorkflow     = "%s/workflows/tasks/latest"
 	submitWorkflowAction  = "%s/workflows/tasks"
 )
+
+func DeleteWorkflow(tk string, id intstring.IntString) error {
+	result, err := resty.New().R().SetAuthToken(tk).Delete(fmt.Sprintf(
+		deleteOneWorkflow, apis.V().GetString(apiWorkflowMdlUrlBase), id),
+	)
+	if err != nil {
+		return err
+	}
+	var resp response.Response
+	if err := json.Unmarshal(result.Body(), &resp); err != nil {
+		return err
+	}
+	if !result.IsSuccess() {
+		return fmt.Errorf("API returns status: %s message: %s %s", result.Status(), resp.MsgCode, resp.Message)
+	}
+	return nil
+}
 
 func CreateWorkflow(tk string, action WorkFlowCreateParam) (*WorkflowView, error) {
 	type (
