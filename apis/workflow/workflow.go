@@ -86,7 +86,7 @@ func GetLatestWorkflowTask(tk, workflowUuid string) (*WorkflowView, error) {
 		return nil, nil
 	}
 	if len(resp.Payload) > 1 {
-		logger.Warn("[GetLatestWorkflow] API returned more than 1 results, using first one: %+v", resp.Payload)
+		logger.Warnf("[GetLatestWorkflow] API returned more than 1 results, using first one: %+v", resp.Payload)
 	}
 	return &resp.Payload[0], nil
 }
