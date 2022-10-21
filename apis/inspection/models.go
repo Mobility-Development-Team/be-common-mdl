@@ -62,24 +62,24 @@ type (
 	// uncomment the fields and add the corresponding structure if necessary
 	TaskDisplay struct {
 		model.Model
-		Title               string                       `json:"title"`
-		Purpose             string                       `json:"purpose"`
-		TaskType            string                       `json:"taskType"`
-		TaskStatus          string                       `json:"taskStatus"`
-		ContentOfTask       string                       `json:"contentOfTask"`
-		SuggestedFollowUp   string                       `json:"suggestedFollowUp"`
-		AnticipatedCompDate string                       `json:"anticipatedCompDate"`
-		TaskDueDate         string                       `json:"taskDueDate"`
-		DaysToDue           int                          `json:"daysToDue"`
-		HasOverdue          bool                         `json:"hasOverdue"`
-		IsManualCompletion  bool                         `json:"isManualCompletion"`
-		DueType             string                       `json:"dueType"`
-		FollowUpCompDate    string                       `json:"followUpCompDate"`
-		MediaBatchRefUuid   string                       `json:"mediaBatchRefUuid"`
-		SiteWalkId          *intstring.IntString         `json:"siteWalkId"`
-		ContractRefId       *intstring.IntString         `json:"contractId"`
-		Media               []model.MediaParam           `json:"media" gorm:"-"` // Media accepts both array of string or struct during json unmarshal
-		FollowUpUsers       []FindingFollowUpUserDisplay `json:"followUpUsers"`
+		Title              string                       `json:"title"`
+		Purpose            string                       `json:"purpose"`
+		TaskType           string                       `json:"taskType"`
+		TaskStatus         string                       `json:"taskStatus"`
+		ContentOfTask      string                       `json:"contentOfTask"`
+		SuggestedFollowUp  string                       `json:"suggestedFollowUp"`
+		FollowUpDate       string                       `json:"followUpDate"`
+		TaskDueDate        string                       `json:"taskDueDate"`
+		DaysToDue          int                          `json:"daysToDue"`
+		HasOverdue         bool                         `json:"hasOverdue"`
+		IsManualCompletion bool                         `json:"isManualCompletion"`
+		DueType            string                       `json:"dueType"`
+		FollowUpCompDate   string                       `json:"followUpCompDate"`
+		MediaBatchRefUuid  string                       `json:"mediaBatchRefUuid"`
+		SiteWalkId         *intstring.IntString         `json:"siteWalkId"`
+		ContractRefId      *intstring.IntString         `json:"contractId"`
+		Media              []model.MediaParam           `json:"media" gorm:"-"` // Media accepts both array of string or struct during json unmarshal
+		FollowUpUsers      []FindingFollowUpUserDisplay `json:"followUpUsers"`
 		// Hashtags            HashtagDisplay               `json:"hashtags"`
 	}
 )
@@ -233,17 +233,17 @@ type (
 	}
 	RatChecklistPartOtherItemDisplay struct {
 		model.Model
-		Uuid                string              `json:"uuid"`
-		PartNo              intstring.IntString `json:"partNo"`
-		Description         *string             `json:"description"`
-		IsShownOn           *bool               `json:"isShownOn"`
-		ApprovalFromEngine  *bool               `json:"approvalFromEngine"`
-		ApprovalFromIce     *bool               `json:"approvalFromIce"`
-		ApprovalFromTechD   *bool               `json:"approvalFromTechD"`
-		IsCompApproved      *bool               `json:"isCompApproved"`
-		Remark              *string             `json:"remark"`
-		RemedialAction      *string             `json:"remedialAction"`
-		AnticipatedCompDate string              `json:"anticipatedCompDate"`
+		Uuid               string              `json:"uuid"`
+		PartNo             intstring.IntString `json:"partNo"`
+		Description        *string             `json:"description"`
+		IsShownOn          *bool               `json:"isShownOn"`
+		ApprovalFromEngine *bool               `json:"approvalFromEngine"`
+		ApprovalFromIce    *bool               `json:"approvalFromIce"`
+		ApprovalFromTechD  *bool               `json:"approvalFromTechD"`
+		IsCompApproved     *bool               `json:"isCompApproved"`
+		Remark             *string             `json:"remark"`
+		RemedialAction     *string             `json:"remedialAction"`
+		FollowUpDate       string              `json:"followUpDate"`
 		// RatChecklistId     intstring.IntString `json:"ratChecklistId"`
 	}
 )
@@ -258,22 +258,22 @@ type (
 	}
 	NcFindingDisplay struct {
 		model.Model
-		Title               string                       `json:"title"`
-		Purpose             string                       `json:"purpose"`
-		TaskType            string                       `json:"taskType"` // NC_FINDING, MEDIA, CHECKLIST
-		TaskStatus          string                       `json:"taskStatus"`
-		ContentOfTask       string                       `json:"contentOfTask"`
-		SuggestedFollowUp   string                       `json:"suggestedFollowUp"`
-		AnticipatedCompDate string                       `json:"anticipatedCompDate"`
-		TaskDueDate         string                       `json:"taskDueDate"`
-		DaysToDue           int                          `json:"daysToDue"`
-		DueType             string                       `json:"dueType"`
-		FollowUpCompDate    string                       `json:"followUpCompDate"`
-		FollowUpUsers       []FindingFollowUpUserDisplay `json:"followUpUsers"`
-		MediaBatchRefUuid   string                       `json:"mediaBatchRefUuid"`
-		SiteWalkId          *intstring.IntString         `json:"siteWalkId"`
-		ContractRefId       *intstring.IntString         `json:"contractId"`
-		Media               []model.MediaParam           `json:"media" gorm:"-"`
+		Title             string                       `json:"title"`
+		Purpose           string                       `json:"purpose"`
+		TaskType          string                       `json:"taskType"` // NC_FINDING, MEDIA, CHECKLIST
+		TaskStatus        string                       `json:"taskStatus"`
+		ContentOfTask     string                       `json:"contentOfTask"`
+		SuggestedFollowUp string                       `json:"suggestedFollowUp"`
+		FollowUpDate      string                       `json:"followUpDate"`
+		TaskDueDate       string                       `json:"taskDueDate"`
+		DaysToDue         int                          `json:"daysToDue"`
+		DueType           string                       `json:"dueType"`
+		FollowUpCompDate  string                       `json:"followUpCompDate"`
+		FollowUpUsers     []FindingFollowUpUserDisplay `json:"followUpUsers"`
+		MediaBatchRefUuid string                       `json:"mediaBatchRefUuid"`
+		SiteWalkId        *intstring.IntString         `json:"siteWalkId"`
+		ContractRefId     *intstring.IntString         `json:"contractId"`
+		Media             []model.MediaParam           `json:"media" gorm:"-"`
 		// Hashtags            HashtagDisplay               `json:"hashtags"`
 	}
 	FindingFollowUpUserDisplay struct {
@@ -382,26 +382,26 @@ type (
 	}
 
 	PinDisplay struct {
-		Id                  intstring.IntString  `json:"id,omitempty"`
-		AxisX               float64              `json:"x"`
-		AxisY               float64              `json:"y"`
-		PinKey              string               `json:"key"`
-		IsDisplay           *bool                `json:"isDisplay"`
-		RefUuid             string               `json:"_id"`
-		Fill                string               `json:"fill"`
-		Stroke              string               `json:"stroke"`
-		Width               float64              `json:"width"`
-		Height              float64              `json:"height"`
-		Title               string               `json:"title"`
-		Media               []model.MediaParam   `json:"media"`
-		Content             string               `json:"content"`
-		Suggested           string               `json:"suggested"`
-		Purpose             string               `json:"purpose"`
-		AnticipatedCompDate string               `json:"anticipatedCompletionDate"`
-		Remark              string               `json:"remark"`
-		Status              string               `json:"status"`
-		FindingType         string               `json:"findingType"`
-		FindingRefId        *intstring.IntString `json:"findingRefId"`
+		Id           intstring.IntString  `json:"id,omitempty"`
+		AxisX        float64              `json:"x"`
+		AxisY        float64              `json:"y"`
+		PinKey       string               `json:"key"`
+		IsDisplay    *bool                `json:"isDisplay"`
+		RefUuid      string               `json:"_id"`
+		Fill         string               `json:"fill"`
+		Stroke       string               `json:"stroke"`
+		Width        float64              `json:"width"`
+		Height       float64              `json:"height"`
+		Title        string               `json:"title"`
+		Media        []model.MediaParam   `json:"media"`
+		Content      string               `json:"content"`
+		Suggested    string               `json:"suggested"`
+		Purpose      string               `json:"purpose"`
+		FollowUpDate string               `json:"anticipatedCompletionDate"`
+		Remark       string               `json:"remark"`
+		Status       string               `json:"status"`
+		FindingType  string               `json:"findingType"`
+		FindingRefId *intstring.IntString `json:"findingRefId"`
 	}
 )
 
@@ -421,9 +421,9 @@ type (
 	}
 	FollowUpTaskActionDisplay struct {
 		FollowUpTaskActionBase
-		Seq                 int             `json:"seq"`
-		AnticipatedCompDate string          `json:"anticipatedCompDate"`
-		SubmittedByUser     *model.UserInfo `json:"submittedByUser"`
+		Seq             int             `json:"seq"`
+		FollowUpDate    string          `json:"followUpDate"`
+		SubmittedByUser *model.UserInfo `json:"submittedByUser"`
 		// Media               []model.MediaParam `json:"media"`
 		FollowUpUserMedia []model.MediaParam `json:"followUpUserMedia"`
 		ApproverMedia     []model.MediaParam `json:"approverMedia"`
