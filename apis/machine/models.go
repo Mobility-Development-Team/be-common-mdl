@@ -13,6 +13,7 @@ type (
 		MasterPermit
 		PlantType         string              `json:"plantType"`
 		PlantOwner        string              `json:"plantOwner"`
+		PlantOwnerName    string              `json:"plantOwnerName"`
 		Manufacturer      string              `json:"manufacturer"`
 		ModelNo           string              `json:"modelNo"`
 		YearOfManufacture string              `json:"yearOfManufacture"`
