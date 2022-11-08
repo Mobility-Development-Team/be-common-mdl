@@ -147,7 +147,7 @@ func GetIdsFromRecords(slice interface{}) ([]intstring.IntString, error) {
 func (mp *MediaParam) ShouldSetRefInfo(refType string, obj interface{}) *MediaParam {
 	b, err := json.Marshal(obj)
 	if err != nil {
-		logger.Errorf("[MediaParam][ShouldSetRefInfo] Unable to set MediaRefInfo: %s Value: %v", err.Error())
+		logger.Errorf("[MediaParam][ShouldSetRefInfo] Unable to set MediaRefInfo: %s", err.Error())
 		return mp
 	}
 	mp.MediaRefType = refType
