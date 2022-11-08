@@ -95,6 +95,7 @@ type (
 		PartyRefId      *intstring.IntString `json:"partyRefId"`
 		UserSource      string               `json:"userSource"`
 		Party           *model.PartyInfo     `json:"party"`
+		SignatureB64    *string              `json:"signature,omitempty"`
 	}
 	PermitApproval struct {
 		model.Model
@@ -148,10 +149,11 @@ type (
 		ContractRefId          intstring.IntString `json:"contractId"`
 	}
 	ApplicantDisplay struct {
-		DisplayName string  `json:"displayName"`
-		Position    *string `json:"position"`
-		ContactNo   *string `json:"contactNo"`
-		PartyName   string  `json:"partyName"`
+		DisplayName  string  `json:"displayName"`
+		Position     *string `json:"position"`
+		ContactNo    *string `json:"contactNo"`
+		PartyName    string  `json:"partyName"`
+		SignatureB64 *string `json:"signature"`
 	}
 	ConstructionWork struct {
 		model.Model
