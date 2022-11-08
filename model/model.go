@@ -156,7 +156,7 @@ func (mp *MediaParam) ShouldSetRefInfo(refType string, obj interface{}) *MediaPa
 }
 
 // Attempts to get MediaRefInfo, ignores if fails.
-// The returned value is a JsonObject for quick retrieval.
+// The returned value is a JsonObject for quick retrieval.-
 // To unmarshal into struct, use json.Unmarshal()
 func (mp MediaParam) ShouldGetRefInfo() (result genericjson.Object) {
 	if err := json.Unmarshal(mp.MediaRefInfo, &result); err != nil {
@@ -314,4 +314,41 @@ func (m *MediaParam) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 	return errors.New("cannot unmarshal MediaParam, not a struct nor a string of id")
+}
+
+// SanitizeForCreate clears all models inside a struct for creation.
+// It looks inside nested structs and arrays
+func SanitizeForCreate(mdl interface{}) interface{} {
+	return cleanModel(reflect.ValueOf(mdl), reflect.TypeOf(Model{})).Interface()
+}
+
+func cleanModel(v reflect.Value, clearType reflect.Type) reflect.Value {
+	if !v.IsValid() {
+		return v
+	}
+	v = reflect.Indirect(v)
+	if !v.IsValid() {
+		return v
+	}
+	switch kind := v.Kind(); kind {
+	case reflect.Struct:
+		if v.Type() == clearType {
+			if v.CanSet() {
+				v.Set(reflect.Zero(clearType))
+			}
+			return v
+		}
+		for _, f := range reflect.VisibleFields(v.Type()) {
+			if fv := v.FieldByIndex(f.Index); fv.IsValid() {
+				cleanModel(fv, clearType)
+			}
+		}
+	case reflect.Array, reflect.Slice:
+		for i := 0; i < v.Len(); i++ {
+			if iv := v.Index(i); iv.IsValid() {
+				cleanModel(iv, clearType)
+			}
+		}
+	}
+	return v
 }
