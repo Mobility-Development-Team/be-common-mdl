@@ -166,6 +166,7 @@ type (
 		CnpRefNo       *string              `json:"cnpRefNo"`
 		EquipGroupName *string              `json:"equipGroupName"`
 		IdCode         *string              `json:"idCode"`
+		Pme            *string              `json:"pme"`
 		EquipQty       *int                 `json:"equipQty"`
 		WorkLocation   *string              `json:"workLocation"`
 		NoiseControlId *intstring.IntString `json:"noiseControlId"`
