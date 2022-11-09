@@ -41,6 +41,17 @@ type (
 		MechEquipments     []MechEquipment     `json:"mechEquipments"`
 		Workers            []Worker            `json:"workers"`
 	}
+	HotWorkPermit struct {
+		MasterPermit
+		WorkDurationFromDate string              `json:"workDurationFromDate"`
+		WorkDurationFromTime string              `json:"workDurationFromTime"`
+		WorkDurationToDate   string              `json:"workDurationToDate"`
+		WorkDurationToTime   string              `json:"workDurationToTime"`
+		Applicant            *ApplicantDisplay   `json:"applicant"`
+		HotWorkType          string              `json:"hotWorkType"`
+		WorkLocation         *string             `json:"workLocation"`
+		PermitMasterId       intstring.IntString `json:"permitMasterId"`
+	}
 	MasterPermit struct {
 		model.Model
 		PermitNo           string              `json:"permitNo"`
