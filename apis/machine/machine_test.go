@@ -6,6 +6,7 @@ import (
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+	"github.com/Mobility-Development-Team/be-common-mdl/util/strutil"
 	"github.com/spf13/viper"
 )
 
@@ -60,7 +61,7 @@ func TestGetOneAsset(t *testing.T) {
 			name: "TEST",
 			args: args{
 				criteria: Equipment{
-					SerialNo: "S1234",
+					SerialNo: strutil.NewPtr("S1234"),
 				},
 				isSimple: true,
 			},
@@ -70,7 +71,7 @@ func TestGetOneAsset(t *testing.T) {
 			name: "TEST",
 			args: args{
 				criteria: Equipment{
-					SerialNo: "S1234",
+					SerialNo: strutil.NewPtr("S1234"),
 				},
 				isSimple: false,
 			},

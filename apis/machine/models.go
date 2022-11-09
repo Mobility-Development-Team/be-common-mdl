@@ -12,17 +12,17 @@ type (
 		model.Model
 		MasterPermit
 		PlantType         string              `json:"plantType"`
-		PlantOwner        string              `json:"plantOwner"`
-		PlantOwnerName    string              `json:"plantOwnerName"`
-		Manufacturer      string              `json:"manufacturer"`
-		ModelNo           string              `json:"modelNo"`
-		YearOfManufacture string              `json:"yearOfManufacture"`
-		SerialNo          string              `json:"serialNo"`
-		OwnerNo           string              `json:"ownerNo"`
-		IsRental          bool                `json:"isRental"`
-		RejectionReason   string              `json:"rejectionReason"`
+		PlantOwner        *string             `json:"plantOwner"`
+		PlantOwnerName    *string             `json:"plantOwnerName"`
+		Manufacturer      *string             `json:"manufacturer"`
+		ModelNo           *string             `json:"modelNo"`
+		YearOfManufacture *string             `json:"yearOfManufacture"`
+		CertExpiryDate    *string             `json:"certExpiryDate"`
+		SerialNo          *string             `json:"serialNo"`
+		OwnerNo           *string             `json:"ownerNo"`
+		IsRental          *bool               `json:"isRental"`
+		RejectionReason   *string             `json:"rejectionReason"`
 		PermitMasterId    intstring.IntString `json:"permitMasterId"`
-		CertExpiryDate    string              `json:"certExpiryDate"`
 		// Custom fields
 		CurrentApprovalStage int `json:"currentApprovalStage"`
 	}
@@ -134,13 +134,13 @@ type (
 		model.Model
 		Uuid              string         `json:"uuid"`
 		PlantType         string         `json:"plantType"`
-		PlantOwner        string         `json:"plantOwner"`
-		Manufacturer      string         `json:"manufacturer"`
-		ModelNo           string         `json:"modelNo"`
-		YearOfManufacture string         `json:"yearOfManufacture"`
+		PlantOwner        *string        `json:"plantOwner"`
+		Manufacturer      *string        `json:"manufacturer"`
+		ModelNo           *string        `json:"modelNo"`
+		YearOfManufacture *string        `json:"yearOfManufacture"`
 		CertExpiryDate    *time.Time     `json:"certExpiryDate"`
-		SerialNo          string         `json:"serialNo"`
-		OwnerNo           string         `json:"ownerNo"`
+		SerialNo          *string        `json:"serialNo"`
+		OwnerNo           *string        `json:"ownerNo"`
 		IsRental          *bool          `json:"isRental"`
 		Permits           []MasterPermit `json:"permits"`
 	}
