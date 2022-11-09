@@ -163,7 +163,9 @@ type (
 	}
 	MechEquipment struct {
 		model.Model
+		CnpRefNo       *string              `json:"cnpRefNo"`
 		EquipGroupName *string              `json:"equipGroupName"`
+		IdCode         *string              `json:"idCode"`
 		EquipQty       *int                 `json:"equipQty"`
 		WorkLocation   *string              `json:"workLocation"`
 		NoiseControlId *intstring.IntString `json:"noiseControlId"`
