@@ -41,7 +41,7 @@ type (
 		MechEquipments     []MechEquipment     `json:"mechEquipments"`
 		Workers            []Worker            `json:"workers"`
 	}
-	HotWorkPermit struct {
+	HotworkPermit struct {
 		MasterPermit
 		WorkDurationFromDate string              `json:"workDurationFromDate"`
 		WorkDurationFromTime string              `json:"workDurationFromTime"`

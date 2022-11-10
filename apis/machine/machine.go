@@ -13,6 +13,7 @@ const (
 	apiMachineMdlUrlBase = "apis.internal.machine.module.url.base"
 	getOnePlantPermit    = "%s/permits/plantpermits/%s"
 	getOneNCAPermit      = "%s/permits/nca/%s"
+	getOneHotworkPermit  = "%s/permits/hw/%s"
 	getOneAsset          = "%s/permits/assets/internal/getone"
 	getAllPermits        = "%s/permits/internal/all"
 )
@@ -92,6 +93,25 @@ func GetAllPermits(tk string, userRefKey string, criteria PermitCriteria, opt Ge
 	).Post(
 		fmt.Sprintf(getAllPermits, apis.V().GetString(apiMachineMdlUrlBase)),
 	)
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetOneHotworkPermit(tk string, permitMasterId intstring.IntString) (*HotworkPermit, error) {
+	resp := struct {
+		Payload *HotworkPermit `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneHotworkPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
 	}
