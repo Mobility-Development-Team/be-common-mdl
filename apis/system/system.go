@@ -189,6 +189,12 @@ func GetContractParties(tk string, contractId intstring.IntString) (map[string]C
 	return resp.Payload, err
 }
 
+func ShouldPopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) {
+	if err := PopulatePartyInfo(tk, partyInfo); err != nil {
+		logger.Error("[ShouldPopulatePartyInfo] Failed getting parties, ignoring ", err)
+	}
+}
+
 // PopulatePartyInfo Gets all parties in partyInfo, replace them with the updated version
 // It tries to look for the records by their id
 func PopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) error {
