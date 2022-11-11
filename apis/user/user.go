@@ -279,6 +279,9 @@ func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 			keyRefMap[info.UserRefKey] = append(keyRefMap[info.UserRefKey], info)
 		}
 	}
+	if len(ids) == 0 && len(keyRefs) == 0 {
+		return nil
+	}
 	updatedInfos, err := GetUsersByIds(tk, ids, keyRefs)
 	if err != nil {
 		return err
