@@ -51,6 +51,7 @@ type (
 		HotWorkType          string              `json:"hotWorkType"`
 		WorkLocation         *string             `json:"workLocation"`
 		PermitMasterId       intstring.IntString `json:"permitMasterId"`
+		CancelMedia          []model.MediaParam  `json:"cancelMedia"`
 	}
 	MasterPermit struct {
 		model.Model
