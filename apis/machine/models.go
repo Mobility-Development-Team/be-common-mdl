@@ -55,10 +55,14 @@ type (
 	}
 	EXPermit struct {
 		MasterPermit
-		Applicant       *ApplicantDisplay   `json:"applicant"`
-		PermitToDigType string              `json:"permitToDigType"`
-		WorkLocation    *string             `json:"workLocation"`
-		PermitMasterId  intstring.IntString `json:"permitMasterId"`
+		WorkDurationFromDate string              `json:"workDurationFromDate"`
+		WorkDurationFromTime string              `json:"workDurationFromTime"`
+		WorkDurationToDate   string              `json:"workDurationToDate"`
+		WorkDurationToTime   string              `json:"workDurationToTime"`
+		Applicant            *ApplicantDisplay   `json:"applicant"`
+		PermitToDigType      string              `json:"permitToDigType"`
+		WorkLocation         *string             `json:"workLocation"`
+		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 	}
 	MasterPermit struct {
 		model.Model
