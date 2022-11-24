@@ -53,6 +53,13 @@ type (
 		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 		CancelMedia          []model.MediaParam  `json:"cancelMedia"`
 	}
+	EXPermit struct {
+		MasterPermit
+		Applicant       *ApplicantDisplay   `json:"applicant"`
+		PermitToDigType string              `json:"permitToDigType"`
+		WorkLocation    *string             `json:"workLocation"`
+		PermitMasterId  intstring.IntString `json:"permitMasterId"`
+	}
 	MasterPermit struct {
 		model.Model
 		PermitNo           string              `json:"permitNo"`
