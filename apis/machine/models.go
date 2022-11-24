@@ -140,6 +140,11 @@ type (
 		TemplateItemRefId     intstring.IntString `json:"templateItemRefId"`
 		PermitChecklistId     intstring.IntString `json:"permitChecklistId"`
 		ResponsedByUserRefKey string              `json:"responsedByUserRefKey"`
+		HasRemark             bool                `json:"hasRemark"`
+		ItemRemarkNameEn      string              `json:"itemRemarkNameEn"`
+		ItemRemarkNameZh      string              `json:"itemRemarkNameZh"`
+		IsMandatory           bool                `json:"isMandatory"`
+		Remark                string              `json:"remark"`
 		Media                 []model.MediaParam  `json:"media" gorm:"-"`
 	}
 	Equipment struct {
