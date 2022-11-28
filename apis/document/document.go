@@ -31,14 +31,20 @@ func GenerateRAT(tk string, siteWalkId intstring.IntString) (string, error) {
 	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalkId, true)
 }
 
-func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo) (string, error) {
+func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId intstring.IntString) (string, error) {
 	client := resty.New()
 	var resp struct {
 		Payload struct {
 			Url string `json:"url"`
 		} `json:"payload"`
 	}
-	result, err := client.R().SetAuthToken(tk).SetBody(params).Post(
+	result, err := client.R().SetAuthToken(tk).SetBody(struct {
+		FollowUpReportInfo
+		TaskId intstring.IntString `json:"taskId"`
+	}{
+		FollowUpReportInfo: params,
+		TaskId:             taskId,
+	}).Post(
 		fmt.Sprintf(generateFollowUpReport, apis.V().GetString(urlBase)),
 	)
 	if err != nil {
