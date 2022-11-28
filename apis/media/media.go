@@ -19,6 +19,7 @@ import (
 const (
 	apiMediaMdlUrlBase    = "apis.internal.media.module.url.base"
 	getMediaMany          = "%s/media/all"
+	getMediaManyByRefId   = "%s/media/many?showAsMap=true"
 	getBatchMany          = "%s/media/batch/many"
 	uploadSitePlanPicture = "%s/file/upload/siteplan"
 	cloneMediaToBatch     = "%s/media/batch/clone"
@@ -68,6 +69,27 @@ func GetMedia(tk string, body map[string]interface{}) ([]model.MediaParam, error
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		logger.Error("[getMedia]", "Unmarshal err:", err)
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+
+func GetMediaByRefId(tk string, refId ...string) (map[string]model.MediaParam, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string][]string{
+		"ids": refId,
+	}).Post(fmt.Sprintf(getMediaManyByRefId, apis.V().GetString(apiMediaMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetMediaBatches] err: ", err)
+		return nil, err
+	}
+	type respType struct {
+		response.Response
+		Payload map[string]model.MediaParam `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		logger.Error("[GetMediaBatches] Unmarshal err: ", err)
 		return nil, err
 	}
 	return resp.Payload, nil

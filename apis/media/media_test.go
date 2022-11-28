@@ -44,3 +44,37 @@ func TestGetMediaBatches(t *testing.T) {
 		})
 	}
 }
+
+func TestGetMediaByRefId(t *testing.T) {
+	v := viper.New()
+	v.Set("apis.internal.media.module.url.base", "https://dev.api.fours.app/media/api")
+	apis.Init(v)
+	type args struct {
+		tk    string
+		refId []string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "Test call",
+			args: args{
+				tk:    "", // Input token here to test
+				refId: []string{"9edb9686-e8bf-4e88-819c-ee939798bf83"},
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetMediaByRefId(tt.args.tk, tt.args.refId...)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("TestGetMediaByRefId() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			fmt.Println("TestGetMediaByRefId() = ", got)
+		})
+	}
+}
