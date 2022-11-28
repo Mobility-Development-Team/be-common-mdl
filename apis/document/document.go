@@ -12,14 +12,15 @@ import (
 )
 
 const (
-	apiNotificationMdlUrlBase = "apis.internal.document.module.url.base"
-	generateSiteWalk          = "%s/documents/inspection/sitewalk/report/generate"
-	generateRATSiteWalk       = "%s/documents/inspection/sitewalk/rat/generate"
-	generatePlantCertificate  = "%s/documents/machine/permits/plantpermits/cert/generate"
-	generatePlantReport       = "%s/documents/machine/permits/plantpermits/report/generate"
-	generateNCAReport         = "%s/documents/machine/permits/nca/report/generate"
-	generateHWReport          = "%s/documents/machine/permits/hw/report/generate"
-	generateEXReport          = "%s/documents/machine/permits/ex/report/generate"
+	urlBase                  = "apis.internal.document.module.url.base"
+	generateSiteWalk         = "%s/documents/inspection/sitewalk/report/generate"
+	generateRATSiteWalk      = "%s/documents/inspection/sitewalk/rat/generate"
+	generateFollowUpReport   = "%s/documents/inspection/task/followup/report/generate"
+	generatePlantCertificate = "%s/documents/machine/permits/plantpermits/cert/generate"
+	generatePlantReport      = "%s/documents/machine/permits/plantpermits/report/generate"
+	generateNCAReport        = "%s/documents/machine/permits/nca/report/generate"
+	generateHWReport         = "%s/documents/machine/permits/hw/report/generate"
+	generateEXReport         = "%s/documents/machine/permits/ex/report/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
@@ -28,6 +29,31 @@ func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error)
 
 func GenerateRAT(tk string, siteWalkId intstring.IntString) (string, error) {
 	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalkId, true)
+}
+
+func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo) (string, error) {
+	client := resty.New()
+	var resp struct {
+		Payload struct {
+			Url string `json:"url"`
+		} `json:"payload"`
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(params).Post(
+		fmt.Sprintf(generateFollowUpReport, apis.V().GetString(urlBase)),
+	)
+	if err != nil {
+		return "", err
+	}
+	if result.StatusCode() != http.StatusCreated {
+		return "", fmt.Errorf(
+			"[GenerateTaskFollowUpReport] status code not 201: %d", result.StatusCode(),
+		)
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return "", err
+	}
+	return resp.Payload.Url, nil
 }
 
 func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish bool) (string, error) {
@@ -40,7 +66,7 @@ func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish 
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
 		"id":      id,
 		"publish": publish,
-	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(apiNotificationMdlUrlBase)))
+	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
 	if err != nil {
 		return "", err
 	}
@@ -84,7 +110,7 @@ func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntS
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
 		"permitMasterId": permitMasterId,
 		"publish":        publish,
-	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(apiNotificationMdlUrlBase)))
+	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
 	if err != nil {
 		return "", err
 	}
