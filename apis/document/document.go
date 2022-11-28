@@ -31,7 +31,7 @@ func GenerateRAT(tk string, siteWalkId intstring.IntString) (string, error) {
 	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalkId, true)
 }
 
-func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId intstring.IntString) (string, error) {
+func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId intstring.IntString, contractId intstring.IntString) (string, error) {
 	client := resty.New()
 	var resp struct {
 		Payload struct {
@@ -40,10 +40,12 @@ func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId int
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(struct {
 		FollowUpReportInfo
-		TaskId intstring.IntString `json:"taskId"`
+		TaskId     intstring.IntString `json:"taskId"`
+		ContractId intstring.IntString `json:"contractId"`
 	}{
 		FollowUpReportInfo: params,
 		TaskId:             taskId,
+		ContractId:         contractId,
 	}).Post(
 		fmt.Sprintf(generateFollowUpReport, apis.V().GetString(urlBase)),
 	)
