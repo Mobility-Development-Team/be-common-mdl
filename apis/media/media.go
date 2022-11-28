@@ -32,6 +32,7 @@ const (
 
 const (
 	ReportTypeSiteWalk            = "siteWalk"
+	ReportTypeTaskFollowUp        = "taskFollowUpReport"
 	ReportTypeRat                 = "rat"
 	ReportTypePlantPermitCert     = "plantPermitCert"
 	ReportTypePlantPermitReport   = "plantPermitReport"
