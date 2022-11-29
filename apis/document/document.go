@@ -15,7 +15,7 @@ const (
 	urlBase                  = "apis.internal.document.module.url.base"
 	generateSiteWalk         = "%s/documents/inspection/sitewalk/report/generate"
 	generateRATSiteWalk      = "%s/documents/inspection/sitewalk/rat/generate"
-	generateFollowUpReport   = "%s/documents/inspection/task/followup/report/generate"
+	generateFollowUpReport   = "%s/documents/inspection/tasks/followup/generate"
 	generatePlantCertificate = "%s/documents/machine/permits/plantpermits/cert/generate"
 	generatePlantReport      = "%s/documents/machine/permits/plantpermits/report/generate"
 	generateNCAReport        = "%s/documents/machine/permits/nca/report/generate"
