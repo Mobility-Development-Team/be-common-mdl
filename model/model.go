@@ -318,11 +318,13 @@ func (m *MediaParam) UnmarshalJSON(b []byte) error {
 
 // SanitizeForCreate clears all models inside a struct for creation.
 // It looks inside nested structs and arrays
-func SanitizeForCreate(mdl interface{}) interface{} {
-	return cleanModel(reflect.ValueOf(mdl), reflect.TypeOf(Model{})).Interface()
+func SanitizeForCreate(mdl interface{}, creatorRefKey string) interface{} {
+	return replaceModel(reflect.ValueOf(mdl), Model{
+		CreatedBy: creatorRefKey,
+	}).Interface()
 }
 
-func cleanModel(v reflect.Value, clearType reflect.Type) reflect.Value {
+func replaceModel(v reflect.Value, replacement Model) reflect.Value {
 	if !v.IsValid() {
 		return v
 	}
@@ -332,21 +334,21 @@ func cleanModel(v reflect.Value, clearType reflect.Type) reflect.Value {
 	}
 	switch kind := v.Kind(); kind {
 	case reflect.Struct:
-		if v.Type() == clearType {
+		if v.Type() == reflect.TypeOf(replacement) {
 			if v.CanSet() {
-				v.Set(reflect.Zero(clearType))
+				v.Set(reflect.ValueOf(replacement))
 			}
 			return v
 		}
 		for _, f := range reflect.VisibleFields(v.Type()) {
 			if fv := v.FieldByIndex(f.Index); fv.IsValid() {
-				cleanModel(fv, clearType)
+				replaceModel(fv, replacement)
 			}
 		}
 	case reflect.Array, reflect.Slice:
 		for i := 0; i < v.Len(); i++ {
 			if iv := v.Index(i); iv.IsValid() {
-				cleanModel(iv, clearType)
+				replaceModel(iv, replacement)
 			}
 		}
 	}

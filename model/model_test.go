@@ -66,7 +66,7 @@ func TestSanitizeForCreate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			fmt.Printf("SanitizeForCreate() = %v", SanitizeForCreate(tt.args.mdl))
+			fmt.Printf("SanitizeForCreate() = %v", SanitizeForCreate(tt.args.mdl, "REPLACEMENT_USER"))
 		})
 	}
 }
