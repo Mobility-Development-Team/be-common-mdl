@@ -91,6 +91,8 @@ type (
 		FbRefId              string              `json:"fbRefId"`
 		FirebaseUrlThumbnail string              `json:"firebaseUrlThumbnail"`
 		CreatedAt            string              `json:"createdAt"`
+		FbCreatedAt          string              `json:"fbCreatedAt"`
+		FbUpdatedAt          string              `json:"fbUpdatedAt"`
 		MediaRefType         string              `json:"mediaRefType"`
 		MediaRefInfo         json.RawMessage     `json:"mediaRefInfo"`
 	}
