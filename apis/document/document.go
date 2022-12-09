@@ -21,6 +21,7 @@ const (
 	generateNCAReport        = "%s/documents/machine/permits/nca/report/generate"
 	generateHWReport         = "%s/documents/machine/permits/hw/report/generate"
 	generateEXReport         = "%s/documents/machine/permits/ex/report/generate"
+	generateELReport         = "%s/documents/machine/permits/el/report/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
@@ -106,6 +107,10 @@ func GenerateHWReport(tk string, permitMasterId intstring.IntString) (string, er
 
 func GenerateEXReport(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generateEXReport, permitMasterId, true)
+}
+
+func GenerateELReport(tk string, permitMasterId intstring.IntString) (string, error) {
+	return generatePermitType(tk, generateELReport, permitMasterId, true)
 }
 
 func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
