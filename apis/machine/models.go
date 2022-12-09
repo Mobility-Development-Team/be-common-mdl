@@ -73,6 +73,10 @@ type (
 		WorkDurationFromTime string            `json:"workDurationFromTime"`
 		WorkDurationToDate   string            `json:"workDurationToDate"`
 		WorkDurationToTime   string            `json:"workDurationToTime"`
+		WorkLocation         *string           `json:"workLocation"`
+		CraneType            *string           `json:"craneType"`
+		CraneTypeRemark      *string           `json:"craneTypeRemark"`
+		SerialNo             *string           `json:"serialNo"`
 		Applicant            *ApplicantDisplay `json:"applicant"`
 	}
 	MasterPermit struct {
