@@ -64,6 +64,17 @@ type (
 		WorkLocation         *string             `json:"workLocation"`
 		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 	}
+	ELPermit struct {
+		MasterPermit
+		CertExpiryDate       string            `json:"certExpiryDate"`
+		LiftingWorkers       []LiftingWorker   `json:"liftingWorkers"`
+		LiftingGears         []LiftingGear     `json:"liftingGears"`
+		WorkDurationFromDate string            `json:"workDurationFromDate"`
+		WorkDurationFromTime string            `json:"workDurationFromTime"`
+		WorkDurationToDate   string            `json:"workDurationToDate"`
+		WorkDurationToTime   string            `json:"workDurationToTime"`
+		Applicant            *ApplicantDisplay `json:"applicant"`
+	}
 	MasterPermit struct {
 		model.Model
 		PermitNo           string              `json:"permitNo"`
@@ -244,5 +255,21 @@ type (
 		DurationFrom string              `json:"durationFrom"`
 		DurationTo   string              `json:"durationTo"`
 		PermitRefId  intstring.IntString `json:"permitRefId"`
+	}
+	LiftingWorker struct {
+		model.Model
+		WorkerType     string              `json:"workerType"`
+		WorkerName     *string             `json:"workerName"`
+		WorkerCertNo   *string             `json:"workerCertNo"`
+		CertExpiryDate *string             `json:"certExpiryDate"`
+		PermitLiftId   intstring.IntString `json:"permitLiftId"`
+	}
+	LiftingGear struct {
+		model.Model
+		LgType         *string             `json:"lgType"`
+		LgTypeRemark   *string             `json:"lgTypeRemark"`
+		OwnerId        *string             `json:"ownerId"`
+		CertExpiryDate *string             `json:"certExpiryDate"`
+		PermitLiftId   intstring.IntString `json:"permitLiftId"`
 	}
 )
