@@ -9,6 +9,7 @@ import (
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis/auth"
 	"github.com/Mobility-Development-Team/be-common-mdl/genericjson"
+	"github.com/Mobility-Development-Team/be-common-mdl/types/floatstring"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
 	"github.com/gin-gonic/gin"
@@ -87,14 +88,29 @@ type (
 		ProjectIdRef string  `json:"projectIdRef"`
 	}
 	MediaParam struct {
-		Id                   intstring.IntString `json:"id"`
-		FbRefId              string              `json:"fbRefId"`
-		FirebaseUrlThumbnail string              `json:"firebaseUrlThumbnail"`
-		CreatedAt            string              `json:"createdAt"`
-		FbCreatedAt          string              `json:"fbCreatedAt"`
-		FbUpdatedAt          string              `json:"fbUpdatedAt"`
-		MediaRefType         string              `json:"mediaRefType"`
-		MediaRefInfo         json.RawMessage     `json:"mediaRefInfo"`
+		Model
+		FbRefId              string                  `json:"fbRefId"`
+		FbCreatedBy          string                  `json:"fbCreatedBy"`
+		FbUpdatedBy          *string                 `json:"fbUpdatedBy"`
+		BatchId              string                  `json:"batchId"`
+		LocalPath            string                  `json:"localPath"`
+		LocalPathThumbnail   string                  `json:"localPathThumbnail"`
+		RefUserName          string                  `json:"userName"`
+		Description          string                  `json:"description"`
+		UpdatedAt            time.Time               `json:"updatedAt"`
+		UploadStatus         string                  `json:"uploadStatus"`
+		FirebaseUrl          string                  `json:"firebaseUrl"`
+		FirebaseUrlThumbnail string                  `json:"firebaseUrlThumbnail"`
+		Latitude             floatstring.FloatString `json:"latitude"`
+		Longitude            floatstring.FloatString `json:"longitude"`
+		DeviceType           string                  `json:"deviceType"`
+		ContractId           string                  `json:"contractId"`
+		MediaType            string                  `json:"mediaType"`
+		MediaRefType         string                  `json:"mediaRefType"`
+		FbCreatedAt          string                  `json:"fbCreatedAt"`
+		FbUpdatedAt          string                  `json:"fbUpdatedAt"`
+		Hashtags             json.RawMessage         `json:"hashtags"`
+		MediaRefInfo         json.RawMessage         `json:"mediaRefInfo"`
 	}
 )
 
@@ -306,7 +322,9 @@ func (m *MediaParam) UnmarshalJSON(b []byte) error {
 		// Try parse as intstring
 		if id := intstring.FromString(str); id != 0 {
 			*m = MediaParam{
-				Id: id,
+				Model: Model{
+					Id: id,
+				},
 			}
 		}
 		// If not, treat as refId
