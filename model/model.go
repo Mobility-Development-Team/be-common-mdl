@@ -88,7 +88,11 @@ type (
 		ProjectIdRef string  `json:"projectIdRef"`
 	}
 	MediaParam struct {
-		Model
+		Id                   intstring.IntString     `json:"id"`
+		CreatedAt            string                  `json:"createdAt"`
+		CreatedBy            json.RawMessage         `json:"createdBy"`
+		UpdatedAt            string                  `json:"updatedAt"`
+		UpdatedBy            json.RawMessage         `json:"updatedBy"`
 		FbRefId              string                  `json:"fbRefId"`
 		FbCreatedBy          string                  `json:"fbCreatedBy"`
 		FbUpdatedBy          *string                 `json:"fbUpdatedBy"`
@@ -97,7 +101,6 @@ type (
 		LocalPathThumbnail   string                  `json:"localPathThumbnail"`
 		RefUserName          string                  `json:"userName"`
 		Description          string                  `json:"description"`
-		UpdatedAt            time.Time               `json:"updatedAt"`
 		UploadStatus         string                  `json:"uploadStatus"`
 		FirebaseUrl          string                  `json:"firebaseUrl"`
 		FirebaseUrlThumbnail string                  `json:"firebaseUrlThumbnail"`
@@ -322,9 +325,7 @@ func (m *MediaParam) UnmarshalJSON(b []byte) error {
 		// Try parse as intstring
 		if id := intstring.FromString(str); id != 0 {
 			*m = MediaParam{
-				Model: Model{
-					Id: id,
-				},
+				Id: id,
 			}
 		}
 		// If not, treat as refId
