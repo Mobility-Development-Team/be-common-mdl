@@ -43,3 +43,29 @@ func TestGetContractUserByUids(t *testing.T) {
 		})
 	}
 }
+
+func TestGetAllContracts(t *testing.T) {
+	v := viper.New()
+	v.Set("apis.internal.system.module.url.base", "https://dev.api.fours.app/system/api")
+	apis.Init(v)
+	tk := "" // Dev token here
+	tests := []struct {
+		name    string
+		wantErr bool
+	}{
+		{
+			name:    "TEST",
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetAllContracts(tk)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetAllContracts() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			fmt.Println("GetAllContracts() = ", got)
+		})
+	}
+}

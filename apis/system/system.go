@@ -19,11 +19,41 @@ const (
 	getOneContract        = "%s/contracts/%s"
 	getAllLocations       = "%s/locations/all"
 	getSupportInfo        = "%s/config/supportinfo"
-	getAllOneContract     = "%s/contracts/%s"
+	getAllContracts       = "%s/contracts/all"
 	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
 	getManyParitesById    = "%s/parties/many"
 	getContractUserByUids = "%s/parties/assoc/users"
 )
+
+func GetAllContracts(tk string) (map[intstring.IntString]model.Contract, error) {
+	var resp struct {
+		response.Response
+		Payload []*struct {
+			model.Contract
+			Id intstring.IntString `json:"id"`
+		} `json:"payload"`
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Post(fmt.Sprintf(getAllContracts, apis.V().GetString(apiSystemMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetAllContracts] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	output := map[intstring.IntString]model.Contract{}
+	for _, r := range resp.Payload {
+		if r == nil || r.Id == 0 {
+			continue
+		}
+		output[r.Id] = r.Contract
+	}
+	return output, nil
+}
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract, error) {
 	type (
