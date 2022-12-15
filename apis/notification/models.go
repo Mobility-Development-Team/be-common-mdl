@@ -44,7 +44,8 @@ type (
 	MailTemplate interface {
 		Id() string
 	}
-	Mail struct {
+	QuickMailTemplate map[string]interface{}
+	Mail              struct {
 		Recipients []string            `json:"recipients"`
 		UserId     intstring.IntString `json:"userId"`
 		Body       MailTemplate        `json:"body"`
@@ -83,6 +84,15 @@ type (
 		Data map[string]string `json:"data"`
 	}
 )
+
+func NewNotification(contractId *intstring.IntString, templateType string, templateParams ...interface{}) *Notification {
+	return &Notification{
+		NotificationType: notificationTypeSystem,
+		TemplateType:     templateType,
+		ContractID:       contractId,
+		Params:           templateParams,
+	}
+}
 
 func (n *Notification) AddUserRecipient(uid ...intstring.IntString) *Notification {
 	n.Recipients.Users = append(n.Recipients.Users, uid...)
@@ -162,4 +172,19 @@ func (n *Notification) AttachPushAutoDefault(additionalBody ...string) *Notifica
 		n.AutoPush.BodyZh = strutil.NewPtr(mergedBody)
 	}
 	return n
+}
+
+func NewMailTemplate(templateId string, body map[string]interface{}) QuickMailTemplate {
+	if body == nil {
+		body = QuickMailTemplate{}
+	}
+	body["_mailTemplateId"] = templateId
+	return body
+}
+
+func (mt QuickMailTemplate) Id() string {
+	if id, ok := mt["_mailTemplateId"].(string); ok {
+		return id
+	}
+	return ""
 }

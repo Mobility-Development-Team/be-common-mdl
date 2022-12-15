@@ -38,15 +38,6 @@ func FilterSelfFromUserIds(c *gin.Context, ids []intstring.IntString) []intstrin
 	return result
 }
 
-func NewNotification(contractId *intstring.IntString, templateType string, templateParams ...interface{}) *Notification {
-	return &Notification{
-		NotificationType: notificationTypeSystem,
-		TemplateType:     templateType,
-		ContractID:       contractId,
-		Params:           templateParams,
-	}
-}
-
 func CreateNotifications(tk string, notifications ...*Notification) error {
 	validNotifications := make([]*Notification, 0, len(notifications))
 	for _, noti := range notifications {
