@@ -11,18 +11,19 @@ type (
 	PlantPermit struct {
 		model.Model
 		MasterPermit
-		PlantType         string              `json:"plantType"`
-		PlantOwner        *string             `json:"plantOwner"`
-		PlantOwnerName    *string             `json:"plantOwnerName"`
-		Manufacturer      *string             `json:"manufacturer"`
-		ModelNo           *string             `json:"modelNo"`
-		YearOfManufacture *string             `json:"yearOfManufacture"`
-		CertExpiryDate    *string             `json:"certExpiryDate"`
-		SerialNo          *string             `json:"serialNo"`
-		OwnerNo           *string             `json:"ownerNo"`
-		IsRental          *bool               `json:"isRental"`
-		RejectionReason   *string             `json:"rejectionReason"`
-		PermitMasterId    intstring.IntString `json:"permitMasterId"`
+		PlantType            string              `json:"plantType"`
+		PlantOwner           *string             `json:"plantOwner"`
+		PlantOwnerName       *string             `json:"plantOwnerName"`
+		Manufacturer         *string             `json:"manufacturer"`
+		ModelNo              *string             `json:"modelNo"`
+		YearOfManufacture    *string             `json:"yearOfManufacture"`
+		CertExpiryDate       *string             `json:"certExpiryDate"`
+		CertActualExpiryDate *time.Time          `json:"certActualExpiryDate"`
+		SerialNo             *string             `json:"serialNo"`
+		OwnerNo              *string             `json:"ownerNo"`
+		IsRental             *bool               `json:"isRental"`
+		RejectionReason      *string             `json:"rejectionReason"`
+		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 		// Custom fields
 		CurrentApprovalStage int `json:"currentApprovalStage"`
 	}
