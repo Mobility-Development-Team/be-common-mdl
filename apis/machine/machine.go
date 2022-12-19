@@ -16,15 +16,15 @@ const (
 	getOneHotworkPermit  = "%s/permits/hw/%s"
 	getOneEXPermit       = "%s/permits/ex/%s"
 	getOneELPermit       = "%s/permits/el/%s"
-	getOneAsset          = "%s/permits/assets/internal/getone"
+	getOneLA             = "%s/plant/equip/LA/detail"
 	getAllPermits        = "%s/permits/internal/all"
 )
 
-func GetOneAsset(tk string, criteria Equipment, isSimple bool) (*Equipment, error) {
+func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
 	resp := struct {
-		Payload *Equipment `json:"payload"`
+		Payload *LA `json:"payload"`
 	}{}
-	uri := getOneAsset
+	uri := getOneLA
 	if isSimple {
 		uri += "?isSimple=true"
 	}

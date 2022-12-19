@@ -163,19 +163,40 @@ type (
 		Remark                string              `json:"remark"`
 		Media                 []model.MediaParam  `json:"media" gorm:"-"`
 	}
-	Equipment struct {
+	LA struct {
 		model.Model
-		Uuid              string         `json:"uuid"`
-		PlantType         string         `json:"plantType"`
-		PlantOwner        *string        `json:"plantOwner"`
-		Manufacturer      *string        `json:"manufacturer"`
-		ModelNo           *string        `json:"modelNo"`
-		YearOfManufacture *string        `json:"yearOfManufacture"`
-		CertExpiryDate    *time.Time     `json:"certExpiryDate"`
-		SerialNo          *string        `json:"serialNo"`
-		OwnerNo           *string        `json:"ownerNo"`
-		IsRental          *bool          `json:"isRental"`
-		Permits           []MasterPermit `json:"permits"`
+		Uuid              string                        `json:"uuid"`
+		AssetNo           string                        `json:"assetNo"`
+		Status            string                        `json:"status"`
+		Manufacturer      *string                       `json:"manufacturer"`
+		YearOfManufacture *string                       `json:"yearOfManufacture"`
+		CraneSerialNo     *string                       `json:"craneSerialNo"`
+		ModelNo           *string                       `json:"modelNo"`
+		PlantGroup        string                        `json:"plantGroup"`
+		PlantType         string                        `json:"plantType"`
+		SerialNo          *string                       `json:"serialNo"`
+		CertNo            *string                       `json:"certNo"`
+		PlantOwner        *string                       `json:"plantOwner"`
+		IsRental          *bool                         `json:"isRental"`
+		MaxSafeLiftCap    *string                       `json:"maxSafeLiftCap"`
+		Description       *string                       `json:"description"`
+		ContractRefId     *intstring.IntString          `json:"contractId"`
+		CertExamDate      *string                       `json:"certExamDate"`
+		CertValidFrom     *string                       `json:"certValidFrom"`
+		CertValidTo       *string                       `json:"certValidTo"`
+		Logs              []LALog                       `json:"logs"`
+		Permits           []MasterPermit                `json:"permits"`
+		Media             map[string][]model.MediaParam `json:"media"`
+	}
+	LALog struct {
+		Id             intstring.IntString `json:"id"`
+		CreatedAt      time.Time           `json:"createdAt"`
+		CreatedBy      string              `json:"createdBy"`
+		Actor          *model.UserInfo     `json:"actor"`
+		Message        *string             `json:"message"`
+		MessageZh      *string             `json:"messageZh"`
+		ActivityType   string              `json:"activityType"`
+		PlantEquipLaId intstring.IntString `json:"plantEquipLaId"`
 	}
 	GetAllPermitOps struct {
 		GetApprovalStage bool `json:"getApprovalStage"`

@@ -43,13 +43,13 @@ func TestGetOnePlantPermit(t *testing.T) {
 	}
 }
 
-func TestGetOneAsset(t *testing.T) {
+func TestGetOneLA(t *testing.T) {
 	v := viper.New()
 	v.Set("apis.internal.machine.module.url.base", "https://dev.api.fours.app/machine/api")
 	apis.Init(v)
 	tk := ""
 	type args struct {
-		criteria Equipment
+		criteria LA
 		isSimple bool
 	}
 	tests := []struct {
@@ -60,8 +60,9 @@ func TestGetOneAsset(t *testing.T) {
 		{
 			name: "TEST",
 			args: args{
-				criteria: Equipment{
-					SerialNo: strutil.NewPtr("S1234"),
+				criteria: LA{
+					CraneSerialNo: strutil.NewPtr("P1234"),
+					ContractRefId: new(intstring.IntString).ShouldScan("38"),
 				},
 				isSimple: true,
 			},
@@ -70,8 +71,9 @@ func TestGetOneAsset(t *testing.T) {
 		{
 			name: "TEST",
 			args: args{
-				criteria: Equipment{
-					SerialNo: strutil.NewPtr("S1234"),
+				criteria: LA{
+					CraneSerialNo: strutil.NewPtr("P1234"),
+					ContractRefId: new(intstring.IntString).ShouldScan("63"),
 				},
 				isSimple: false,
 			},
@@ -80,12 +82,12 @@ func TestGetOneAsset(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetOneAsset(tk, tt.args.criteria, tt.args.isSimple)
+			got, err := GetOneLA(tk, tt.args.criteria, tt.args.isSimple)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetOneAsset() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetOneLA() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			fmt.Println("GetOneAsset() = ", got)
+			fmt.Println("GetOneLA() = ", got)
 		})
 	}
 }
