@@ -28,8 +28,7 @@ type (
 
 		// Setting this to true will not ignore the sender (caller of this API) if the sender
 		// is the recipient user or as a group member of the recipent group / party.
-		// This setting has no effect to additional payloads that are manually provided and
-		// not automatically added like AutoPush.
+		// This setting has no effect to additional payloads that are manually provided.
 		IncludeSelf bool `json:"includeSelf"`
 	}
 	Recipients struct {
