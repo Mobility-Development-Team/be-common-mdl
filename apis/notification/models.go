@@ -30,6 +30,9 @@ type (
 		// is the recipient user or as a group member of the recipent group / party.
 		// This setting has no effect to additional payloads that are manually provided.
 		IncludeSelf bool `json:"includeSelf"`
+
+		// Setting this to true allows the notification to be submitted even if the recipients are emptyd
+		PermitEmptyRecipients bool `json:"-"`
 	}
 	Recipients struct {
 		Users  []intstring.IntString `json:"users"`
@@ -141,6 +144,11 @@ func (n *Notification) SetMail(mail ...Mail) *Notification {
 
 func (n *Notification) AllowSelf() *Notification {
 	n.IncludeSelf = true
+	return n
+}
+
+func (n *Notification) AllowEmptyRecipients() *Notification {
+	n.PermitEmptyRecipients = true
 	return n
 }
 
