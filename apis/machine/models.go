@@ -284,11 +284,11 @@ type (
 	}
 	LiftingWorker struct {
 		model.Model
-		WorkerType     string              `json:"workerType"`
-		WorkerName     *string             `json:"workerName"`
-		WorkerCertNo   *string             `json:"workerCertNo"`
-		CertExpiryDate *string             `json:"certExpiryDate"`
-		PermitLiftId   intstring.IntString `json:"permitLiftId"`
+		WorkerType           string              `json:"workerType"`
+		WorkerName           *string             `json:"workerName"`
+		WorkerCertNo         *string             `json:"workerCertNo"`
+		WorkerCertExpiryDate *string             `json:"workerCertExpiryDate"`
+		PermitLiftId         intstring.IntString `json:"permitLiftId"`
 	}
 	LiftingGear struct {
 		model.Model
