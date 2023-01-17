@@ -13,9 +13,10 @@ const (
 	PermitSearchTypeAll        = "ALL"
 	PermitSearchTypeSystem     = "SYSTEM"
 
-	PermitStatusDraft            = "DRAFT"
-	PermitStatusWorkInProgress   = "WORK_IN_PROGRESS"
-	PermitStatusAwaitingApproval = "AWAITING_APPROVAL"
-	PermitStatusApproved         = "APPROVED"
-	PermitStatusExpired          = "EXPIRED"
+	PermitStatusDraft              = "DRAFT"
+	PermitStatusWorkInProgress     = "WORK_IN_PROGRESS"
+	PermitStatusAwaitingApproval   = "AWAITING_APPROVAL"
+	PermitStatusApproved           = "APPROVED"
+	PermitStatusExpired            = "EXPIRED"
+	PermitStatusAwaitingAcceptance = "AWAITING_ACCEPTANCE"
 )
