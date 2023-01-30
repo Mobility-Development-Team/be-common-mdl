@@ -77,7 +77,7 @@ type (
 		WorkLocation         *string           `json:"workLocation"`
 		CraneType            *string           `json:"craneType"`
 		CraneTypeRemark      *string           `json:"craneTypeRemark"`
-		SerialNo             *string           `json:"serialNo"`
+		CraneSerialNo        *string           `json:"craneSerialNo"`
 		Applicant            *ApplicantDisplay `json:"applicant"`
 	}
 	MasterPermit struct {
@@ -293,7 +293,8 @@ type (
 	LiftingGear struct {
 		model.Model
 		LgType         *string             `json:"lgType"`
-		LgTypeRemark   *string             `json:"lgTypeRemark"`
+		LgTypeRemark   *string             `json:"lgTypeRemark"` // TODO to be removed
+		LgMark         *string             `json:"lgMark"`
 		OwnerId        *string             `json:"ownerId"`
 		CertExpiryDate *string             `json:"certExpiryDate"`
 		PermitLiftId   intstring.IntString `json:"permitLiftId"`
