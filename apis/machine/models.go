@@ -130,11 +130,13 @@ type (
 	}
 	Participant struct {
 		model.UserInfo
-		ParticipantType string               `json:"participantType"`
-		PartyRefId      *intstring.IntString `json:"partyRefId"`
-		UserSource      string               `json:"userSource"`
-		Party           *model.PartyInfo     `json:"party"`
-		SignatureB64    *string              `json:"signature,omitempty"`
+		ParticipantUserId     intstring.IntString  `json:"participantUserId"`
+		ParticipantUserRefKey string               `json:"participantUserRefKey"`
+		ParticipantType       string               `json:"participantType"`
+		PartyRefId            *intstring.IntString `json:"partyRefId"`
+		UserSource            string               `json:"userSource"`
+		Party                 *model.PartyInfo     `json:"party"`
+		SignatureB64          *string              `json:"signature,omitempty"`
 	}
 	PermitApproval struct {
 		model.Model

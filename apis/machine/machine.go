@@ -3,6 +3,10 @@ package machine
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Mobility-Development-Team/be-common-mdl/apis/system"
+	"github.com/Mobility-Development-Team/be-common-mdl/apis/user"
+	"github.com/Mobility-Development-Team/be-common-mdl/util/arrutil"
+	logger "github.com/sirupsen/logrus"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
@@ -163,4 +167,55 @@ func GetOneELPermit(tk string, permitMasterId intstring.IntString) (*ELPermit, e
 		return nil, err
 	}
 	return resp.Payload, err
+}
+
+func AddPartyIdToParticipants(tk string, contractId intstring.IntString, participants ...*Participant) error {
+	if len(participants) == 0 {
+		return nil
+	}
+	uids := make([]intstring.IntString, 0, len(participants))
+	var uRefs []string
+	uRefToIdMap := map[string]intstring.IntString{}
+	for _, p := range participants {
+		switch {
+		case p.ParticipantUserId > 0:
+			uids = append(uids, p.ParticipantUserId)
+		case p.ParticipantUserId == 0 && p.ParticipantUserRefKey != "":
+			uRefs = append(uRefs, p.ParticipantUserRefKey)
+		default:
+			logger.Debug("[AddPartyIdToParticipants] Participant is not identifiable, cannot look for party id: ", p)
+		}
+	}
+	if len(uRefs) > 0 {
+		logger.Debug("[AddPartyIdToParticipants] Some participant(s) have only refKey available, proceeding to fetch userId: ", uRefs)
+		users, err := user.GetUsersByIds(tk, nil, uRefs)
+		if err != nil {
+			return err
+		}
+		for _, u := range users {
+			uids = append(uids, u.Id)
+			uRefToIdMap[u.UserRefKey] = u.Id
+		}
+	}
+	partyInfo, err := system.GetContractUserByUids(tk, contractId, arrutil.Unique(uids)...)
+	if err != nil {
+		return err
+	}
+	for _, p := range participants {
+		var uid intstring.IntString
+		switch {
+		case p.ParticipantUserId > 0:
+			uid = p.ParticipantUserId
+		case p.ParticipantUserId == 0 && p.ParticipantUserRefKey != "":
+			uid = uRefToIdMap[p.ParticipantUserRefKey]
+		default:
+			continue
+		}
+		if partyInfo, ok := partyInfo[uid]; ok {
+			p.PartyRefId = &partyInfo.Info.Id
+		} else {
+			logger.Warn("[AddPartyIdToParticipants] Unable to find user party, continuing anyways: ", p.ParticipantUserId)
+		}
+	}
+	return nil
 }
