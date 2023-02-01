@@ -2,6 +2,14 @@ package log_template
 
 import "fmt"
 
+// This common log template will be shared between Machine & Labour
+const (
+	ActivityTypeCreate   = "CREATE"
+	ActivityTypePublish  = "PUBLISH"
+	ActivityTypeUpdate   = "UPDATE"
+	ActivityTypeComplete = "COMPLETE"
+)
+
 type ActivityLogTemplate struct {
 	FormatChiStr string
 	FormatEngStr string
