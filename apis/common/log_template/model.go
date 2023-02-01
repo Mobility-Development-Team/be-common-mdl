@@ -8,6 +8,10 @@ const (
 	ActivityTypePublish  = "PUBLISH"
 	ActivityTypeUpdate   = "UPDATE"
 	ActivityTypeComplete = "COMPLETE"
+	// ActivityTypeADD For worker point
+	ActivityTypeADD   = "ADD"
+	ActivityTypeMINUS = "MINUS"
+	ActivityTypeBEGIN = "BEGIN"
 )
 
 type ActivityLogTemplate struct {
