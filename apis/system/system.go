@@ -75,7 +75,7 @@ func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract,
 	return resp.Payload, nil
 }
 
-func GetMnayPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyInfo, error) {
+func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyInfo, error) {
 	var resp struct {
 		response.Response
 		Payload []*model.PartyInfo `json:"payload"`
@@ -87,7 +87,7 @@ func GetMnayPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyIn
 		},
 	).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
-		logger.Error("[GetMnayPartiesById] err: ", err)
+		logger.Error("[GetManyPartiesById] err: ", err)
 		return nil, err
 	}
 	if !result.IsSuccess() {
@@ -245,7 +245,7 @@ func PopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) error {
 	if len(ids) == 0 {
 		return nil
 	}
-	updatedInfos, err := GetMnayPartiesById(tk, ids...)
+	updatedInfos, err := GetManyPartiesById(tk, ids...)
 	if err != nil {
 		return err
 	}
