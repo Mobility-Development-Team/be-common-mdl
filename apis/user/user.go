@@ -25,11 +25,12 @@ const (
 )
 
 const (
-	apiUserMdlUrlBase  = "apis.internal.user.module.url.base"
-	getCurrentUserInfo = "%s/users/profile?isSimple=true"
-	getAllUserInfo     = "%s/users/all"
-	getUserSignatures  = "%s/users/signatures"
-	getAllGroupInfo    = "%s/groups/all"
+	apiUserMdlUrlBase      = "apis.internal.user.module.url.base"
+	getCurrentUserInfo     = "%s/users/profile?isSimple=true"
+	getAllUserInfo         = "%s/users/all"
+	getUsersByGroupDetails = "%s/users/groups/details"
+	getUserSignatures      = "%s/users/signatures"
+	getAllGroupInfo        = "%s/groups/all"
 )
 
 // ShouldGetCurrentUserInfoFromContext Similar to GetCurrentUserInfoFromContext, but returns an empty value if it fails with an error message
@@ -183,6 +184,34 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 		result = &users[0]
 	}
 	return result, nil
+}
+
+// GetUsersByGroupDetails Gets a user by id or userKeyRef (either is fine), returns the user information if found, nil if not found / error
+func GetUsersByGroupDetails(tk string, groupName *string, contractId, partyId *intstring.IntString) ([]model.UserInfo, error) {
+	if nil == groupName || nil == contractId || nil == partyId {
+		return []model.UserInfo{}, nil // Nothing specified, returns nil user
+	}
+	client := resty.New()
+	body := map[string]interface{}{
+		"groupName":  groupName,
+		"contractId": contractId,
+		"partyId":    partyId,
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
+		fmt.Sprintf(getUsersByGroupDetails, apis.V().GetString(apiUserMdlUrlBase)),
+	)
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	type respType struct {
+		response.Response
+		Payload []model.UserInfo `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
 }
 
 // GetUserSignatures gets user signatures by given user ids
