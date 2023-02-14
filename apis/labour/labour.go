@@ -9,7 +9,7 @@ import (
 
 const (
 	apiLabourMdlUrlBase         = "apis.internal.labour.module.url.base"
-	getAllUnsafeCasesForMyTasks = "%s/unsafe-cases/internal/all"
+	getAllUnsafeCasesForMyTasks = "%s/unsafe-cases/all/internal"
 )
 
 func GetAllUnsafeCasesForMyTasks(tk string, criteria UnsafeCaseCriteria) ([]*UnsafeCase, error) {
@@ -30,7 +30,7 @@ func GetAllUnsafeCasesForMyTasks(tk string, criteria UnsafeCaseCriteria) ([]*Uns
 		return nil, err
 	}
 	if !result.IsSuccess() {
-		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+		return nil, fmt.Errorf("labour module returned status code: %d", result.StatusCode())
 	}
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {
