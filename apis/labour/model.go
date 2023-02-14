@@ -15,4 +15,7 @@ type (
 		Worker        interface{}         `json:"worker"`
 		Item          interface{}         `json:"item"`
 	}
+	UnsafeCaseCriteria struct {
+		CaseStatuses []string `json:"CaseStatuses"`
+	}
 )
