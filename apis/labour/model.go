@@ -9,12 +9,13 @@ import (
 type (
 	UnsafeCase struct {
 		model.Model
-		CaseNo        string              `json:"caseNo"`
-		CaseStatus    string              `json:"caseStatus"`
-		CaseType      string              `json:"caseType"`
-		ContractRefId intstring.IntString `json:"contractId"`
-		Worker        interface{}         `json:"worker"`
-		Item          interface{}         `json:"item"`
+		CaseNo        string               `json:"caseNo"`
+		CaseStatus    string               `json:"caseStatus"`
+		CaseType      string               `json:"caseType"`
+		ContractRefId intstring.IntString  `json:"contractId"`
+		Worker        interface{}          `json:"worker"`
+		Item          interface{}          `json:"item"`
+		ApprovalFlow  []UnsafeCaseApproval `json:"approvalFlow"`
 	}
 	UnsafeCaseCriteria struct {
 		CaseStatuses []string `json:"CaseStatuses"`
