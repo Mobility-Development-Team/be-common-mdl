@@ -12,7 +12,7 @@ const (
 	getAllUnsafeCasesForMyTasks = "%s/unsafe-cases/internal/all"
 )
 
-func GetAllUnsafeCasesForMyTasks(tk string, userRefKey string, criteria UnsafeCaseCriteria) ([]*UnsafeCase, error) {
+func GetAllUnsafeCasesForMyTasks(tk string, criteria UnsafeCaseCriteria) ([]*UnsafeCase, error) {
 	resp := struct {
 		Payload []*UnsafeCase `json:"payload"`
 	}{}
