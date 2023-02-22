@@ -82,12 +82,28 @@ func ParseDateStartEndTimeFull(date, startTime, endTime string) (startDateTime, 
 	return
 }
 
+func ParseTimeStrAsDatetime(timeStr string, loc *time.Location) (timePtr *time.Time, err error) {
+	timeComponent := time.Time{}
+	if err != nil {
+		logger.Error("[ParseDateStartEndTime] Failed getting timezone information, ignoring...")
+	}
+	if timeStr != "" {
+		timeComponent, err = time.ParseInLocation("15:04", timeStr, loc)
+		if err != nil {
+			return
+		}
+		timeComponent = timeComponent.AddDate(1970, 0, 0)
+		timePtr = &timeComponent
+	}
+	return
+}
+
 // ParseDateStartEndTime parse a single given date string with specified Day Start/ Day End time in Time
 func ParseDateStartEndTime(date, startTime, endTime string) (datePtr, startTimePtr, endTimePtr *time.Time, err error) {
 	// Store date
 	dateComponent := time.Time{}
-	startTimeComponent := time.Time{}
-	endTimeComponent := time.Time{}
+	// startTimeComponent := time.Time{}
+	// endTimeComponent := time.Time{}
 	loc, err := time.LoadLocation("Asia/Hong_Kong")
 	if err != nil {
 		logger.Error("[ParseDateStartEndTime] Failed getting timezone information, ignoring...")
@@ -100,20 +116,18 @@ func ParseDateStartEndTime(date, startTime, endTime string) (datePtr, startTimeP
 		datePtr = &dateComponent
 	}
 	if startTime != "" {
-		startTimeComponent, err = time.ParseInLocation("15:04", startTime, loc)
+		startTimePtr, err = ParseTimeStrAsDatetime(startTime, loc)
 		if err != nil {
 			return
 		}
-		startTimeComponent = startTimeComponent.AddDate(1970, 0, 0)
-		startTimePtr = &startTimeComponent
+		// startTimePtr = &startTimeComponent
 	}
 	if endTime != "" {
-		endTimeComponent, err = time.ParseInLocation("15:04", endTime, loc)
+		endTimePtr, err = ParseTimeStrAsDatetime(endTime, loc)
 		if err != nil {
 			return
 		}
-		endTimeComponent = endTimeComponent.AddDate(1970, 0, 0)
-		endTimePtr = &endTimeComponent
+		// endTimePtr = &endTimeComponent
 	}
 	return
 }
