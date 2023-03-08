@@ -89,6 +89,24 @@ func ParseDateStartEndTimeFull(date, startTime, endTime string) (startDateTime, 
 	return
 }
 
+func ParseDateTimeStrAsDatetime(dateTimeStr string, loc *time.Location) (timePtr *time.Time, err error) {
+	if nil == loc {
+		loc, err = time.LoadLocation("Asia/Hong_Kong")
+		if err != nil {
+			logger.Error("[ParseDateStartEndTime] Failed getting timezone information, ignoring...")
+		}
+	}
+	timeComponent := time.Time{}
+	if dateTimeStr != "" {
+		timeComponent, err = time.ParseInLocation("2006-01-02 15:04:05", dateTimeStr, loc)
+		if err != nil {
+			return
+		}
+		timePtr = &timeComponent
+	}
+	return
+}
+
 func ParseTimeStrAsDatetime(timeStr string, loc *time.Location) (timePtr *time.Time, err error) {
 	if nil == loc {
 		loc, err = time.LoadLocation("Asia/Hong_Kong")
