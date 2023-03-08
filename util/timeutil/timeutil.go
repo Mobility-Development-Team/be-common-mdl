@@ -9,6 +9,13 @@ import (
 	logger "github.com/sirupsen/logrus"
 )
 
+// ValidateDateTimeStringFormat check if the given Time value is in 'yyyy-mm-dd hh:mm:ss' format
+func ValidateDateTimeStringFormat(time string) bool {
+	// format hh:mm
+	re := regexp.MustCompile("^([0-9]{4}|[0-9]{2})[-]([0]?[1-9]|[1][0-2])[-]([0]?[1-9]|[1|2][0-9]|[3][0|1]) ([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$")
+	return re.MatchString(time)
+}
+
 // ValidateDateStringFormat check if the given Date value is in 'yyyy-mm-dd' format
 func ValidateDateStringFormat(date string) bool {
 	// format yyyy-mm-dd
