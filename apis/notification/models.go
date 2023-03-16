@@ -107,7 +107,7 @@ func (n *Notification) AddGroupRecipient(gid ...intstring.IntString) *Notificati
 	return n
 }
 
-func (n *Notification) AddPartAdminRecipient(pid ...intstring.IntString) *Notification {
+func (n *Notification) AddPartyAdminRecipient(pid ...intstring.IntString) *Notification {
 	n.Recipients.PartyAdmin = append(n.Recipients.PartyAdmin, pid...)
 	return n
 }
