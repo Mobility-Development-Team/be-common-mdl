@@ -35,8 +35,9 @@ type (
 		PermitEmptyRecipients bool `json:"-"`
 	}
 	Recipients struct {
-		Users  []intstring.IntString `json:"users"`
-		Groups []intstring.IntString `json:"groups"`
+		Users      []intstring.IntString `json:"users"`
+		Groups     []intstring.IntString `json:"groups"`
+		PartyAdmin []intstring.IntString `json:"partyAdmin"`
 	}
 	Action struct {
 		ActionID    string `json:"actionId"`
@@ -103,6 +104,11 @@ func (n *Notification) AddUserRecipient(uid ...intstring.IntString) *Notificatio
 
 func (n *Notification) AddGroupRecipient(gid ...intstring.IntString) *Notification {
 	n.Recipients.Groups = append(n.Recipients.Groups, gid...)
+	return n
+}
+
+func (n *Notification) AddPartAdminRecipient(pid ...intstring.IntString) *Notification {
+	n.Recipients.PartyAdmin = append(n.Recipients.PartyAdmin, pid...)
 	return n
 }
 
