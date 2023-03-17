@@ -49,7 +49,7 @@ func CreateNotifications(tk string, notifications ...*Notification) error {
 			logger.Warn("[CreateNotification] Skipped: notifcation does not have a templateType: ", *noti)
 			continue
 		}
-		if !noti.PermitEmptyRecipients && len(noti.Recipients.Groups) == 0 && len(noti.Recipients.Users) == 0 {
+		if !noti.PermitEmptyRecipients && len(noti.Recipients.Groups) == 0 && len(noti.Recipients.Users) == 0 && len(noti.Recipients.PartyAdmin) == 0 {
 			logger.Debug("[CreateNotification] Notification has no recipents, ignoring: ", noti.TemplateType)
 			continue
 		}
