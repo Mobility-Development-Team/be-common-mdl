@@ -2,10 +2,17 @@ package strutil
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"reflect"
 	"strconv"
 	"strings"
 )
+
+// IsValidUUID returns a boolean value representing if given string is a valid UUID,
+func IsValidUUID(u string) bool {
+	_, err := uuid.Parse(u)
+	return err == nil
+}
 
 // StrOrEmpty returns the string pointed by a string pointer str,
 // if str is nil, return empty string "" instead
