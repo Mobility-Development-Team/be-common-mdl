@@ -24,6 +24,7 @@ const (
 	uploadSitePlanPicture = "%s/file/upload/siteplan"
 	cloneMediaToBatch     = "%s/media/batch/clone"
 	sendCloudMessage      = "%s/fcm/messaging"
+	getFileKeys           = "%s/file/upload/worker-mgt/file/k"
 	uploadUrlBase         = "%s/file/upload/%s/%s"
 	uploadFileUrlBase     = "%s/file/upload/%s"
 
@@ -241,7 +242,7 @@ func MapMediaById(media []model.MediaParam, err error, mapfunc func(m model.Medi
 // `scope` determines the subset of media to be affected, if scope is specified, only existing media inside the batch that
 // have all matching key-value pair inside their refInfo will be updated/deleted as required. If a specified media is being
 // put inside the batch (specified in `media`) but is currently outside the scope (belongs to a different batchId, or does
-// not have the matching key-value pairs), the record duplicated and put inside the given `batchId``, leaving the original
+// not have the matching key-value pairs), the record duplicated and put inside the given `batchId“, leaving the original
 // media record intact.
 func CloneMediaToBatch(tk string, batchId string, media []model.MediaParam, scope Scope, optOpts ...CloneOpts) error {
 	var opts *CloneOpts
@@ -359,6 +360,32 @@ func UploadFile(tk string, fileBytes []byte, fileName string, reportType string,
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {
 		return "", err
+	}
+	return resp.Payload, err
+}
+
+// Get file Keys  permit reference doc
+func GetFileKeys(tk string, urls []string) (map[string]string, error) {
+	resp := struct {
+		Payload map[string]string `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"urls": urls,
+		},
+	).Post(
+		fmt.Sprintf(getFileKeys, apis.V().GetString(apiMediaMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("photo module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
 	}
 	return resp.Payload, err
 }
