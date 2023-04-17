@@ -36,12 +36,23 @@ type (
 		Applicant          *ApplicantDisplay   `json:"applicant"`
 		WorkLocation       *string             `json:"workLocation"`
 		PermitMasterId     intstring.IntString `json:"permitMasterId"`
+		WorkPeriodsDisplay []WorkPeriodDisplay `json:"workPeriods"`
 		ConstructionWorks  []ConstructionWork  `json:"constructionWorks"`
 		PrescribedWorks    []PrescribedWork    `json:"prescribedWorks"`
 		ProjectPermitInfo  []ProjectPermitInfo `json:"projectPermitInfo"`
 		MechEquipments     []MechEquipment     `json:"mechEquipments"`
 		Workers            []Worker            `json:"workers"`
 	}
+
+	WorkPeriodDisplay struct {
+		model.Model
+		WorkPeriodFromDate string               `json:"workPeriodFromDate"`
+		WorkPeriodFromTime string               `json:"workPeriodFromTime"`
+		WorkPeriodToDate   string               `json:"workPeriodToDate"`
+		WorkPeriodToTime   string               `json:"workPeriodToTime"`
+		NoiseControlId     *intstring.IntString `json:"noiseControlId"`
+	}
+
 	HotworkPermit struct {
 		MasterPermit
 		WorkDurationFromDate string              `json:"workDurationFromDate"`
