@@ -46,8 +46,8 @@ type (
 	WorkPeriodDisplay struct {
 		model.Model
 		WorkDate           string               `json:"workDate"`
-		WorkPeriodFromTime string               `json:"workPeriodFromTime"`
-		WorkPeriodToTime   string               `json:"workPeriodToTime"`
+		WorkPeriodFrom string               `json:"workPeriodFrom"`
+		WorkPeriodTo   string               `json:"workPeriodTo"`
 		NoiseControlId     *intstring.IntString `json:"noiseControlId"`
 	}
 
