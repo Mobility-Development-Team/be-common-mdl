@@ -29,10 +29,9 @@ type (
 	}
 	NCAPermit struct {
 		MasterPermit
-		WorkPeriodFromDate string              `json:"workPeriodFromDate"`
-		WorkPeriodFromTime string              `json:"workPeriodFromTime"`
-		WorkPeriodToDate   string              `json:"workPeriodToDate"`
-		WorkPeriodToTime   string              `json:"workPeriodToTime"`
+		// WorkDate string                        `json:"workDate"` 
+		// WorkPeriodFromTime string              `json:"workPeriodFromTime"`
+		// WorkPeriodToTime   string              `json:"workPeriodToTime"`
 		Applicant          *ApplicantDisplay   `json:"applicant"`
 		WorkLocation       *string             `json:"workLocation"`
 		PermitMasterId     intstring.IntString `json:"permitMasterId"`
@@ -46,9 +45,8 @@ type (
 
 	WorkPeriodDisplay struct {
 		model.Model
-		WorkPeriodFromDate string               `json:"workPeriodFromDate"`
+		WorkDate           string               `json:"workDate"`
 		WorkPeriodFromTime string               `json:"workPeriodFromTime"`
-		WorkPeriodToDate   string               `json:"workPeriodToDate"`
 		WorkPeriodToTime   string               `json:"workPeriodToTime"`
 		NoiseControlId     *intstring.IntString `json:"noiseControlId"`
 	}
