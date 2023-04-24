@@ -29,7 +29,7 @@ type (
 	}
 	NCAPermit struct {
 		MasterPermit
-		// WorkDate string                        `json:"workDate"` 
+		// WorkDate string                        `json:"workDate"`
 		// WorkPeriodFromTime string              `json:"workPeriodFromTime"`
 		// WorkPeriodToTime   string              `json:"workPeriodToTime"`
 		Applicant          *ApplicantDisplay   `json:"applicant"`
@@ -43,12 +43,28 @@ type (
 		Workers            []Worker            `json:"workers"`
 	}
 
+	PITChecklist struct {
+		MasterPermit
+		PlantType         string              `json:"platType"`
+		PlantOwner        *string             `json:"plantOwner"`
+		PlantOwnerName    *string             `json:"plantOwnerName"`
+		Manufacturer      *string             `json:"manufacturer"`
+		ModelNo           *string             `json:"modelNo"`
+		YearOfManufacture *string             `json:"yearOfManufacture"`
+		CertExpiryDate    *string             `json:"certExpiryDate"`
+		SerialNo          *string             `json:"serialNo"`
+		OwnerNo           *string             `json:"ownerNo"`
+		IsRental          *bool               `json:"isRental"`
+		IsRpe             *bool               `json:"isRpe"`
+		PermitMasterId    intstring.IntString `json:"permitMasterId"`
+	}
+
 	WorkPeriodDisplay struct {
 		model.Model
-		WorkDate           string               `json:"workDate"`
+		WorkDate       string               `json:"workDate"`
 		WorkPeriodFrom string               `json:"workPeriodFrom"`
 		WorkPeriodTo   string               `json:"workPeriodTo"`
-		NoiseControlId     *intstring.IntString `json:"noiseControlId"`
+		NoiseControlId *intstring.IntString `json:"noiseControlId"`
 	}
 
 	HotworkPermit struct {

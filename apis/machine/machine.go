@@ -18,6 +18,7 @@ const (
 	getOneELPermit       = "%s/permits/el/%s"
 	getOneLA             = "%s/plant/equip/LA/detail"
 	getAllPermits        = "%s/permits/internal/all"
+	getPITChecklist      = "%s/permits/pc/%s"
 )
 
 func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
@@ -150,6 +151,26 @@ func GetOneELPermit(tk string, permitMasterId intstring.IntString) (*ELPermit, e
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneELPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+
+func GetOnePITChecklist(tk string, plantType string, permitMasterId intstring.IntString) (*PITChecklist, error) {
+	resp := struct {
+		Payload *PITChecklist `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetQueryParam("plantType",plantType).SetAuthToken(tk).Get(fmt.Sprintf(getPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
 	}
