@@ -36,7 +36,7 @@ func GetAllContracts(tk string, contractId ...intstring.IntString) (map[intstrin
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
-			"ids": append([]intstring.IntString{}, contractId...),
+			"contractIds": append([]intstring.IntString{}, contractId...),
 		},
 	).Post(fmt.Sprintf(getAllContracts, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
