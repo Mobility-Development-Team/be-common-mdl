@@ -44,6 +44,7 @@ type (
 	}
 
 	PITChecklist struct {
+		MasterPermit
 		PlantType         string              `json:"platType"`
 		PlantOwner        *string             `json:"plantOwner"`
 		PlantOwnerName    *string             `json:"plantOwnerName"`
