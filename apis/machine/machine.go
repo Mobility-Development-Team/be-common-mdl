@@ -165,12 +165,12 @@ func GetOneELPermit(tk string, permitMasterId intstring.IntString) (*ELPermit, e
 }
 
 
-func GetOnePITChecklist(tk string, plantType string, permitMasterId intstring.IntString) (*PITChecklist, error) {
+func GetOnePITChecklist(tk string, permitMasterId intstring.IntString) (*PITChecklist, error) {
 	resp := struct {
 		Payload *PITChecklist `json:"payload"`
 	}{}
 	client := resty.New()
-	result, err := client.R().SetQueryParam("plantType",plantType).SetAuthToken(tk).Get(fmt.Sprintf(getPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
 	}
@@ -181,5 +181,6 @@ func GetOnePITChecklist(tk string, plantType string, permitMasterId intstring.In
 	if err != nil {
 		return nil, err
 	}
+
 	return resp.Payload, err
 }
