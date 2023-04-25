@@ -184,6 +184,8 @@ type (
 		HasRemark             bool                `json:"hasRemark"`
 		ItemRemarkNameEn      string              `json:"itemRemarkNameEn"`
 		ItemRemarkNameZh      string              `json:"itemRemarkNameZh"`
+		ItemGrpNameEn         string              `json:"itemGrpNameEn"`
+		ItemGrpNameZh         string              `json:"itemGrpNameZh"`
 		IsMandatory           bool                `json:"isMandatory"`
 		Remark                string              `json:"remark"`
 		Media                 []model.MediaParam  `json:"media" gorm:"-"`
