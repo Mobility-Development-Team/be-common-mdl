@@ -48,16 +48,14 @@ func NewTokenVerifierInterceptor(invalidHeaderMsg, invalidTokenMsg response.Mess
 		tk, ok := apiutil.ParseBearerAuth(c)
 		if !ok {
 			logger.Warn("[ValidateInternalToken] unable to parse the given token from the header")
-			c.Abort()
 			apiutil.GenerateResponse(c, nil, invalidHeaderMsg)
-			return
+			c.Abort()
 		}
 		info, err := GetTokenInfo(c, tk)
 		if err != nil {
 			logger.Warn("[ValidateInternalToken] ", err)
 			apiutil.GenerateResponse(c, nil, invalidTokenMsg)
 			c.Abort()
-			return
 		}
 		// Reserve Token User Key
 		c.Set(keyTokenInfo, info)

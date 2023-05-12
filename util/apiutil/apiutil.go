@@ -26,4 +26,5 @@ func GenerateResponse(c *gin.Context, payload interface{}, message response.Mess
 		resp = response.NewResponseByMessage(payload, message)
 	}
 	c.JSON(message.StatusCode, resp)
+	c.Abort()
 }
