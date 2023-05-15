@@ -21,7 +21,7 @@ func ParseBearerAuth(c *gin.Context) (string, bool) {
 func GenerateResponse(c *gin.Context, payload interface{}, message response.Message, v ...interface{}) {
 	var resp interface{}
 	if v != nil {
-		resp = response.NewResponseByMessage(payload, message, v)
+		resp = response.NewResponseByMessage(payload, message, v...)
 	} else {
 		resp = response.NewResponseByMessage(payload, message)
 	}
