@@ -22,6 +22,7 @@ const (
 	getAllTasks                = "%s/tasks/all"
 	getSitePlanBySiteWalkId    = "%s/inspection/tasks/siteplans/latest"
 	getFollowUpByParentRefIds  = "%s/tasks/followup/tasks/all/many"
+	findManyTaskByParentId     = "%s/inspection/tasks/parents"
 )
 
 // Gets all appointments requiring the user's attention
@@ -208,6 +209,32 @@ func GetSiteWalkActivityLog(tk string, siteWalkId, checklistId *intstring.IntStr
 			Descending:  false,
 		}).
 		Post(fmt.Sprintf(getSiteWalkActivityLog, apis.V().GetString(apiInspectionMdlUrlBase)))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("inspection module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func FindManyTaskByParentId(tk string, parentId, parentGroupId *intstring.IntString, parentType *string) (map[intstring.IntString]interface{}, error) {
+	resp := struct {
+		Payload map[intstring.IntString]interface{} `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().
+		SetAuthToken(tk).
+		SetBody(map[string]interface{}{
+			"parentId":      parentId,
+			"parentGroupId": parentGroupId,
+			"parentType":    parentType,
+		}).
+		Post(fmt.Sprintf(findManyTaskByParentId, apis.V().GetString(apiInspectionMdlUrlBase)))
 	if err != nil {
 		return nil, err
 	}
