@@ -19,7 +19,7 @@ const (
 	getSiteWalkInfo            = "%s/inspection/tasks/%s"
 	registerAttachment         = "%s/inspection/tasks/attachments"
 	getSiteWalkActivityLog     = "%s/inspection/tasks/activities/all"
-	findManyTaskByParentId     = "%s/inspection/tasks/parents"
+	findManyTaskByParentId     = "%s/tasks/parents"
 	getAllTasks                = "%s/tasks/all"
 	getSitePlanBySiteWalkId    = "%s/inspection/tasks/siteplans/latest"
 	getFollowUpByParentRefIds  = "%s/tasks/followup/tasks/all/many"
