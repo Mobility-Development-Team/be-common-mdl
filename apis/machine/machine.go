@@ -10,15 +10,16 @@ import (
 )
 
 const (
-	apiMachineMdlUrlBase = "apis.internal.machine.module.url.base"
-	getOnePlantPermit    = "%s/permits/plantpermits/%s"
-	getOneNCAPermit      = "%s/permits/nca/%s"
-	getOneHotworkPermit  = "%s/permits/hw/%s"
-	getOneEXPermit       = "%s/permits/ex/%s"
-	getOneELPermit       = "%s/permits/el/%s"
-	getOneLA             = "%s/plant/equip/LA/detail"
-	getAllPermits        = "%s/permits/internal/all"
-	getPITChecklist      = "%s/permits/pc/%s"
+	apiMachineMdlUrlBase          = "apis.internal.machine.module.url.base"
+	getOnePlantPermit             = "%s/permits/plantpermits/%s"
+	getOneNCAPermit               = "%s/permits/nca/%s"
+	getOneHotworkPermit           = "%s/permits/hw/%s"
+	getOneEXPermit                = "%s/permits/ex/%s"
+	getOneELPermit                = "%s/permits/el/%s"
+	getOneLA                      = "%s/plant/equip/LA/detail"
+	getAllPermits                 = "%s/permits/internal/all"
+	getPITChecklist               = "%s/permits/pc/%s"
+	getOneTaskRelatedPITChecklist = "%s/permits/pc/checklist/%s"
 )
 
 func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
@@ -164,7 +165,6 @@ func GetOneELPermit(tk string, permitMasterId intstring.IntString) (*ELPermit, e
 	return resp.Payload, err
 }
 
-
 func GetOnePITChecklist(tk string, permitMasterId intstring.IntString) (*PITChecklist, error) {
 	resp := struct {
 		Payload *PITChecklist `json:"payload"`
@@ -182,5 +182,26 @@ func GetOnePITChecklist(tk string, permitMasterId intstring.IntString) (*PITChec
 		return nil, err
 	}
 
+	return resp.Payload, err
+}
+
+func GetOneTaskRelatedPITChecklist(tk string, parentId intstring.IntString) (interface{}, error) {
+	resp := struct {
+		Payload interface{} `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(
+		fmt.Sprintf(getOneTaskRelatedPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), parentId),
+	)
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
 	return resp.Payload, err
 }
