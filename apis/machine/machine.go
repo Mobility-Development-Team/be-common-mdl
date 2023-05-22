@@ -20,6 +20,7 @@ const (
 	getAllPermits                 = "%s/permits/internal/all"
 	getPITChecklist               = "%s/permits/pc/%s"
 	getOneTaskRelatedPITChecklist = "%s/permits/pc/checklist/%s"
+	getAllAppointmentsForInternal = "%s/permits/appt/internal/all"
 )
 
 func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
@@ -192,6 +193,31 @@ func GetOneTaskRelatedPITChecklist(tk string, parentGroupId intstring.IntString)
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(
 		fmt.Sprintf(getOneTaskRelatedPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), parentGroupId),
+	)
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetAllAppointmentsForMyTask(tk string, criteria PermitApptCriteria) ([]PermitAppointment, error) {
+	resp := struct {
+		Payload []PermitAppointment `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"criteria": criteria,
+		},
+	).Post(
+		fmt.Sprintf(getAllAppointmentsForInternal, apis.V().GetString(apiMachineMdlUrlBase)),
 	)
 	if err != nil {
 		return nil, err
