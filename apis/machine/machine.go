@@ -185,13 +185,13 @@ func GetOnePITChecklist(tk string, permitMasterId intstring.IntString) (*PITChec
 	return resp.Payload, err
 }
 
-func GetOneTaskRelatedPITChecklist(tk string, parentId intstring.IntString) (interface{}, error) {
+func GetOneTaskRelatedPITChecklist(tk string, parentGroupId intstring.IntString) (interface{}, error) {
 	resp := struct {
 		Payload interface{} `json:"payload"`
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(
-		fmt.Sprintf(getOneTaskRelatedPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), parentId),
+		fmt.Sprintf(getOneTaskRelatedPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), parentGroupId),
 	)
 	if err != nil {
 		return nil, err
