@@ -114,6 +114,11 @@ type (
 		PermitMasterId  intstring.IntString `json:"permitMasterId"`
 		TimeSlots       []interface{}       `json:"timeSlots"`
 		Participants    []*interface{}      `json:"participants"`
+		PermitNo        string              `json:"permitNo"`
+		PermitStatus    string              `json:"permitStatus"`
+		PlantType       string              `json:"plantType"`
+		ProjectId       string              `json:"projectId"`
+		ContractNo      string              `json:"contractNo"`
 	}
 	MasterPermit struct {
 		model.Model
