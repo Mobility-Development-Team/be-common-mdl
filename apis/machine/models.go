@@ -117,7 +117,7 @@ type (
 		PermitNo        string              `json:"permitNo"`
 		PermitStatus    string              `json:"permitStatus"`
 		PlantType       string              `json:"plantType"`
-		ContractRefNo   intstring.IntString `json:"contractRefId"`
+		contractRefId   intstring.IntString `json:"contractRefId"`
 	}
 	MasterPermit struct {
 		model.Model
