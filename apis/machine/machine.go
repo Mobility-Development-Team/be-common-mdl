@@ -92,6 +92,8 @@ func GetAllPermits(tk string, userRefKey string, criteria PermitCriteria, opt Ge
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"criteria": criteria,
+			"opts":     opt,
+			"preloads": preloadNames,
 		},
 	).Post(
 		fmt.Sprintf(getAllPermits, apis.V().GetString(apiMachineMdlUrlBase)),
