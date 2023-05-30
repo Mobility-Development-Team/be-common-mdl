@@ -1,6 +1,8 @@
 package system
 
-import "github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+import (
+	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+)
 
 type ContractParty struct {
 	Info struct {
@@ -19,4 +21,5 @@ type ContractParty struct {
 	UserIds      []intstring.IntString `json:"userIds"`
 	GroupIds     []intstring.IntString `json:"groupIds"`
 	RoleIds      []intstring.IntString `json:"roleIds"`
+	IsPrimary    bool                  `json:"isPrimary"`
 }
