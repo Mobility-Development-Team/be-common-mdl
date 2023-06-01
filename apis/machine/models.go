@@ -105,6 +105,20 @@ type (
 		CraneSerialNo        *string           `json:"craneSerialNo"`
 		Applicant            *ApplicantDisplay `json:"applicant"`
 	}
+	PermitAppointment struct {
+		model.Model
+		ApptStatus      string              `json:"apptStatus"`
+		ReceiverType    string              `json:"receiverType"`
+		Remark          *string             `json:"remark"`
+		WorkflowRefUuid *string             `json:"workflowRefUuid"`
+		PermitMasterId  intstring.IntString `json:"permitMasterId"`
+		TimeSlots       []interface{}       `json:"timeSlots"`
+		Participants    []*interface{}      `json:"participants"`
+		PermitNo        string              `json:"permitNo"`
+		PermitStatus    string              `json:"permitStatus"`
+		PlantType       string              `json:"plantType"`
+		ContractRefId   intstring.IntString `json:"contractRefId"`
+	}
 	MasterPermit struct {
 		model.Model
 		PermitNo           string              `json:"permitNo"`
@@ -239,6 +253,11 @@ type (
 		SearchType             string              `json:"searchType"`
 		PermitStatuses         []string            `json:"permitStatuses"`
 		ContractRefId          intstring.IntString `json:"contractId"`
+	}
+	PermitApptCriteria struct {
+		ParticipantUserRefKeys []string `json:"participantUserRefKeys"`
+		SearchType             string   `json:"searchType"`
+		ApptStatuses           []string `json:"apptStatuses"`
 	}
 	ApplicantDisplay struct {
 		DisplayName  string  `json:"displayName"`
