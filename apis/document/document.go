@@ -23,6 +23,7 @@ const (
 	generateEXReport         = "%s/documents/machine/permits/ex/report/generate"
 	generateELReport         = "%s/documents/machine/permits/el/report/generate"
 	generatePCChecklist      = "%s/documents/machine/permits/pc/report/generate"
+	generatePCCertificate    = "%s/documents/machine/permits/pc/cert/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
@@ -94,6 +95,10 @@ func GeneratePermitCertificate(tk string, permitMasterId intstring.IntString) (s
 	return generatePermitType(tk, generatePlantCertificate, permitMasterId, true)
 }
 
+func GeneratePCCertificate(tk string, permitMasterId intstring.IntString) (string, error) {
+	return generatePermitType(tk, generatePCCertificate, permitMasterId, true)
+}
+
 func GeneratePlantReport(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generatePlantReport, permitMasterId, true)
 }
@@ -117,7 +122,6 @@ func GenerateELReport(tk string, permitMasterId intstring.IntString) (string, er
 func GeneratePCChecklist(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generatePCChecklist, permitMasterId, true)
 }
-
 
 func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
 	client := resty.New()
