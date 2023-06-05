@@ -52,6 +52,7 @@ type (
 		ModelNo           *string             `json:"modelNo"`
 		YearOfManufacture *string             `json:"yearOfManufacture"`
 		CertExpiryDate    *string             `json:"certExpiryDate"`
+		CertActualExpiryDate *time.Time          `json:"certActualExpiryDate"`
 		SerialNo          *string             `json:"serialNo"`
 		OwnerNo           *string             `json:"ownerNo"`
 		IsRental          *bool               `json:"isRental"`
