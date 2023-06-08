@@ -21,6 +21,7 @@ const (
 	getPITChecklist               = "%s/permits/pc/%s"
 	getOneTaskRelatedPITChecklist = "%s/permits/pc/checklist/%s"
 	getAllAppointmentsForInternal = "%s/permits/appt/internal/all"
+	getOneCSPermit                = "%s/permits/cs/%s"
 )
 
 func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
@@ -188,16 +189,31 @@ func GetOnePITChecklist(tk string, permitMasterId intstring.IntString) (*PITChec
 	return resp.Payload, err
 }
 
-func GetOneTaskRelatedPITChecklist(tk string, parentId, parentGroupId intstring.IntString) (interface{}, error) {
+func GetOneCSPermit(tk string, permitMasterId intstring.IntString) (*ConfinedSpacePermit, error) {
+	resp := struct {
+		Payload *ConfinedSpacePermit  `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCSPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetOneTaskRelatedPITChecklist(tk string, parentGroupId intstring.IntString) (interface{}, error) {
 	resp := struct {
 		Payload interface{} `json:"payload"`
 	}{}
 	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(
-		map[string]interface{}{
-			"parentId": parentId,
-		},
-	).Post(
+	result, err := client.R().SetAuthToken(tk).Get(
 		fmt.Sprintf(getOneTaskRelatedPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), parentGroupId),
 	)
 	if err != nil {

@@ -45,19 +45,19 @@ type (
 
 	PITChecklist struct {
 		MasterPermit
-		PlantType         string              `json:"plantType"`
-		PlantOwner        *string             `json:"plantOwner"`
-		PlantOwnerName    *string             `json:"plantOwnerName"`
-		Manufacturer      *string             `json:"manufacturer"`
-		ModelNo           *string             `json:"modelNo"`
-		YearOfManufacture *string             `json:"yearOfManufacture"`
-		CertExpiryDate    *string             `json:"certExpiryDate"`
+		PlantType            string              `json:"plantType"`
+		PlantOwner           *string             `json:"plantOwner"`
+		PlantOwnerName       *string             `json:"plantOwnerName"`
+		Manufacturer         *string             `json:"manufacturer"`
+		ModelNo              *string             `json:"modelNo"`
+		YearOfManufacture    *string             `json:"yearOfManufacture"`
+		CertExpiryDate       *string             `json:"certExpiryDate"`
 		CertActualExpiryDate *time.Time          `json:"certActualExpiryDate"`
-		SerialNo          *string             `json:"serialNo"`
-		OwnerNo           *string             `json:"ownerNo"`
-		IsRental          *bool               `json:"isRental"`
-		IsRpe             *bool               `json:"isRpe"`
-		PermitMasterId    intstring.IntString `json:"permitMasterId"`
+		SerialNo             *string             `json:"serialNo"`
+		OwnerNo              *string             `json:"ownerNo"`
+		IsRental             *bool               `json:"isRental"`
+		IsRpe                *bool               `json:"isRpe"`
+		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 	}
 
 	WorkPeriodDisplay struct {
@@ -80,6 +80,19 @@ type (
 		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 		CancelMedia          []model.MediaParam  `json:"cancelMedia"`
 	}
+
+	ConfinedSpacePermit struct {
+		MasterPermit
+		RraReportNo    string              `json:"rraReportNo"`
+		WorkActivity   string              `json:"workActivity"`
+		WorkDate       string              `json:"workDate"`
+		WorkLocation   *string             `json:"workLocation"`
+		WorkPeriodFrom string              `json:"workPeriodFrom"`
+		WorkPeriodTo   string              `json:"workPeriodTo"`
+		PermitMasterId intstring.IntString `json:"permitMasterId"`
+		CancelMedia    []model.MediaParam  `json:"cancelMedia"`
+	}
+
 	EXPermit struct {
 		MasterPermit
 		WorkDurationFromDate string              `json:"workDurationFromDate"`
