@@ -90,6 +90,7 @@ type (
 		WorkPeriodFrom string              `json:"workPeriodFrom"`
 		WorkPeriodTo   string              `json:"workPeriodTo"`
 		PermitMasterId intstring.IntString `json:"permitMasterId"`
+		AcceptMedia    []model.MediaParam  `json:"acceptMedia"`
 		CancelMedia    []model.MediaParam  `json:"cancelMedia"`
 	}
 
@@ -217,6 +218,16 @@ type (
 		IsMandatory           bool                `json:"isMandatory"`
 		Remark                string              `json:"remark"`
 		Media                 []model.MediaParam  `json:"media" gorm:"-"`
+		ChecklistItemRemark   []ChecklistItemSupportInfo `json:"checklistItemRemark" gorm:"foreignKey:ChecklistItemId"`
+	}
+	ChecklistItemSupportInfo struct {
+		model.Model
+		SuppInfoKey       string              `json:"suppInfoKey"`
+		SuppInfoVal       string              `json:"suppInfoVal"`
+		SuppInfoKeyNameEn *string             `json:"suppInfoKeyNameEn"`
+		SuppInfoKeyNameZh *string             `json:"suppInfoKeyNameZh"`
+		ChklItemId        intstring.IntString `json:"chklItemId"`
+		ChecklistItem     *ChecklistItem      `json:"checklistItem,omitempty" gorm:"foreignKey:Id;references:ChecklistItemId"`
 	}
 	LA struct {
 		model.Model
