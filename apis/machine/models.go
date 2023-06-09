@@ -90,7 +90,6 @@ type (
 		WorkPeriodFrom string              `json:"workPeriodFrom"`
 		WorkPeriodTo   string              `json:"workPeriodTo"`
 		PermitMasterId intstring.IntString `json:"permitMasterId"`
-		AcceptMedia    []model.MediaParam  `json:"acceptMedia"`
 		CancelMedia    []model.MediaParam  `json:"cancelMedia"`
 	}
 
@@ -202,35 +201,23 @@ type (
 	}
 	ChecklistItem struct {
 		model.Model
-		Seq                   int                        `json:"seq"`
-		Response              string                     `json:"response"`
-		ItemNameEn            string                     `json:"itemNameEn"`
-		ItemNameZh            string                     `json:"itemNameZh"`
-		ResponsedBy           intstring.IntString        `json:"responsedBy"`
-		TemplateItemRefId     intstring.IntString        `json:"templateItemRefId"`
-		PermitChecklistId     intstring.IntString        `json:"permitChecklistId"`
-		ResponsedByUserRefKey string                     `json:"responsedByUserRefKey"`
-		HasRemark             bool                       `json:"hasRemark"`
-		ItemRemarkNameEn      string                     `json:"itemRemarkNameEn"`
-		ItemRemarkNameZh      string                     `json:"itemRemarkNameZh"`
-		ItemGrpNameEn         string                     `json:"itemGrpNameEn"`
-		ItemGrpNameZh         string                     `json:"itemGrpNameZh"`
-		IsMandatory           bool                       `json:"isMandatory"`
-		Remark                string                     `json:"remark"`
-		Media                 []model.MediaParam         `json:"media" gorm:"-"`
-		ChecklistItemRemark   []ChecklistItemSupportInfo `json:"checklistItemRemark" gorm:"foreignKey:ChecklistItemId"`
+		Seq                   int                 `json:"seq"`
+		Response              string              `json:"response"`
+		ItemNameEn            string              `json:"itemNameEn"`
+		ItemNameZh            string              `json:"itemNameZh"`
+		ResponsedBy           intstring.IntString `json:"responsedBy"`
+		TemplateItemRefId     intstring.IntString `json:"templateItemRefId"`
+		PermitChecklistId     intstring.IntString `json:"permitChecklistId"`
+		ResponsedByUserRefKey string              `json:"responsedByUserRefKey"`
+		HasRemark             bool                `json:"hasRemark"`
+		ItemRemarkNameEn      string              `json:"itemRemarkNameEn"`
+		ItemRemarkNameZh      string              `json:"itemRemarkNameZh"`
+		ItemGrpNameEn         string              `json:"itemGrpNameEn"`
+		ItemGrpNameZh         string              `json:"itemGrpNameZh"`
+		IsMandatory           bool                `json:"isMandatory"`
+		Remark                string              `json:"remark"`
+		Media                 []model.MediaParam  `json:"media" gorm:"-"`
 	}
-
-	ChecklistItemSupportInfo struct {
-		model.Model
-		SuppInfoKey       string              `json:"suppInfoKey"`
-		SuppInfoVal       string              `json:"suppInfoVal"`
-		SuppInfoKeyNameEn *string             `json:"suppInfoKeyNameEn"`
-		SuppInfoKeyNameZh *string             `json:"suppInfoKeyNameZh"`
-		ChklItemId        intstring.IntString `json:"chklItemId"`
-		ChecklistItem     *ChecklistItem      `json:"checklistItem,omitempty" gorm:"foreignKey:Id;references:ChecklistItemId"`
-	}
-
 	LA struct {
 		model.Model
 		Uuid              string                        `json:"uuid"`
