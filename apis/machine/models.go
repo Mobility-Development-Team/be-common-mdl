@@ -90,7 +90,6 @@ type (
 		WorkPeriodFrom string              `json:"workPeriodFrom"`
 		WorkPeriodTo   string              `json:"workPeriodTo"`
 		PermitMasterId intstring.IntString `json:"permitMasterId"`
-		AcceptMedia    []model.MediaParam  `json:"acceptMedia"`
 		CancelMedia    []model.MediaParam  `json:"cancelMedia"`
 	}
 
