@@ -148,6 +148,7 @@ type (
 		Logs               []ActivityLog       `json:"logs"`
 		Attachments        []Attachment        `json:"attachments"`
 		ApprovalStage      *string             `json:"approvalStage"`
+		SuppInfos          []PermitSuppInfo    `json:"suppInfos"`
 	}
 	Checklist struct {
 		model.Model
@@ -157,7 +158,7 @@ type (
 		IsCompleted          bool                `json:"isCompleted"`
 		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 		TemplateRefOwnerType string              `json:"templateRefOwnerType"`
-		Items                []ChecklistItem     `json:"items" gorm:"foreignKey:PermitChecklistId"`
+		Items                []ChecklistItem     `json:"items"`
 	}
 	Attachment struct {
 		model.Model
@@ -218,9 +219,17 @@ type (
 		IsMandatory           bool                       `json:"isMandatory"`
 		Remark                string                     `json:"remark"`
 		Media                 []model.MediaParam         `json:"media" gorm:"-"`
-		ChecklistItemRemark   []ChecklistItemSupportInfo `json:"checklistItemRemark" gorm:"foreignKey:ChecklistItemId"`
+		ChecklistItemRemark   []ChecklistItemSupportInfo `json:"checklistItemRemark"`
 	}
-
+	PermitSuppInfo struct {
+		model.Model
+		SuppInfoKey      string              `json:"suppInfoKey"`
+		SuppInfoVal      *string             `json:"suppInfoVal"`
+		SuppInfoDataType string              `json:"suppInfoDataType"`
+		PermitMasterId   intstring.IntString `json:"permitMasterId"`
+		// Media is hidden via omitempty unless explicitly set, hence a pointer here
+		Media *model.MediaParam `json:"media,omitempty"`
+	}
 	ChecklistItemSupportInfo struct {
 		model.Model
 		SuppInfoKey       string              `json:"suppInfoKey"`
@@ -228,7 +237,7 @@ type (
 		SuppInfoKeyNameEn *string             `json:"suppInfoKeyNameEn"`
 		SuppInfoKeyNameZh *string             `json:"suppInfoKeyNameZh"`
 		ChklItemId        intstring.IntString `json:"chklItemId"`
-		ChecklistItem     *ChecklistItem      `json:"checklistItem,omitempty" gorm:"foreignKey:Id;references:ChecklistItemId"`
+		ChecklistItem     *ChecklistItem      `json:"checklistItem,omitempty"`
 	}
 
 	LA struct {
