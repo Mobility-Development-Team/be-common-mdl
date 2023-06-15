@@ -19,5 +19,6 @@ const (
 	PermitStatusApproved           = "APPROVED"
 	PermitStatusExpired            = "EXPIRED"
 	PermitStatusAwaitingAccepted   = "ACCEPTED"
+	PermitStatusValid              = "VALID"
 	PermitStatusAwaitingAcceptance = "AWAITING_ACCEPTANCE"
 )
