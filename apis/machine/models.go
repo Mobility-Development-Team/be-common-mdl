@@ -84,7 +84,7 @@ type (
 	ConfinedSpacePermit struct {
 		MasterPermit
 		RraReportNo    string              `json:"rraReportNo"`
-		LiftingWorkers []Worker            `json:"workers"`
+		Workers        []Worker            `json:"workers"`
 		WorkActivity   string              `json:"workActivity"`
 		WorkDate       string              `json:"workDate"`
 		WorkLocation   *string             `json:"workLocation"`
