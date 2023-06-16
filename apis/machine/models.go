@@ -84,7 +84,7 @@ type (
 	ConfinedSpacePermit struct {
 		MasterPermit
 		RraReportNo    string              `json:"rraReportNo"`
-		Workers        []Worker            `json:"workers"`
+		Workers        []CSWorker          `json:"cSWorkers"`
 		WorkActivity   string              `json:"workActivity"`
 		WorkDate       string              `json:"workDate"`
 		WorkLocation   *string             `json:"workLocation"`
@@ -379,5 +379,14 @@ type (
 		OwnerId        *string             `json:"ownerId"`
 		CertExpiryDate *string             `json:"certExpiryDate"`
 		PermitLiftId   intstring.IntString `json:"permitLiftId"`
+	}
+
+	CSWorker struct {
+		model.Model
+		WorkerType           string              `json:"workerType"`
+		WorkerName           *string             `json:"workerName"`
+		WorkerCertNo         *string             `json:"workerCertNo"`
+		WorkerCertExpiryDate *string             `json:"workerCertExpiryDate"`
+		PermitCSId           intstring.IntString `json:"permitCSId"`
 	}
 )
