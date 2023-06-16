@@ -84,14 +84,13 @@ type (
 	ConfinedSpacePermit struct {
 		MasterPermit
 		RraReportNo    string              `json:"rraReportNo"`
+		LiftingWorkers []Worker            `json:"workers"`
 		WorkActivity   string              `json:"workActivity"`
 		WorkDate       string              `json:"workDate"`
 		WorkLocation   *string             `json:"workLocation"`
 		WorkPeriodFrom string              `json:"workPeriodFrom"`
 		WorkPeriodTo   string              `json:"workPeriodTo"`
 		PermitMasterId intstring.IntString `json:"permitMasterId"`
-		AcceptMedia    []model.MediaParam  `json:"acceptMedia"`
-		CancelMedia    []model.MediaParam  `json:"cancelMedia"`
 	}
 
 	EXPermit struct {
@@ -228,7 +227,7 @@ type (
 		SuppInfoDataType string              `json:"suppInfoDataType"`
 		PermitMasterId   intstring.IntString `json:"permitMasterId"`
 		// Media is hidden via omitempty unless explicitly set, hence a pointer here
-		Media *model.MediaParam `json:"media,omitempty"`
+		Media *[]model.MediaParam `json:"media,omitempty"`
 	}
 	ChecklistItemSupportInfo struct {
 		model.Model
