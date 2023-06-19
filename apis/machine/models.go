@@ -385,6 +385,7 @@ type (
 		model.Model
 		WorkerType           string              `json:"workerType"`
 		WorkerName           *string             `json:"workerName"`
+		WorkerCompanyName    *string             `json:"workerCompanyName"`
 		WorkerCertNo         *string             `json:"workerCertNo"`
 		WorkerCertExpiryDate *string             `json:"workerCertExpiryDate"`
 		ConfinedSpaceId      intstring.IntString `json:"confinedSpaceId"`
