@@ -211,6 +211,7 @@ type (
 		PermitChecklistId     intstring.IntString        `json:"permitChecklistId"`
 		ResponsedByUserRefKey string                     `json:"responsedByUserRefKey"`
 		HasRemark             bool                       `json:"hasRemark"`
+		HasMedia              bool                       `json:"hasMedia"`
 		ItemRemarkNameEn      string                     `json:"itemRemarkNameEn"`
 		ItemRemarkNameZh      string                     `json:"itemRemarkNameZh"`
 		ItemGrpNameEn         string                     `json:"itemGrpNameEn"`
