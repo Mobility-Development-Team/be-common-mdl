@@ -218,7 +218,7 @@ type (
 		IsMandatory           bool                       `json:"isMandatory"`
 		Remark                string                     `json:"remark"`
 		Media                 []model.MediaParam         `json:"media" gorm:"-"`
-		ChecklistItemRemark   []ChecklistItemSupportInfo `json:"checklistItemRemark"`
+		ChecklistSuppInfos  []ChecklistItemSupportInfo `json:"suppInfos"`
 	}
 	PermitSuppInfo struct {
 		model.Model
