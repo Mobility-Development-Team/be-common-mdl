@@ -219,7 +219,7 @@ type (
 		IsMandatory           bool                       `json:"isMandatory"`
 		Remark                string                     `json:"remark"`
 		Media                 []model.MediaParam         `json:"media" gorm:"-"`
-		ChecklistItemRemark   []ChecklistItemSupportInfo `json:"checklistItemRemark"`
+		ChecklistSuppInfos    []ChecklistItemSupportInfo `json:"suppInfos"`
 	}
 	PermitSuppInfo struct {
 		model.Model
@@ -236,6 +236,7 @@ type (
 		SuppInfoVal       string              `json:"suppInfoVal"`
 		SuppInfoKeyNameEn *string             `json:"suppInfoKeyNameEn"`
 		SuppInfoKeyNameZh *string             `json:"suppInfoKeyNameZh"`
+		SuppInfoDataType  string              `json:"suppInfoDataType"`
 		ChklItemId        intstring.IntString `json:"chklItemId"`
 		ChecklistItem     *ChecklistItem      `json:"checklistItem,omitempty"`
 	}
