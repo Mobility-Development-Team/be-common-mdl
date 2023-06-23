@@ -235,6 +235,7 @@ type (
 		SuppInfoVal       string              `json:"suppInfoVal"`
 		SuppInfoKeyNameEn *string             `json:"suppInfoKeyNameEn"`
 		SuppInfoKeyNameZh *string             `json:"suppInfoKeyNameZh"`
+		SuppInfoDataType  string              `json:"suppInfoDataType"`
 		ChklItemId        intstring.IntString `json:"chklItemId"`
 		ChecklistItem     *ChecklistItem      `json:"checklistItem,omitempty"`
 	}
