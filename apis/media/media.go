@@ -51,6 +51,7 @@ type CloneOpts struct {
 	NoTruncate bool `json:"noTruncate"` // Do not delete any records
 	NoClone    bool `json:"noClone"`    // Do not clone new records
 	NoUpdate   bool `json:"noUpdate"`   // Do not update existing record
+	ForReport  bool `json:"forReport"`
 }
 
 type Scope map[string]string
