@@ -115,11 +115,36 @@ type (
 		Hashtags             json.RawMessage         `json:"hashtags"`
 		MediaRefInfo         json.RawMessage         `json:"mediaRefInfo"`
 	}
+	// HashTags related object - Replicated for report
+	HashTags struct {
+		Custom    []CustomHashTag    `json:"custom"`
+		Location  []LocationHashTag  `json:"location"`
+		User      []UserHashTag      `json:"user"`
+		UserGroup []UserGroupHashTag `json:"usergroup"`
+	}
+	CustomHashTag struct {
+		TagName string `json:"tagName"`
+	}
+	LocationHashTag struct {
+		LocationId   string `json:"locationId"`
+		LocationName string `json:"locationName"`
+		Uuid         string `json:"uuid"`
+	}
+	UserHashTag struct {
+		UserId   string `json:"userId"`
+		UserName string `json:"userName"`
+		Uuid     string `json:"uuid"`
+	}
+	UserGroupHashTag struct {
+		UserGroupId   string `json:"usergroupId"`
+		UserGroupName string `json:"usergroupName"`
+		Uuid          string `json:"uuid"`
+	}
 )
 
 // GetIdFromInterface attempts to get the Id field of obj
 //
-// obj must be a struct with field ``Id`` of type intstring.IntString,
+// obj must be a struct with field “Id“ of type intstring.IntString,
 // embedding Model is not required as long as the requirement is met.
 func GetIdFromInterface(obj interface{}) (intstring.IntString, error) {
 	if obj == nil {
@@ -142,7 +167,7 @@ func GetIdFromInterface(obj interface{}) (intstring.IntString, error) {
 
 // GetIdsFromRecords attempts to get all the ids from the given slice
 //
-// All slice values must be structs with field ``Id`` of type intstring.IntString.
+// All slice values must be structs with field “Id“ of type intstring.IntString.
 // Any value failing to meet such requirement result in an error.
 func GetIdsFromRecords(slice interface{}) ([]intstring.IntString, error) {
 	if slice == nil {
