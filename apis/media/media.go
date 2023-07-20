@@ -45,6 +45,7 @@ const (
 	ReportTypePCPermitCert        = "pcPermitCert"
 	ReportTypePCPermitReport      = "pcPermitReport"
 	ReportTypeCSPermitReport      = "csPermitReport"
+	ReportTypeDocReport           = "docReport"
 )
 
 type CloneOpts struct {
