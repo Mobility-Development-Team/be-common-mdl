@@ -25,6 +25,7 @@ const (
 	generatePCReport         = "%s/documents/machine/permits/pc/report/generate"
 	generatePCCertificate    = "%s/documents/machine/permits/pc/cert/generate"
 	generateCSReport        = "%s/documents/machine/permits/cs/report/generate"
+	generateDocReport        = "%s/report/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
@@ -145,6 +146,34 @@ func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntS
 	}
 	if result.StatusCode() != http.StatusCreated {
 		return "", fmt.Errorf("[generatePlantPermitType] status code not 201: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return "", err
+	}
+	return resp.Payload.Url, nil
+}
+
+func GenerateDocReport(tk string, reportId intstring.IntString) (string, error) {
+	return generateDoc(tk, generateDocReport, reportId, true)
+}
+
+func generateDoc(tk, apiPath string, id intstring.IntString, publish bool) (string, error) {
+	client := resty.New()
+	var resp struct {
+		Payload struct {
+			Url string `json:"url"`
+		} `json:"payload"`
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+		"id":      id,
+		"publish": publish,
+	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
+	if err != nil {
+		return "", err
+	}
+	if result.StatusCode() != http.StatusCreated {
+		return "", fmt.Errorf("[GenerateDocReport] status code not 201: %d", result.StatusCode())
 	}
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {
