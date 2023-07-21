@@ -158,7 +158,7 @@ func GenerateDocReport(tk string, reportId intstring.IntString) (string, error) 
 	return generateDoc(tk, generateDocReport, reportId, true)
 }
 
-func generateDoc(tk, apiPath string, id intstring.IntString, publish bool) (string, error) {
+func generateDoc(tk, apiPath string, reportId intstring.IntString, publish bool) (string, error) {
 	client := resty.New()
 	var resp struct {
 		Payload struct {
@@ -166,7 +166,7 @@ func generateDoc(tk, apiPath string, id intstring.IntString, publish bool) (stri
 		} `json:"payload"`
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
-		"id":      id,
+		"reportId":      reportId,
 		"publish": publish,
 	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
 	if err != nil {
