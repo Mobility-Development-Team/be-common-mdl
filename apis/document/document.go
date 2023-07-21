@@ -25,7 +25,7 @@ const (
 	generatePCReport         = "%s/documents/machine/permits/pc/report/generate"
 	generatePCCertificate    = "%s/documents/machine/permits/pc/cert/generate"
 	generateCSReport        = "%s/documents/machine/permits/cs/report/generate"
-	generateDocReport        = "%s/report/generate"
+	generateDocReport        = "%s/reports/generate"
 )
 
 func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error) {
