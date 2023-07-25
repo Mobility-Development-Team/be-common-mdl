@@ -48,11 +48,32 @@ func GetUserRefKeyFromContext(c *gin.Context) string {
 	return fmt.Sprintf("%v", k)
 }
 
-// Gets a gin middleware for handing token verifications. The returned intercepter should be registered
+// NewTokenVerifierInterceptor Gets a gin middleware for handing token verifications. The returned intercepter should be registered
 // as a middleware in gin for protected API calls such that ParseBearerAuth and GetUserRefKeyFromContext
 // can be used. invalidHeaderMsg or invalidTokenMsg is returned to the user in case of error.
 func NewTokenVerifierInterceptor(invalidHeaderMsg, invalidTokenMsg response.Message) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		b := strings.ToLower(c.Query("smm")) == "true"
+		if b {
+			// Handle EMat token
+			tk, isValid := parseCustomAuthHeader(c, "Bearer ")
+			if !isValid {
+				logger.Warn("[NewTokenVerifierInterceptor] unable to get token from Authorization-ext")
+				apiutil.GenerateResponse(c, nil, invalidTokenMsg)
+				c.Abort()
+				return
+			}
+			r, err := ValidateEMatToken(c, tk)
+			if err != nil {
+				logger.Warn("[NewTokenVerifierInterceptor] invalid EMat token")
+				apiutil.GenerateResponse(c, nil, invalidTokenMsg)
+				c.Abort()
+				return
+			}
+			c.Set("userRefKey", r.UserRefKey)
+			c.Next()
+			return
+		}
 		tk, ok := apiutil.ParseBearerAuth(c)
 		if !ok {
 			logger.Warn("[ValidateInternalToken] unable to parse the given token from the header")
@@ -117,4 +138,16 @@ func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error
 		return nil, err
 	}
 	return &info, err
+}
+
+func parseCustomAuthHeader(c *gin.Context, prefix string) (string, bool) {
+	auth := c.Request.Header.Get("Authorization-ext") // Customized token for exchange
+	pf, token := "Bearer", ""
+	if prefix != "" {
+		pf = prefix
+	}
+	if auth != "" && strings.HasPrefix(auth, pf) {
+		token = auth[len(pf):]
+	}
+	return token, token != ""
 }
