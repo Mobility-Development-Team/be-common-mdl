@@ -20,9 +20,10 @@ const (
 	keyTokenInfo        = "tokenInfo"
 	CustAuthHeader      = "Authorization-ext"
 	// API constant
-	apiAuthMdlUrlBase = "apis.internal.auth.module.url.base"
-	getTokenInfo      = "%s/tokeninfo"
-	validateEmatToken = "%s/validate/smm/user"
+	apiAuthMdlUrlBase       = "apis.internal.auth.module.url.base"
+	getTokenInfo            = "%s/tokeninfo"
+	validateEmatToken       = "%s/validate/smm/user"
+	validateEmatTokenWithTk = "%s/validate/smm/user?tk=true"
 )
 
 type (
@@ -37,6 +38,7 @@ type (
 		Message    string `json:"message"`
 		Email      string `json:"email"`
 		UserRefKey string `json:"userRefKey"`
+		Token      string `json:"tk"`
 	}
 )
 
@@ -125,7 +127,7 @@ func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 
 func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error) {
 	client := resty.New()
-	url := strings.TrimSpace(fmt.Sprintf(validateEmatToken, apis.V().GetString(apiAuthMdlUrlBase)))
+	url := strings.TrimSpace(fmt.Sprintf(validateEmatTokenWithTk, apis.V().GetString(apiAuthMdlUrlBase)))
 	result, err := client.R().SetHeader(CustAuthHeader, fmt.Sprintf("Bearer %s", tk)).Get(url)
 	if err != nil {
 		return nil, err
