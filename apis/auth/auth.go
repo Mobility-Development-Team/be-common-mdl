@@ -21,7 +21,7 @@ const (
 	// API constant
 	apiAuthMdlUrlBase = "apis.internal.auth.module.url.base"
 	getTokenInfo      = "%s/tokeninfo"
-	validateEmatToken = "%s/auth/validate/smm/user"
+	validateEmatToken = "%s/validate/smm/user"
 )
 
 type (
