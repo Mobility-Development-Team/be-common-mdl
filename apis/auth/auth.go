@@ -19,6 +19,7 @@ const (
 	tokenInfoUserRefKey = "userRefKey"
 	keyTokenInfo        = "tokenInfo"
 	CustAuthHeader      = "Authorization-ext"
+	AuthorizationBearer = "Bearer"
 	// API constant
 	apiAuthMdlUrlBase       = "apis.internal.auth.module.url.base"
 	getTokenInfo            = "%s/tokeninfo"
@@ -72,6 +73,7 @@ func NewTokenVerifierInterceptor(invalidHeaderMsg, invalidTokenMsg response.Mess
 				c.Abort()
 				return
 			}
+			c.Set("somTk", r.Token)
 			c.Set("userRefKey", r.UserRefKey)
 			c.Next()
 			return
@@ -143,8 +145,8 @@ func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error
 }
 
 func parseCustomAuthHeader(c *gin.Context, prefix string) (string, bool) {
-	auth := c.Request.Header.Get("Authorization-ext") // Customized token for exchange
-	pf, token := "Bearer", ""
+	auth := c.Request.Header.Get(CustAuthHeader) // Customized token for exchange
+	pf, token := AuthorizationBearer, ""
 	if prefix != "" {
 		pf = prefix
 	}
