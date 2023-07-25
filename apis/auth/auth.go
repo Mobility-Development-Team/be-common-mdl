@@ -105,7 +105,7 @@ func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error) {
 	client := resty.New()
 	url := strings.TrimSpace(fmt.Sprintf(validateEmatToken, apis.V().GetString(apiAuthMdlUrlBase)))
-	result, err := client.R().SetHeader(keyTokenInfo, fmt.Sprintf("Bearer %s", tk)).Get(url)
+	result, err := client.R().SetHeader(CustAuthHeader, fmt.Sprintf("Bearer %s", tk)).Get(url)
 	if err != nil {
 		return nil, err
 	}
