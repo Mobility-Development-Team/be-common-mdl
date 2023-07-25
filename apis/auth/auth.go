@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
@@ -57,12 +58,14 @@ func NewTokenVerifierInterceptor(invalidHeaderMsg, invalidTokenMsg response.Mess
 			logger.Warn("[ValidateInternalToken] unable to parse the given token from the header")
 			apiutil.GenerateResponse(c, nil, invalidHeaderMsg)
 			c.Abort()
+			return
 		}
 		info, err := GetTokenInfo(c, tk)
 		if err != nil {
 			logger.Warn("[ValidateInternalToken] ", err)
 			apiutil.GenerateResponse(c, nil, invalidTokenMsg)
 			c.Abort()
+			return
 		}
 		// Reserve Token User Key
 		c.Set(keyTokenInfo, info)
@@ -101,7 +104,8 @@ func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 
 func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error) {
 	client := resty.New()
-	result, err := client.R().SetHeader(keyTokenInfo, fmt.Sprintf("Bearer %s", tk)).Get(fmt.Sprintf(validateEmatToken, apis.V().GetString(apiAuthMdlUrlBase)))
+	url := strings.TrimSpace(fmt.Sprintf(validateEmatToken, apis.V().GetString(apiAuthMdlUrlBase)))
+	result, err := client.R().SetHeader(keyTokenInfo, fmt.Sprintf("Bearer %s", tk)).Get(url)
 	if err != nil {
 		return nil, err
 	}
