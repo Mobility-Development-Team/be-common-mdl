@@ -17,20 +17,27 @@ import (
 const (
 	tokenInfoUserRefKey = "userRefKey"
 	keyTokenInfo        = "tokenInfo"
-)
-
-// API constant
-const (
+	CustAuthHeader      = "Authorization-ext"
+	// API constant
 	apiAuthMdlUrlBase = "apis.internal.auth.module.url.base"
 	getTokenInfo      = "%s/tokeninfo"
+	validateEmatToken = "%s/auth/validate/smm/user"
 )
 
-type TokenInfoResp struct {
-	UserId     string `json:"userId"`
-	CExpiresIn int    `json:"cExpiresIn"`
-	AExpiresIn int    `json:"aExpiresIn"`
-	RExpiresIn int    `json:"rExpiresIn"`
-}
+type (
+	TokenInfoResp struct {
+		UserId     string `json:"userId"`
+		CExpiresIn int    `json:"cExpiresIn"`
+		AExpiresIn int    `json:"aExpiresIn"`
+		RExpiresIn int    `json:"rExpiresIn"`
+	}
+	ValidateEmatTokenResp struct {
+		IsValid    bool   `json:"isValid"`
+		Message    string `json:"message"`
+		Email      string `json:"email"`
+		UserRefKey string `json:"userRefKey"`
+	}
+)
 
 func GetUserRefKeyFromContext(c *gin.Context) string {
 	k, ok := c.Get(tokenInfoUserRefKey) // Assume
@@ -90,4 +97,20 @@ func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 		return TokenInfoResp{}, errors.New("the validated token is not TokenInfoResp")
 	}
 	return info, nil
+}
+
+func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error) {
+	client := resty.New()
+	result, err := client.R().SetHeader(keyTokenInfo, fmt.Sprintf("Bearer %s", tk)).Get(fmt.Sprintf(validateEmatToken, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil {
+		return nil, err
+	}
+	if result.StatusCode() != 200 {
+		return nil, errors.New("the given token is invalid")
+	}
+	var info ValidateEmatTokenResp
+	if err := json.Unmarshal(result.Body(), &info); err != nil {
+		return nil, err
+	}
+	return &info, err
 }
