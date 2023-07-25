@@ -18,8 +18,10 @@ import (
 const (
 	tokenInfoUserRefKey = "userRefKey"
 	keyTokenInfo        = "tokenInfo"
-	CustAuthHeader      = "Authorization-ext"
+	AuthHeader          = "Authorization"
+	AuthHeaderCust      = "Authorization-ext"
 	AuthorizationBearer = "Bearer"
+	AuthorizationBasic  = "Basic"
 	// API constant
 	apiAuthMdlUrlBase       = "apis.internal.auth.module.url.base"
 	getTokenInfo            = "%s/tokeninfo"
@@ -59,7 +61,7 @@ func NewTokenVerifierInterceptor(invalidHeaderMsg, invalidTokenMsg response.Mess
 		b := strings.ToLower(c.Query("smm")) == "true"
 		if b {
 			// Handle EMat token
-			tk, isValid := parseCustomAuthHeader(c, "Bearer ")
+			tk, isValid := parseCustomAuthHeader(c, fmt.Sprintf("%s ", AuthorizationBearer))
 			if !isValid {
 				logger.Warn("[NewTokenVerifierInterceptor] unable to get token from Authorization-ext")
 				apiutil.GenerateResponse(c, nil, invalidTokenMsg)
@@ -130,7 +132,10 @@ func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error) {
 	client := resty.New()
 	url := strings.TrimSpace(fmt.Sprintf(validateEmatTokenWithTk, apis.V().GetString(apiAuthMdlUrlBase)))
-	result, err := client.R().SetHeader(CustAuthHeader, fmt.Sprintf("Bearer %s", tk)).Get(url)
+	result, err := client.R().SetHeaders(map[string]string{
+		AuthHeaderCust: fmt.Sprintf("%s %s", AuthorizationBearer, tk),
+		AuthHeader:     fmt.Sprintf("%s %s", AuthorizationBasic, "YzBhZjVlMDZiNTdlYmJlYTlhYTQ6ZGI4MDBjNzQ3ZjQ2MzgzOGM2NTQwMDQwYmM4ODM3MmNlZjVkNGVkMTlhNDU="),
+	}).Get(url)
 	if err != nil {
 		return nil, err
 	}
@@ -145,7 +150,7 @@ func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error
 }
 
 func parseCustomAuthHeader(c *gin.Context, prefix string) (string, bool) {
-	auth := c.Request.Header.Get(CustAuthHeader) // Customized token for exchange
+	auth := c.Request.Header.Get(AuthHeaderCust) // Customized token for exchange
 	pf, token := AuthorizationBearer, ""
 	if prefix != "" {
 		pf = prefix
