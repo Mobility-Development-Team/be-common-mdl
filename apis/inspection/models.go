@@ -103,11 +103,12 @@ type (
 		// ParticipantUser model.UserInfo `json:"participantUser"`
 	}
 	TemplateItemSimple struct {
-		Id         intstring.IntString `json:"id"`
-		ItemNo     string              `json:"itemNo"`
-		ItemNameEn string              `json:"itemNameEn"`
-		ItemNameZh string              `json:"itemNameZh"`
-		Seq        int                 `json:"seq"`
+		Id          intstring.IntString `json:"id"`
+		ItemNo      string              `json:"itemNo"`
+		ItemNameEn  string              `json:"itemNameEn"`
+		ItemNameZh  string              `json:"itemNameZh"`
+		IsMandatory bool                `json:"isMandatory"`
+		Seq         int                 `json:"seq"`
 	}
 	TemplateSimple struct {
 		Id               intstring.IntString `json:"id"`
@@ -130,6 +131,7 @@ type (
 		Response                  *string              `json:"response"`
 		ResponsedByUserRefKey     *string              `json:"responsedByUserRefKey"`
 		ResponsedByDisplay        *model.UserInfo      `json:"responsedBy" `
+		IsMandatory               *bool                `json:"isMandatory"`
 		Remark                    *string              `json:"remark"`
 		ChecklistId               *intstring.IntString `json:"checklistId"`
 		ChecklistItemMediaDisplay []model.MediaParam   `json:"checklistItemMedia"`
@@ -156,6 +158,10 @@ type (
 		OkItemSize               int                    `json:"okItemSize"`
 		FailedItemSize           int                    `json:"failedItemSize"`
 		NaItemSize               int                    `json:"naItemSize"`
+		GoodItemSize             int                    `json:"goodItemSize"`
+		OkayItemSize             int                    `json:"okayItemSize"`
+		PoorItemSize             int                    `json:"poorItemSize"`
+		MissItemSize             int                    `json:"missItemSize"`
 	}
 	SiteWalk struct {
 		model.Model
@@ -174,6 +180,10 @@ type (
 		OkItemSize          int                     `json:"okItemSize"`
 		FailedItemSize      int                     `json:"failedItemSize"`
 		NaItemSize          int                     `json:"naItemSize"`
+		GoodItemSize        int                     `json:"goodItemSize"`
+		OkayItemSize        int                     `json:"okayItemSize"`
+		PoorItemSize        int                     `json:"poorItemSize"`
+		MissItemSize        int                     `json:"missItemSize"`
 		Participants        []*SiteWalkParticipant  `json:"participants"`
 		LocationsDisplay    []*model.Location       `json:"locations"`
 		LocationIds         []intstring.IntString   `json:"locationIds"`
