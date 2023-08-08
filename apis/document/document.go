@@ -37,7 +37,7 @@ func GenerateRAT(tk string, siteWalkId intstring.IntString) (string, error) {
 	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalkId, true)
 }
 
-func generateSiteWalkAdmin(tk string, siteWalkId intstring.IntString) (string, error) {
+func GenerateSiteWalkAdmin(tk string, siteWalkId intstring.IntString) (string, error) {
 	return generateReportSiteWalk(tk, generateAdminSiteWalk , siteWalkId, true)
 }
 
