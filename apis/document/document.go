@@ -14,6 +14,7 @@ import (
 const (
 	urlBase                  = "apis.internal.document.module.url.base"
 	generateSiteWalk         = "%s/documents/inspection/sitewalk/report/generate"
+	generateAdminSiteWalk    = "%s/documents/inspection/sitewalk/adminReport/generate"
 	generateRATSiteWalk      = "%s/documents/inspection/sitewalk/rat/generate"
 	generateFollowUpReport   = "%s/documents/inspection/tasks/followup/generate"
 	generatePlantCertificate = "%s/documents/machine/permits/plantpermits/cert/generate"
@@ -24,7 +25,7 @@ const (
 	generateELReport         = "%s/documents/machine/permits/el/report/generate"
 	generatePCReport         = "%s/documents/machine/permits/pc/report/generate"
 	generatePCCertificate    = "%s/documents/machine/permits/pc/cert/generate"
-	generateCSReport        = "%s/documents/machine/permits/cs/report/generate"
+	generateCSReport         = "%s/documents/machine/permits/cs/report/generate"
 	generateDocReport        = "%s/reports/generate"
 )
 
@@ -34,6 +35,10 @@ func GenerateSiteWalk(tk string, siteWalkId intstring.IntString) (string, error)
 
 func GenerateRAT(tk string, siteWalkId intstring.IntString) (string, error) {
 	return generateReportSiteWalk(tk, generateRATSiteWalk, siteWalkId, true)
+}
+
+func generateSiteWalkAdmin(tk string, siteWalkId intstring.IntString) (string, error) {
+	return generateReportSiteWalk(tk, generateAdminSiteWalk , siteWalkId, true)
 }
 
 func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId intstring.IntString, contractId intstring.IntString) (string, error) {
@@ -101,7 +106,6 @@ func GeneratePCCertificate(tk string, permitMasterId intstring.IntString) (strin
 	return generatePermitType(tk, generatePCCertificate, permitMasterId, true)
 }
 
-
 func GeneratePlantReport(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generatePlantReport, permitMasterId, true)
 }
@@ -166,8 +170,8 @@ func generateDoc(tk, apiPath string, reportId intstring.IntString, publish bool)
 		} `json:"payload"`
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
-		"reportId":      reportId,
-		"publish": publish,
+		"reportId": reportId,
+		"publish":  publish,
 	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
 	if err != nil {
 		return "", err
