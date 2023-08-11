@@ -124,9 +124,10 @@ type (
 	LDPermit struct {
 		MasterPermit
 		WorkLocation     *string             `json:"workLocation"`
-		WorkDate         *string         `json:"workDate"`
-		WorkDurationFrom *string             `json:"workDurationFrom"`
-		WorkDurationTo   *string             `json:"workDurationTo"`
+		WorkDurationFromDate string              `json:"workDurationFromDate"`
+		WorkDurationFromTime string              `json:"workDurationFromTime"`
+		WorkDurationToDate   string              `json:"workDurationToDate"`
+		WorkDurationToTime   string              `json:"workDurationToTime"`
 		PermitMasterId   intstring.IntString `json:"permitMasterId"`
 	}
 
