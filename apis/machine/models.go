@@ -119,6 +119,19 @@ type (
 		CraneSerialNo        *string           `json:"craneSerialNo"`
 		Applicant            *ApplicantDisplay `json:"applicant"`
 	}
+
+
+	LadderPermit struct {
+		MasterPermit
+		WorkLocation     *string             `json:"workLocation"`
+		WorkDate         *time.Time          `json:"workDate"`
+		WorkDurationFrom *string             `json:"workDurationFrom"`
+		WorkDurationTo   *string             `json:"workDurationTo"`
+		PermitMasterId   intstring.IntString `json:"permitMasterId"`
+	}
+
+
+
 	PermitAppointment struct {
 		model.Model
 		ApptStatus      string              `json:"apptStatus"`

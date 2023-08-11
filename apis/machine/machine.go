@@ -14,6 +14,7 @@ const (
 	getOnePlantPermit             = "%s/permits/plantpermits/%s"
 	getOneNCAPermit               = "%s/permits/nca/%s"
 	getOneHotworkPermit           = "%s/permits/hw/%s"
+	getOneLadderPermit            = "%s/permits/ld/%s"
 	getOneEXPermit                = "%s/permits/ex/%s"
 	getOneELPermit                = "%s/permits/el/%s"
 	getOneLA                      = "%s/plant/equip/LA/detail"
@@ -191,7 +192,7 @@ func GetOnePITChecklist(tk string, permitMasterId intstring.IntString) (*PITChec
 
 func GetOneCSPermit(tk string, permitMasterId intstring.IntString) (*ConfinedSpacePermit, error) {
 	resp := struct {
-		Payload *ConfinedSpacePermit  `json:"payload"`
+		Payload *ConfinedSpacePermit `json:"payload"`
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCSPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
@@ -241,6 +242,25 @@ func GetAllAppointmentsForMyTask(tk string, criteria PermitApptCriteria) ([]Perm
 	).Post(
 		fmt.Sprintf(getAllAppointmentsForInternal, apis.V().GetString(apiMachineMdlUrlBase)),
 	)
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetOneLDPermit(tk string, permitMasterId intstring.IntString) (*LadderPermit, error) {
+	resp := struct {
+		Payload *LadderPermit `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneLadderPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
 	}

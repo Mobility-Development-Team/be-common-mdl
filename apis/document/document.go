@@ -26,6 +26,7 @@ const (
 	generatePCReport         = "%s/documents/machine/permits/pc/report/generate"
 	generatePCCertificate    = "%s/documents/machine/permits/pc/cert/generate"
 	generateCSReport         = "%s/documents/machine/permits/cs/report/generate"
+	generateLDReport         = "%s/documents/machine/permits/ld/report/generate"
 	generateDocReport        = "%s/reports/generate"
 )
 
@@ -133,6 +134,13 @@ func GeneratePCReport(tk string, permitMasterId intstring.IntString) (string, er
 func GenerateCSReport(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generateCSReport, permitMasterId, true)
 }
+
+
+func GenerateLDReport(tk string, permitMasterId intstring.IntString) (string, error) {
+	return generatePermitType(tk, generateLDReport, permitMasterId, true)
+}
+
+
 
 func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
 	client := resty.New()
