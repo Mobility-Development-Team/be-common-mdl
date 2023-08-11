@@ -255,9 +255,9 @@ func GetAllAppointmentsForMyTask(tk string, criteria PermitApptCriteria) ([]Perm
 	return resp.Payload, err
 }
 
-func GetOneLDPermit(tk string, permitMasterId intstring.IntString) (*LadderPermit, error) {
+func GetOneLDPermit(tk string, permitMasterId intstring.IntString) (*LDPermit, error) {
 	resp := struct {
-		Payload *LadderPermit `json:"payload"`
+		Payload *LDPermit `json:"payload"`
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneLadderPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))

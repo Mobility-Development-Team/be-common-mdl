@@ -121,10 +121,10 @@ type (
 	}
 
 
-	LadderPermit struct {
+	LDPermit struct {
 		MasterPermit
 		WorkLocation     *string             `json:"workLocation"`
-		WorkDate         *time.Time          `json:"workDate"`
+		WorkDate         *string         `json:"workDate"`
 		WorkDurationFrom *string             `json:"workDurationFrom"`
 		WorkDurationTo   *string             `json:"workDurationTo"`
 		PermitMasterId   intstring.IntString `json:"permitMasterId"`
