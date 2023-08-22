@@ -40,7 +40,6 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 	if projectId != nil {
 		req["projectIdRef"] = *projectId
 	}
-	logger.Error("*** req", req["projectIdRef"])
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		req,
 	).Post(fmt.Sprintf(getAllContracts, apis.V().GetString(apiSystemMdlUrlBase)))
