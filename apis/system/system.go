@@ -35,12 +35,12 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 	}
 	client := resty.New()
 	req := map[string]interface{}{
-		"projectIdRef": *projectId,
-		"contractIds":  append([]intstring.IntString{}, contractId...),
+		"contractIds": append([]intstring.IntString{}, contractId...),
 	}
 	if projectId != nil {
 		req["projectIdRef"] = *projectId
 	}
+	logger.Error("*** req", req["projectIdRef"])
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		req,
 	).Post(fmt.Sprintf(getAllContracts, apis.V().GetString(apiSystemMdlUrlBase)))
