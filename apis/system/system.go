@@ -34,11 +34,15 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 		} `json:"payload"`
 	}
 	client := resty.New()
+	req := map[string]interface{}{
+		"projectIdRef": *projectId,
+		"contractIds":  append([]intstring.IntString{}, contractId...),
+	}
+	if projectId != nil {
+		req["projectIdRef"] = *projectId
+	}
 	result, err := client.R().SetAuthToken(tk).SetBody(
-		map[string]interface{}{
-			"projectIdRef": projectId,
-			"contractIds":  append([]intstring.IntString{}, contractId...),
-		},
+		req,
 	).Post(fmt.Sprintf(getAllContracts, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetAllContracts] err: ", err)
