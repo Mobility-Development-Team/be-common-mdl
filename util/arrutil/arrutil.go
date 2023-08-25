@@ -20,9 +20,21 @@ func DiffStrSlice(a, b []string) []string {
 // Contains check if the given intStr value exist in Slice intStrSlice
 func Contains(intStrSlice []intstring.IntString, intStr intstring.IntString) bool {
 	for _, v := range intStrSlice {
-		if v == intStr {
-			return true
+		if v != intStr {
+			continue
 		}
+		return true
+	}
+	return false
+}
+
+// ContainsStr check if the given intStr value exist in Slice intStrSlice
+func ContainsStr(strSlice []string, str string) bool {
+	for _, v := range strSlice {
+		if v != str {
+			continue
+		}
+		return true
 	}
 	return false
 }
