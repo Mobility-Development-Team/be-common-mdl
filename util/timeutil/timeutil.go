@@ -30,6 +30,14 @@ func ValidateTimeStringFormat(time string) bool {
 	return re.MatchString(time)
 }
 
+func ParseTimeAsFormattedStr(date *time.Time, format string) (dateTime *string) {
+	if date == nil {
+		return nil
+	}
+	fd := date.Local().Format(format)
+	return &fd
+}
+
 // ParseDateStringAsTime parse a single given date string in full format with either Day Start/ Day End
 func ParseDateStringAsTime(date string, isDayEnd bool) (dateTime time.Time, err error) {
 	t := "00:00"
