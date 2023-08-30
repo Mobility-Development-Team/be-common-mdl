@@ -122,18 +122,35 @@ type (
 
 	EFPermit struct {
 		MasterPermit
-		CertExpiryDate       string            `json:"certExpiryDate"`
-		EFLiftingWorkers     []EFLiftingWorker `json:"eFLiftingWorkers"`
-		EFLiftingGears       []EFLiftingGear   `json:"eFliftingGears"`
-		WorkDurationFromDate string            `json:"workDurationFromDate"`
-		WorkDurationFromTime string            `json:"workDurationFromTime"`
-		WorkDurationToDate   string            `json:"workDurationToDate"`
-		WorkDurationToTime   string            `json:"workDurationToTime"`
-		WorkLocation         *string           `json:"workLocation"`
-		CraneType            *string           `json:"craneType"`
-		CraneTypeRemark      *string           `json:"craneTypeRemark"`
-		CraneSerialNo        *string           `json:"craneSerialNo"`
-		Applicant            *ApplicantDisplay `json:"applicant"`
+		EFLiftingWorkers      []EFLiftingWorker `json:"eFLiftingWorkers"`
+		EFLiftingGears        []EFLiftingGear   `json:"eFliftingGears"`
+		WorkDurationFromDate  string            `json:"workDurationFromDate"`
+		WorkDurationFromTime  string            `json:"workDurationFromTime"`
+		WorkDurationToDate    string            `json:"workDurationToDate"`
+		WorkDurationToTime    string            `json:"workDurationToTime"`
+		WorkLocation          *string           `json:"workLocation"`
+		Weather               *string           `json:"weather"`
+		WorkDescription       *string           `json:"workDescription"`
+		PlantType             *string           `json:"plantType"`
+		PlantTypeRemark       *string           `json:"plantTypeRemark"`
+		ModelNo               *string           `json:"modelNo"`
+		SerialNo              *string           `json:"serialNo"`
+		MethodStatementRef    *string           `json:"methodStatementRef"`
+		JhaRefNo              *string           `json:"jhaRefNo"`
+		MaxLoadWeightKg       *string           `json:"maxLoadWeightKg"`
+		MaxLoadWeightM        *string           `json:"maxLoadWeightM"`
+		MaxRadiusWeightKg     *string           `json:"maxRadiusWeightKg"`
+		MaxRadiusWeightM      *string           `json:"maxRadiusWeightM"`
+		IsCapableToLift       bool              `json:"isCapableToLift"`
+		IsDistApplicable      bool              `json:"isDistApplicable"`
+		IsDistApplicableM     *string           `json:"isDistApplicableM"`
+		LaCraneValidGreenTick bool              `json:"laCraneValidGreenTick"`
+		LaCraneSitePlanNo     *string           `json:"laCraneSitePlanNo"`
+		LaCraneCertExpiryDate string            `json:"laCraneCertExpiryDate"`
+		LaWoGtCertNo          *string           `json:"laWoGtCertNo"`
+		LaWoGtCertExpiryDate  string            `json:"laWoGtCertExpiryDate"`
+		LaCraneLorryType      *string           `json:"laCraneLorryType"`
+		Applicant             *ApplicantDisplay `json:"applicant"`
 	}
 
 	LDPermit struct {
