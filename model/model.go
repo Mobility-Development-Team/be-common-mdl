@@ -83,9 +83,10 @@ type (
 		ContractRefId *intstring.IntString `json:"contractId"`
 	}
 	Contract struct {
-		ContractNo   string  `json:"contractNo"`
-		ContractDesc *string `json:"contractDesc"`
-		ProjectIdRef string  `json:"projectIdRef"`
+		Id           intstring.IntString `json:"id"`
+		ContractNo   string              `json:"contractNo"`
+		ContractDesc *string             `json:"contractDesc"`
+		ProjectIdRef string              `json:"projectIdRef"`
 	}
 	MediaParam struct {
 		Id                   intstring.IntString     `json:"id"`

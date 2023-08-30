@@ -25,7 +25,7 @@ const (
 	getContractUserByUids = "%s/parties/assoc/users"
 )
 
-func GetAllContracts(tk string, contractId ...intstring.IntString) (map[intstring.IntString]model.Contract, error) {
+func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntString) (map[intstring.IntString]model.Contract, error) {
 	var resp struct {
 		response.Response
 		Payload []*struct {
@@ -34,10 +34,14 @@ func GetAllContracts(tk string, contractId ...intstring.IntString) (map[intstrin
 		} `json:"payload"`
 	}
 	client := resty.New()
+	req := map[string]interface{}{
+		"contractIds": append([]intstring.IntString{}, contractId...),
+	}
+	if projectId != nil {
+		req["projectIdRef"] = *projectId
+	}
 	result, err := client.R().SetAuthToken(tk).SetBody(
-		map[string]interface{}{
-			"contractIds": append([]intstring.IntString{}, contractId...),
-		},
+		req,
 	).Post(fmt.Sprintf(getAllContracts, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetAllContracts] err: ", err)
