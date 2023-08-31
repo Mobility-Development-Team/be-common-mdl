@@ -122,8 +122,8 @@ type (
 
 	EFPermit struct {
 		MasterPermit
-		EFLiftingWorkers      []EFLiftingWorker `json:"eFLiftingWorkers"`
-		EFLiftingGears        []EFLiftingGear   `json:"eFliftingGears"`
+		LiftingWorkers        []EFLiftingWorker `json:"liftingWorkers"`
+		LiftingGears          []EFLiftingGear   `json:"liftingGears"`
 		WorkDurationFromDate  string            `json:"workDurationFromDate"`
 		WorkDurationFromTime  string            `json:"workDurationFromTime"`
 		WorkDurationToDate    string            `json:"workDurationToDate"`
