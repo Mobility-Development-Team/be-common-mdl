@@ -441,8 +441,8 @@ type (
 	EFLiftingGear struct {
 		model.Model
 		LgNo            *string             `json:"lgNo"`
-		From6           *string             `json:"from6"`
-		From7           *string             `json:"from7"`
+		From6           *string             `json:"formSix"`
+		From7           *string             `json:"formSeven"`
 		CertExpiryDate  *string             `json:"certExpiryDate"`
 		SafeWorkingLoad *string             `json:"safeWorkingLoad"`
 		PermitLiftId    intstring.IntString `json:"permitLiftId"`
