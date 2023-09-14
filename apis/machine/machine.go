@@ -210,12 +210,16 @@ func GetOneCSPermit(tk string, permitMasterId intstring.IntString) (*ConfinedSpa
 	return resp.Payload, err
 }
 
-func GetOneTaskRelatedPITChecklist(tk string, parentGroupId intstring.IntString) (interface{}, error) {
+func GetOneTaskRelatedPITChecklist(tk string, parentGroupId, parentId intstring.IntString) (interface{}, error) {
 	resp := struct {
 		Payload interface{} `json:"payload"`
 	}{}
 	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).Get(
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"parentId": parentId,
+		},
+	).Post(
 		fmt.Sprintf(getOneTaskRelatedPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), parentGroupId),
 	)
 	if err != nil {
