@@ -422,6 +422,7 @@ type (
 		model.Model
 		WorkerType           string              `json:"workerType"`
 		WorkerName           *string             `json:"workerName"`
+		WorkerSitePassNo     *string             `json:"workerSitePassNo"`
 		WorkerCertNo         *string             `json:"workerCertNo"`
 		WorkerCertExpiryDate *string             `json:"workerCertExpiryDate"`
 		WorkerSignature      *string             `json:"workerSignature"`
