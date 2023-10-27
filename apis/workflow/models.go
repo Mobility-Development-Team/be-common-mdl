@@ -3,6 +3,7 @@ package workflow
 import (
 	"encoding/json"
 	"errors"
+	"github.com/Mobility-Development-Team/be-common-mdl/apis/common/log_template"
 	"time"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
@@ -29,6 +30,14 @@ type (
 		TaskStartDate *string   `json:"taskStartDate"`
 		Contents      []Content `json:"contents"`
 		Actor         Actor     `json:"actor"`
+	}
+	ProceedFlowParam struct {
+		TargetWkFLowAction string
+		TargetActionType   string
+		ActorType          string
+		LogTemplate        log_template.ActivityLogTemplate
+		IsReject           *bool
+		IsLast             *bool
 	}
 )
 
