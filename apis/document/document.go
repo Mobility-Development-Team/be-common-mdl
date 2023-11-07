@@ -28,6 +28,7 @@ const (
 	generateCSReport         = "%s/documents/machine/permits/cs/report/generate"
 	generateLDReport         = "%s/documents/machine/permits/ld/report/generate"
 	generateEFReport         = "%s/documents/machine/permits/ef/report/generate"
+	generateLSReport         = "%s/documents/machine/permits/ls/report/generate"
 	generateDocReport        = "%s/reports/generate"
 )
 
@@ -40,7 +41,7 @@ func GenerateRAT(tk string, siteWalkId intstring.IntString) (string, error) {
 }
 
 func GenerateSiteWalkAdmin(tk string, siteWalkId intstring.IntString) (string, error) {
-	return generateReportSiteWalk(tk, generateAdminSiteWalk , siteWalkId, true)
+	return generateReportSiteWalk(tk, generateAdminSiteWalk, siteWalkId, true)
 }
 
 func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId intstring.IntString, contractId intstring.IntString) (string, error) {
@@ -136,7 +137,6 @@ func GenerateCSReport(tk string, permitMasterId intstring.IntString) (string, er
 	return generatePermitType(tk, generateCSReport, permitMasterId, true)
 }
 
-
 func GenerateLDReport(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generateLDReport, permitMasterId, true)
 }
@@ -145,7 +145,9 @@ func GenerateEFReport(tk string, permitMasterId intstring.IntString) (string, er
 	return generatePermitType(tk, generateEFReport, permitMasterId, true)
 }
 
-
+func GenerateLSReport(tk string, permitMasterId intstring.IntString) (string, error) {
+	return generatePermitType(tk, generateLSReport, permitMasterId, true)
+}
 
 func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
 	client := resty.New()

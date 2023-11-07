@@ -24,6 +24,7 @@ const (
 	getOneTaskRelatedPITChecklist = "%s/permits/pc/checklist/%s"
 	getAllAppointmentsForInternal = "%s/permits/appt/internal/all"
 	getOneCSPermit                = "%s/permits/cs/%s"
+	getOneLSPermit                = "%s/permits/ls/%s"
 )
 
 func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
@@ -197,6 +198,25 @@ func GetOneCSPermit(tk string, permitMasterId intstring.IntString) (*ConfinedSpa
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCSPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetOneLSPermit(tk string, permitMasterId intstring.IntString) (*LSPermit, error) {
+	resp := struct {
+		Payload *LSPermit `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneLSPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
 	}

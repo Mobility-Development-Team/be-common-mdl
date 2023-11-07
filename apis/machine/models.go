@@ -163,6 +163,19 @@ type (
 		PermitMasterId       intstring.IntString `json:"permitMasterId"`
 	}
 
+	LSPermit struct {
+		MasterPermit
+		WorkActivity         string              `json:"workActivity"`
+		WorkLocation         *string             `json:"workLocation"`
+		WorkFloor            string              `json:"workFloor"`
+		WorkDurationFromDate string              `json:"workDurationFromDate"`
+		WorkDurationFromTime string              `json:"workDurationFromTime"`
+		WorkDurationToDate   string              `json:"workDurationToDate"`
+		WorkDurationToTime   string              `json:"workDurationToTime"`
+		PermitMasterId       intstring.IntString `json:"permitMasterId"`
+		Workers              []LSWorker          `json:"workers"`
+	}
+
 	PermitAppointment struct {
 		model.Model
 		ApptStatus      string              `json:"apptStatus"`
@@ -458,5 +471,13 @@ type (
 		WorkerCertNo         *string             `json:"workerCertNo"`
 		WorkerCertExpiryDate *string             `json:"workerCertExpiryDate"`
 		ConfinedSpaceId      intstring.IntString `json:"confinedSpaceId"`
+	}
+
+	LSWorker struct {
+		model.Model
+		WorkerType        string              `json:"workerType"`
+		WorkerName        *string             `json:"workerName"`
+		WorkerCompanyName *string             `json:"workerCompanyName"`
+		LiftShaftId       intstring.IntString `json:"liftShaftId"`
 	}
 )
