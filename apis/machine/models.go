@@ -415,6 +415,7 @@ type (
 		WorkerName           *string             `json:"workerName"`
 		WorkerCertNo         *string             `json:"workerCertNo"`
 		WorkerCertExpiryDate *string             `json:"workerCertExpiryDate"`
+		WorkerRiggerPhotoUrl *string             `json:"workerRiggerPhotoUrl"`
 		PermitLiftId         intstring.IntString `json:"permitLiftId"`
 	}
 
