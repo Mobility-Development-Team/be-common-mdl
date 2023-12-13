@@ -60,7 +60,7 @@ func AuthenticateHyPath() (result HyPathAuthenResponse, err error) {
 	return
 }
 
-func GetConfinedSpaceByProjectCode(projectCode string) (result GetCSByProjectCodeResponse, err error) {
+func GetConfinedSpaceByProjectCode(tk, projectCode string) (result GetCSByProjectCodeResponse, err error) {
 	var (
 		client   = resty.New()
 		resp     *resty.Response
@@ -70,12 +70,15 @@ func GetConfinedSpaceByProjectCode(projectCode string) (result GetCSByProjectCod
 		err = ErrHyPathInvalidParam
 		return
 	}
-	// Get Token
-	authResp, err = AuthenticateHyPath()
-	if err != nil || len(authResp.Token) == 0 {
-		return
+	// Get Token if not provided
+	if tk == "" {
+		authResp, err = AuthenticateHyPath()
+		if err != nil || len(authResp.Token) == 0 {
+			return
+		}
+		tk = authResp.Token
 	}
-	resp, err = client.R().SetAuthToken(authResp.Token).Get(
+	resp, err = client.R().SetAuthToken(tk).Get(
 		fmt.Sprintf(getCSByProjectCode, projectCode, apis.V().GetString(apiMachineMdlUrlBase)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
@@ -90,7 +93,7 @@ func GetConfinedSpaceByProjectCode(projectCode string) (result GetCSByProjectCod
 	return
 }
 
-func GetConfinedSpaceBySpaceIdAndProjectCode(spaceId, projectCode string) (result GetCSBySpaceIdAndProjectCodeResponse, err error) {
+func GetConfinedSpaceBySpaceIdAndProjectCode(tk, spaceId, projectCode string) (result GetCSBySpaceIdAndProjectCodeResponse, err error) {
 	var (
 		client   = resty.New()
 		resp     *resty.Response
@@ -100,12 +103,15 @@ func GetConfinedSpaceBySpaceIdAndProjectCode(spaceId, projectCode string) (resul
 		err = ErrHyPathInvalidParam
 		return
 	}
-	// Get Token
-	authResp, err = AuthenticateHyPath()
-	if err != nil || len(authResp.Token) == 0 {
-		return
+	// Get Token if not provided
+	if tk == "" {
+		authResp, err = AuthenticateHyPath()
+		if err != nil || len(authResp.Token) == 0 {
+			return
+		}
+		tk = authResp.Token
 	}
-	resp, err = client.R().SetAuthToken(authResp.Token).Get(
+	resp, err = client.R().SetAuthToken(tk).Get(
 		fmt.Sprintf(getCSBySpaceIdAndProjectCode, spaceId, projectCode, apis.V().GetString(apiMachineMdlUrlBase)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
@@ -120,16 +126,19 @@ func GetConfinedSpaceBySpaceIdAndProjectCode(spaceId, projectCode string) (resul
 	return
 }
 
-func PostCreateCSPermit(request PostCreateCSPermitRequest) (result PostCreateCSPermitResponse, err error) {
+func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result PostCreateCSPermitResponse, err error) {
 	var (
 		client   = resty.New()
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
-	// Get Token
-	authResp, err = AuthenticateHyPath()
-	if err != nil || len(authResp.Token) == 0 {
-		return
+	// Get Token if not provided
+	if tk == "" {
+		authResp, err = AuthenticateHyPath()
+		if err != nil || len(authResp.Token) == 0 {
+			return
+		}
+		tk = authResp.Token
 	}
 	resp, err = client.R().SetAuthToken(authResp.Token).SetBody(request).Post(
 		fmt.Sprintf(postCreateCSPermit, apis.V().GetString(apiMachineMdlUrlBase)),
@@ -146,16 +155,20 @@ func PostCreateCSPermit(request PostCreateCSPermitRequest) (result PostCreateCSP
 	return
 }
 
-func PostUpdateCSPermitWorkflow(projectFormId, actionType, pdfUrl string) (result PostCommonCSPermitWorkflowResponse, err error) {
+func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (result PostCommonCSPermitWorkflowResponse, err error) {
 	var (
 		client   = resty.New()
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
-	// Get Token
-	authResp, err = AuthenticateHyPath()
-	if err != nil || len(authResp.Token) == 0 {
-		return
+	// Get Token if not provided
+	if tk == "" {
+		// Get Token
+		authResp, err = AuthenticateHyPath()
+		if err != nil || len(authResp.Token) == 0 {
+			return
+		}
+		tk = authResp.Token
 	}
 	resp, err = client.R().SetAuthToken(authResp.Token).SetBody(&PostCommonCSPermitWorkflowRequest{
 		pdfUrl,
