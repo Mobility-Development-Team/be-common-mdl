@@ -16,25 +16,28 @@ type (
 		Error   interface{} `json:"error"`
 		Token   string      `json:"token"`
 	}
+
 	GetCSByProjectCodeResponse struct {
 		HyPathApiBase
-		Data GetCSByProjectCodeResponseDetail `json:"data"`
+		Data []GetCSByProjectCodeResponseDetail `json:"data"`
 	}
 	GetCSByProjectCodeResponseDetail struct {
-		PermitFormId string `json:"permitFormId"`
+		Id           string `json:"id"`
+		ProjectCode  string `json:"projectCode"`
+		WorkLocation string `json:"workLocation"`
+		Northing     int    `json:"northing"`
+		Easting      int    `json:"easting"`
 	}
+
 	GetCSBySpaceIdAndProjectCodeResponse struct {
 		HyPathApiBase
 		Data GetCSBySpaceIdAndProjectCodeResponseDetail `json:"data"`
 	}
 	GetCSBySpaceIdAndProjectCodeResponseDetail struct {
-		Sensors      []Sensor `json:"sensors"`
-		Id           string   `json:"id"`
-		ProjectCode  string   `json:"projectCode"`
-		WorkLocation string   `json:"workLocation"`
-		Northing     int      `json:"northing"`
-		Easting      int      `json:"easting"`
+		Sensors []Sensor `json:"sensors"`
+		GetCSByProjectCodeResponseDetail
 	}
+
 	Sensor struct {
 		SensorType            string  `json:"sensorType"`
 		Name                  string  `json:"name"`
@@ -46,7 +49,6 @@ type (
 		CalibrationExpiryDate string  `json:"calibrationExpiryDate"`
 		Location              string  `json:"location"`
 	}
-
 	PostCreateCSPermitRequest struct {
 		ProjectCode     string   `json:"projectCode"`
 		ConfinedSpaceId string   `json:"confinedSpaceId"`
@@ -66,6 +68,7 @@ type (
 		WorkerType string `json:"workerType"`
 		MappingKey string `json:"mappingKey"`
 	}
+
 	PostCommonCSPermitWorkflowRequest struct {
 		PDFUrl string `json:"PDFUrl"`
 	}
