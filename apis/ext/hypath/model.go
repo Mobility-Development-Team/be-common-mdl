@@ -1,7 +1,5 @@
 package hypath
 
-import "time"
-
 type (
 	HyPathApiBase struct {
 		Success    bool        `json:"success"`
@@ -52,12 +50,12 @@ type (
 		Location              string  `json:"location"`
 	}
 	PostCreateCSPermitRequest struct {
-		ProjectCode     string    `json:"projectCode"`
-		ConfinedSpaceId string    `json:"confinedSpaceId"`
-		StartDateTime   time.Time `json:"startDateTime"` // could be time.Time
-		EndDateTime     string    `json:"endDateTime"`   // could be time.Time
-		PDFUrl          string    `json:"PDFUrl"`
-		Workers         []Worker  `json:"workers"`
+		ProjectCode     string   `json:"projectCode"`
+		ConfinedSpaceId string   `json:"confinedSpaceId"`
+		StartDateTime   string   `json:"startDateTime"` // could be time.Time
+		EndDateTime     string   `json:"endDateTime"`   // could be time.Time
+		PDFUrl          string   `json:"PDFUrl"`
+		Workers         []Worker `json:"workers"`
 	}
 	PostCreateCSPermitResponse struct {
 		HyPathApiBase
