@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	apiMachineMdlUrlBase         = "apis.external.hypath.base"
+	apiMachineMdlUrlBase         = "apis.external.hypath.url.base"
 	authenticate                 = "%s/auth/authenticate"
 	getCSByProjectCode           = "%s/confinedspace/ext_permit/confinedspace?projectcode=%s"
 	getCSBySpaceIdAndProjectCode = "%s/confinedspace/ext_permit/confinedspace/%s?projectcode=%s"
