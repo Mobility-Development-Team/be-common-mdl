@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	apiMachineMdlUrlBase         = "apis.external.hypath.url.base"
+	apiHypathUrlBase             = "apis.external.hypath.url.base"
 	authenticate                 = "%s/auth/authenticate"
 	getCSByProjectCode           = "%s/confinedspace/ext_permit/confinedspace?projectcode=%s"
 	getCSBySpaceIdAndProjectCode = "%s/confinedspace/ext_permit/confinedspace/%s?projectcode=%s"
@@ -46,7 +46,7 @@ func AuthenticateHyPath() (result HyPathAuthenResponse, err error) {
 		Password: fmt.Sprintf("%s", pwDecoded),
 		Scope:    sp,
 	}).Post(
-		fmt.Sprintf(authenticate, apis.V().GetString(apiMachineMdlUrlBase)),
+		fmt.Sprintf(authenticate, apis.V().GetString(apiHypathUrlBase)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		err = ErrHyPathUnableToAuthenticate
@@ -79,7 +79,7 @@ func GetConfinedSpaceByProjectCode(tk, projectCode string) (result GetCSByProjec
 		tk = authResp.Token
 	}
 	resp, err = client.R().SetAuthToken(tk).Get(
-		fmt.Sprintf(getCSByProjectCode, projectCode, apis.V().GetString(apiMachineMdlUrlBase)),
+		fmt.Sprintf(getCSByProjectCode, projectCode, apis.V().GetString(apiHypathUrlBase)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		err = ErrHyPathInvalidApiCall
@@ -112,7 +112,7 @@ func GetConfinedSpaceBySpaceIdAndProjectCode(tk, spaceId, projectCode string) (r
 		tk = authResp.Token
 	}
 	resp, err = client.R().SetAuthToken(tk).Get(
-		fmt.Sprintf(getCSBySpaceIdAndProjectCode, spaceId, projectCode, apis.V().GetString(apiMachineMdlUrlBase)),
+		fmt.Sprintf(getCSBySpaceIdAndProjectCode, spaceId, projectCode, apis.V().GetString(apiHypathUrlBase)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		err = ErrHyPathInvalidApiCall
@@ -140,8 +140,8 @@ func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result Po
 		}
 		tk = authResp.Token
 	}
-	resp, err = client.R().SetAuthToken(authResp.Token).SetBody(request).Post(
-		fmt.Sprintf(postCreateCSPermit, apis.V().GetString(apiMachineMdlUrlBase)),
+	resp, err = client.R().SetAuthToken(tk).SetBody(request).Post(
+		fmt.Sprintf(postCreateCSPermit, apis.V().GetString(apiHypathUrlBase)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		err = ErrHyPathInvalidApiCall
@@ -170,13 +170,13 @@ func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (r
 		}
 		tk = authResp.Token
 	}
-	resp, err = client.R().SetAuthToken(authResp.Token).SetBody(&PostCommonCSPermitWorkflowRequest{
+	resp, err = client.R().SetAuthToken(tk).SetBody(&PostCommonCSPermitWorkflowRequest{
 		pdfUrl,
 	}).Post(
-		fmt.Sprintf(postUpdateCSPermitWorkflow, projectFormId, strings.ToUpper(actionType), apis.V().GetString(apiMachineMdlUrlBase)),
+		fmt.Sprintf(postUpdateCSPermitWorkflow, projectFormId, strings.ToUpper(actionType), apis.V().GetString(apiHypathUrlBase)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
-		err = ErrHyPathInvalidApiCall
+		// err = ErrHyPathInvalidApiCall
 		return
 	}
 	err = json.Unmarshal(resp.Body(), &result)
