@@ -158,6 +158,7 @@ func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result Po
 func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (result PostCommonCSPermitWorkflowResponse, err error) {
 	var (
 		client   = resty.New()
+		req      = &PostCommonCSPermitWorkflowRequest{}
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
@@ -170,10 +171,12 @@ func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (r
 		}
 		tk = authResp.Token
 	}
-	resp, err = client.R().SetAuthToken(tk).SetBody(&PostCommonCSPermitWorkflowRequest{
-		pdfUrl,
-	}).Post(
-		fmt.Sprintf(postUpdateCSPermitWorkflow, projectFormId, strings.ToUpper(actionType), apis.V().GetString(apiHypathUrlBase)),
+	if pdfUrl != "" {
+		req.PDFUrl = pdfUrl
+	}
+	resp, err = client.R().SetAuthToken(tk).SetBody(req).Post(
+		// %s/confinedspace/ext_permit/permit/%s/status/%s
+		fmt.Sprintf(postUpdateCSPermitWorkflow, apis.V().GetString(apiHypathUrlBase), projectFormId, strings.ToUpper(actionType)),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		// err = ErrHyPathInvalidApiCall
