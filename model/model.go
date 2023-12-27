@@ -55,6 +55,12 @@ type (
 		PartyPrefix   string              `json:"partyPrefix"`
 		SubconRefId   string              `json:"subconRefId"`
 	}
+	PartyInfoExtended struct {
+		Info         PartyInfo `json:"info" gorm:"embedded"`
+		PartyTypeRef string    `json:"partyType"`
+		PartySubtype *string   `json:"partySubtype"`
+		IsPrimary    bool      `json:"isPrimary"`
+	}
 	GroupInfo struct {
 		Model
 		Uuid          string              `json:"uuid"`

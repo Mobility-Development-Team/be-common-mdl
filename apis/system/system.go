@@ -15,14 +15,15 @@ import (
 )
 
 const (
-	apiSystemMdlUrlBase   = "apis.internal.system.module.url.base"
-	getOneContract        = "%s/contracts/%s"
-	getAllLocations       = "%s/locations/all"
-	getSupportInfo        = "%s/config/supportinfo"
-	getAllContracts       = "%s/contracts/all"
-	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
-	getManyParitesById    = "%s/parties/many"
-	getContractUserByUids = "%s/parties/assoc/users"
+	apiSystemMdlUrlBase        = "apis.internal.system.module.url.base"
+	getOneContract             = "%s/contracts/%s"
+	getAllLocations            = "%s/locations/all"
+	getSupportInfo             = "%s/config/supportinfo"
+	getAllContracts            = "%s/contracts/all"
+	getContractParties         = "%s/parties/assoc/%s?groupBy=party"
+	getManyParitesById         = "%s/parties/many"
+	getClientPartyByContractId = "%s/parties/assoc/%s/client"
+	getContractUserByUids      = "%s/parties/assoc/users"
 )
 
 func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntString) (map[intstring.IntString]model.Contract, error) {
@@ -94,6 +95,26 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyIn
 			"ids": ids,
 		},
 	).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiSystemMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetManyPartiesById] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+
+func GetClientPartyByContractId(tk string, contractId intstring.IntString) (*model.PartyInfoExtended, error) {
+	var resp struct {
+		response.Response
+		Payload *model.PartyInfoExtended `json:"payload"`
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getClientPartyByContractId, apis.V().GetString(apiSystemMdlUrlBase), contractId))
 	if err != nil {
 		logger.Error("[GetManyPartiesById] err: ", err)
 		return nil, err
