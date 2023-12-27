@@ -22,7 +22,7 @@ const (
 	getAllContracts            = "%s/contracts/all"
 	getContractParties         = "%s/parties/assoc/%s?groupBy=party"
 	getManyParitesById         = "%s/parties/many"
-	getClientPartyByContractId = "%s/parties/assoc/%s/client"
+	getClientPartyByContractId = "%s/parties/assoc/contracts/client"
 	getContractUserByUids      = "%s/parties/assoc/users"
 )
 
