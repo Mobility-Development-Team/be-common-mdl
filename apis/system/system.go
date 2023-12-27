@@ -117,7 +117,7 @@ func GetClientPartyByContractIds(tk string, contractIds []intstring.IntString) (
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"contractIds": contractIds,
-		}).Post(fmt.Sprintf(getClientPartyByContractId, apis.V().GetString(apiSystemMdlUrlBase), contractIds))
+		}).Post(fmt.Sprintf(getClientPartyByContractId, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetManyPartiesById] err: ", err)
 		return nil, err
