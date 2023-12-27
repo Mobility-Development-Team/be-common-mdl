@@ -18,6 +18,7 @@ type ContractParty struct {
 		SubconRefId   string              `json:"subconRefId"`
 	} `json:"info"`
 	PartyTypeRef string                `json:"partyType"`
+	PartySubtype *string               `json:"partySubtype"`
 	UserIds      []intstring.IntString `json:"userIds"`
 	GroupIds     []intstring.IntString `json:"groupIds"`
 	RoleIds      []intstring.IntString `json:"roleIds"`

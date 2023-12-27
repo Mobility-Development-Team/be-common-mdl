@@ -108,10 +108,10 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyIn
 	return resp.Payload, nil
 }
 
-func GetClientPartyByContractIds(tk string, contractIds []intstring.IntString) (map[intstring.IntString]*model.PartyInfoExtended, error) {
+func GetClientPartyByContractIds(tk string, contractIds []intstring.IntString) (map[intstring.IntString]*ContractParty, error) {
 	var resp struct {
 		response.Response
-		Payload map[intstring.IntString]*model.PartyInfoExtended `json:"payload"`
+		Payload map[intstring.IntString]*ContractParty `json:"payload"`
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(
