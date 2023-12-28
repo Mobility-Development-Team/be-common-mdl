@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/go-resty/resty/v2"
+	logger "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
@@ -126,7 +127,7 @@ func GetConfinedSpaceBySpaceIdAndProjectCode(tk, spaceId, projectCode string) (r
 	return
 }
 
-func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result PostCreateCSPermitResponse, err error) {
+func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result PostCreateCSPermitResponse, url string, requestBody []byte, err error) {
 	var (
 		client   = resty.New()
 		resp     *resty.Response
@@ -140,9 +141,14 @@ func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result Po
 		}
 		tk = authResp.Token
 	}
-	resp, err = client.R().SetAuthToken(tk).SetBody(request).Post(
-		fmt.Sprintf(postCreateCSPermit, apis.V().GetString(apiHypathUrlBase)),
-	)
+	// prepare post body for logging
+	url = fmt.Sprintf(postCreateCSPermit, apis.V().GetString(apiHypathUrlBase))
+	if b, err := json.Marshal(request); err != nil {
+		logger.Error("[PublishOneConfinedSpace][PostUpdateCSPermitWorkflow] unable to marshal request")
+	} else {
+		requestBody = b
+	}
+	resp, err = client.R().SetAuthToken(tk).SetBody(request).Post(url)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		err = ErrHyPathInvalidApiCall
 		return
@@ -155,7 +161,7 @@ func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result Po
 	return
 }
 
-func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (result PostCommonCSPermitWorkflowResponse, err error) {
+func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (result PostCommonCSPermitWorkflowResponse, url string, requestBody []byte, err error) {
 	var (
 		client   = resty.New()
 		req      = &PostCommonCSPermitWorkflowRequest{}
@@ -174,10 +180,15 @@ func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (r
 	if pdfUrl != "" {
 		req.PDFUrl = pdfUrl
 	}
-	resp, err = client.R().SetAuthToken(tk).SetBody(req).Post(
-		// %s/confinedspace/ext_permit/permit/%s/status/%s
-		fmt.Sprintf(postUpdateCSPermitWorkflow, apis.V().GetString(apiHypathUrlBase), projectFormId, strings.ToUpper(actionType)),
-	)
+	// prepare post body for logging
+	url = fmt.Sprintf(postUpdateCSPermitWorkflow, apis.V().GetString(apiHypathUrlBase), projectFormId, strings.ToUpper(actionType))
+	if b, err := json.Marshal(req); err != nil {
+		logger.Error("[PublishOneConfinedSpace][PostUpdateCSPermitWorkflow] unable to marshal request")
+	} else {
+		requestBody = b
+	}
+	// Call hyPath
+	resp, err = client.R().SetAuthToken(tk).SetBody(req).Post(url)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		// err = ErrHyPathInvalidApiCall
 		return
