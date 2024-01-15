@@ -67,6 +67,7 @@ type (
 	Worker struct {
 		WorkerType string `json:"workerType"`
 		MappingKey string `json:"mappingKey"`
+		IsSZWorker bool   `json:"isSZWorker"`
 	}
 
 	PostCommonCSPermitWorkflowRequest struct {
