@@ -80,7 +80,7 @@ func GetConfinedSpaceByProjectCode(tk, projectCode string) (result GetCSByProjec
 		tk = authResp.Token
 	}
 	resp, err = client.R().SetAuthToken(tk).Get(
-		fmt.Sprintf(getCSByProjectCode, projectCode, apis.V().GetString(apiHypathUrlBase)),
+		fmt.Sprintf(getCSByProjectCode, apis.V().GetString(apiHypathUrlBase), projectCode),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		err = ErrHyPathInvalidApiCall
@@ -113,7 +113,7 @@ func GetConfinedSpaceBySpaceIdAndProjectCode(tk, spaceId, projectCode string) (r
 		tk = authResp.Token
 	}
 	resp, err = client.R().SetAuthToken(tk).Get(
-		fmt.Sprintf(getCSBySpaceIdAndProjectCode, spaceId, projectCode, apis.V().GetString(apiHypathUrlBase)),
+		fmt.Sprintf(getCSBySpaceIdAndProjectCode, apis.V().GetString(apiHypathUrlBase), spaceId, projectCode),
 	)
 	if err != nil || resp.StatusCode() != http.StatusOK {
 		err = ErrHyPathInvalidApiCall
