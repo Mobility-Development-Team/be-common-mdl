@@ -22,11 +22,11 @@ type (
 		Data []GetCSByProjectCodeResponseDetail `json:"data"`
 	}
 	GetCSByProjectCodeResponseDetail struct {
-		Id           string `json:"id"`
-		ProjectCode  string `json:"projectCode"`
-		WorkLocation string `json:"workLocation"`
-		Northing     int    `json:"northing"`
-		Easting      int    `json:"easting"`
+		Id           string  `json:"id"`
+		ProjectCode  string  `json:"projectCode"`
+		WorkLocation string  `json:"workLocation"`
+		Northing     float64 `json:"northing"`
+		Easting      float64 `json:"easting"`
 	}
 
 	GetCSBySpaceIdAndProjectCodeResponse struct {
