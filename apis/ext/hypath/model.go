@@ -17,6 +17,16 @@ type (
 		Token   string      `json:"token"`
 	}
 
+	GetProjectListResponse struct {
+		HyPathApiBase
+		Data []GetProjectListDetail `json:"data"`
+	}
+	GetProjectListDetail struct {
+		ProjectCode   string `json:"projectCode"`
+		DescriptionZH string `json:"descriptionZH"`
+		DescriptionEN string `json:"descriptionEN"`
+	}
+
 	GetCSByProjectCodeResponse struct {
 		HyPathApiBase
 		Data []GetCSByProjectCodeResponseDetail `json:"data"`

@@ -15,6 +15,7 @@ import (
 const (
 	apiHypathUrlBase             = "apis.external.hypath.url.base"
 	authenticate                 = "%s/auth/authenticate"
+	getProjectList               = "%s/confinedspace/ext_permit/projects"
 	getCSByProjectCode           = "%s/confinedspace/ext_permit/confinedspace?projectcode=%s"
 	getCSBySpaceIdAndProjectCode = "%s/confinedspace/ext_permit/confinedspace/%s?projectcode=%s"
 	postCreateCSPermit           = "%s/confinedspace/ext_permit/permit/create"
@@ -56,6 +57,35 @@ func AuthenticateHyPath() (result HyPathAuthenResponse, err error) {
 	err = json.Unmarshal(resp.Body(), &result)
 	if err != nil {
 		err = ErrHyPathUnableToAuthenticate
+		return
+	}
+	return
+}
+
+func GetProjectList(tk string) (result GetProjectListResponse, err error) {
+	var (
+		client   = resty.New()
+		resp     *resty.Response
+		authResp HyPathAuthenResponse
+	)
+	// Get Token if not provided
+	if tk == "" {
+		authResp, err = AuthenticateHyPath()
+		if err != nil || len(authResp.Token) == 0 {
+			return
+		}
+		tk = authResp.Token
+	}
+	resp, err = client.R().SetAuthToken(tk).Get(
+		fmt.Sprintf(getProjectList, apis.V().GetString(apiHypathUrlBase)),
+	)
+	if err != nil || resp.StatusCode() != http.StatusOK {
+		err = ErrHyPathInvalidApiCall
+		return
+	}
+	err = json.Unmarshal(resp.Body(), &result)
+	if err != nil {
+		err = ErrHyPathInvalidApiResponse
 		return
 	}
 	return
