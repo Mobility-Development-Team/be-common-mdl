@@ -27,6 +27,7 @@ const (
 	getTokenInfo            = "%s/tokeninfo"
 	validateEmatToken       = "%s/validate/smm/user"
 	validateEmatTokenWithTk = "%s/validate/smm/user?tk=true"
+	findIdentitiesByUserKey = "%s/users/identities"
 )
 
 type (
@@ -159,4 +160,16 @@ func parseCustomAuthHeader(c *gin.Context, prefix string) (string, bool) {
 		token = auth[len(pf):]
 	}
 	return token, token != ""
+}
+
+func FindAuthUserIdentities(tk string, body map[string]interface{}) (AuthUserMaster, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findIdentitiesByUserKey, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return AuthUserMaster{}, errors.New(result.String())
+	}
+	// var ids []user.UserIdentity
+	var u AuthUserMaster
+	_ = json.Unmarshal(result.Body(), &u)
+	return u, nil
 }
