@@ -127,6 +127,20 @@ func GetTokenInfo(c *gin.Context, tk string) (TokenInfoResp, error) {
 	return info, err
 }
 
+func CreateAuthUser(c *gin.Context, body map[string]interface{}) (*resty.Response, error) {
+	client := resty.New()
+	tk, _ := apiutil.ParseBearerAuth(c)
+	v, _ := apiutil.ParseCustAuthExt(c, "")
+	result, err := client.R().SetAuthToken(tk).SetHeader(apiutil.HeaderCustom, fmt.Sprintf("%s%s", apiutil.AuthHeaderPrefixBasic, v)).
+		SetBody(body).Post(fmt.Sprintf(createUserWithIdentities, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		// c.Abort()
+		// api.GenerateResponse(c, nil, message.MsgCodeCommon19002)
+		return nil, errors.New(result.String())
+	}
+	return result, nil
+}
+
 func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 	value, ok := c.Get(keyTokenInfo)
 	if !ok {

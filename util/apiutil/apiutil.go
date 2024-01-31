@@ -7,13 +7,31 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	HeaderRegular         = "Authorization"
+	HeaderCustom          = "Authorization-ext"
+	AuthHeaderPrefixBasic = "Basic "
+)
+
 func ParseBearerAuth(c *gin.Context) (string, bool) {
-	auth := c.Request.Header.Get("Authorization")
+	auth := c.Request.Header.Get(HeaderRegular)
 	prefix := "Bearer "
 	token := ""
 
 	if auth != "" && strings.HasPrefix(auth, prefix) {
 		token = auth[len(prefix):]
+	}
+	return token, token != ""
+}
+
+func ParseCustAuthExt(c *gin.Context, prefix string) (string, bool) {
+	auth := c.Request.Header.Get(HeaderCustom)
+	pf, token := "Basic ", ""
+	if prefix != "" {
+		pf = prefix
+	}
+	if auth != "" && strings.HasPrefix(auth, pf) {
+		token = auth[len(pf):]
 	}
 	return token, token != ""
 }
