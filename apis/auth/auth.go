@@ -23,12 +23,20 @@ const (
 	AuthorizationBearer = "Bearer"
 	AuthorizationBasic  = "Basic"
 	// API constant
-	apiAuthMdlUrlBase          = "apis.internal.auth.module.url.base"
-	getTokenInfo               = "%s/tokeninfo"
-	validateEmatToken          = "%s/validate/smm/user"
-	validateEmatTokenWithTk    = "%s/validate/smm/user?tk=true"
-	findIdentitiesByUserKey    = "%s/users/identities"
-	validateExternalByIdentity = "%s/users/validate/external"
+	apiAuthMdlUrlBase             = "apis.internal.auth.module.url.base"
+	getTokenInfo                  = "%s/tokeninfo"
+	validateEmatToken             = "%s/validate/smm/user"
+	validateEmatTokenWithTk       = "%s/validate/smm/user?tk=true"
+	findIdentitiesByUserKey       = "%s/users/identities"
+	validateExternalByIdentity    = "%s/users/validate/external"
+	createUserWithIdentities      = "%s/users"
+	updateDeviceIdRegisterAttempt = "%s/users/device/regd"
+	linkUserWithIdentity          = "%s/users/identity/link"
+	unlinkUserWithIdentity        = "%s/users/identity/unlink"
+	resetUserIdentityCredential   = "%s/users/identity/credential/reset"
+	findAllLoginHistory           = "%s/users/login/histories"
+	updateAuthUserlockStatus      = "%s/users/lock/status"
+	getManyUserLockInfo           = "%s/users/lock/info"
 )
 
 type (
@@ -192,4 +200,89 @@ func ValidateExternalByIdentity(tk, phoneNo, email string) (*ValidateExternalRes
 		return nil, err
 	}
 	return &resp, nil
+}
+
+func LinkUserWithOneIdentity(tk string, body map[string]interface{}) error {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Patch(fmt.Sprintf(linkUserWithIdentity, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return errors.New(result.String())
+	}
+	return nil
+}
+
+func UnlinkUserWithOneIdentity(tk string, body map[string]interface{}) error {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Patch(fmt.Sprintf(unlinkUserWithIdentity, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return errors.New(result.String())
+	}
+	return nil
+}
+
+func ResetUserIdentityCredential(tk string, body map[string]interface{}) error {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Patch(fmt.Sprintf(resetUserIdentityCredential, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return errors.New(result.String())
+	}
+	return nil
+}
+
+func UpdateAuthUserLockStatus(tk string, userRefKey string, lock bool) error {
+	body := map[string]interface{}{
+		"userKey": userRefKey,
+		"lock":    lock,
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(updateAuthUserlockStatus, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return errors.New(result.String())
+	}
+	return nil
+}
+
+func UpdateAuthUserDeviceRegisterAttempt(tk string, userRefKey string) error {
+	body := map[string]interface{}{
+		"userKey": userRefKey,
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(updateDeviceIdRegisterAttempt, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return errors.New(result.String())
+	}
+	return nil
+}
+
+func FindAllUserLoginHistory(tk string, userRefKey string, isDesc bool) (interface{}, error) {
+	body := map[string]interface{}{
+		"userKey":    userRefKey,
+		"descending": isDesc,
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findAllLoginHistory, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return nil, errors.New(result.String())
+	}
+	var histories []interface{}
+	_ = json.Unmarshal(result.Body(), &histories)
+	return histories, nil
+}
+
+func GetAuthStatusByUserRefKeys(tk string, userRefKeys []string) (map[string]*AuthUserMaster, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+		"userRefKeys": userRefKeys,
+	}).Post(fmt.Sprintf(getManyUserLockInfo, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	values := map[string]*AuthUserMaster{}
+	if err := json.Unmarshal(result.Body(), &values); err != nil {
+		return nil, err
+	}
+	return values, nil
 }
