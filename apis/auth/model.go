@@ -12,4 +12,8 @@ type (
 		IsApiAccount      bool          `json:"isApiAccount"`
 		Identities        []interface{} `json:"identities"`
 	}
+	ValidateExternalResp struct {
+		IsValid bool   `json:"isValid"`
+		Uuid    string `json:"userKey"`
+	}
 )

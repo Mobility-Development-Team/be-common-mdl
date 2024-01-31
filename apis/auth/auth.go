@@ -23,11 +23,12 @@ const (
 	AuthorizationBearer = "Bearer"
 	AuthorizationBasic  = "Basic"
 	// API constant
-	apiAuthMdlUrlBase       = "apis.internal.auth.module.url.base"
-	getTokenInfo            = "%s/tokeninfo"
-	validateEmatToken       = "%s/validate/smm/user"
-	validateEmatTokenWithTk = "%s/validate/smm/user?tk=true"
-	findIdentitiesByUserKey = "%s/users/identities"
+	apiAuthMdlUrlBase          = "apis.internal.auth.module.url.base"
+	getTokenInfo               = "%s/tokeninfo"
+	validateEmatToken          = "%s/validate/smm/user"
+	validateEmatTokenWithTk    = "%s/validate/smm/user?tk=true"
+	findIdentitiesByUserKey    = "%s/users/identities"
+	validateExternalByIdentity = "%s/users/validate/external"
 )
 
 type (
@@ -172,4 +173,23 @@ func FindAuthUserIdentities(tk string, body map[string]interface{}) (AuthUserMas
 	var u AuthUserMaster
 	_ = json.Unmarshal(result.Body(), &u)
 	return u, nil
+}
+
+func ValidateExternalByIdentity(tk, phoneNo, email string) (*ValidateExternalResp, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+		"phoneNo": phoneNo,
+		"email":   email,
+	}).Post(fmt.Sprintf(validateExternalByIdentity, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	resp := ValidateExternalResp{}
+	if err := json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
