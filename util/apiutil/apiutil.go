@@ -46,3 +46,9 @@ func GenerateResponse(c *gin.Context, payload interface{}, message response.Mess
 	c.JSON(message.StatusCode, resp)
 	c.Abort()
 }
+
+func CommonResultIndicator(isSuccess bool) map[string]interface{} {
+	return map[string]interface{}{
+		"isSuccess": isSuccess,
+	}
+}
