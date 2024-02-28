@@ -166,3 +166,35 @@ func GetSupportInfo() (map[string]string, error) {
 	return resp.Payload, nil
 }
 
+
+// A version of GetSupportInfo that logs the error and retruns the initialized map value on error
+func ShouldGetSupportInfo() map[string]string {
+	supportInfo, err := GetSupportInfo()
+	if err != nil {
+		logger.Error("[ShouldGetSupportInfo] Unable to get support info, support info would be missing for functions depending on it")
+		return map[string]string{}
+	}
+	if supportInfo == nil {
+		logger.Error("[ShouldGetSupportInfo] Call was successful but a nil support info was received")
+		return map[string]string{}
+	}
+	return supportInfo
+}
+
+// A version of GetOneContract that logs the error and retruns an empty value on error
+func ShouldGetOneContract(tk string, contractId *intstring.IntString) model.Contract {
+	if contractId == nil {
+		logger.Warn("[ShouldGetOneContract] Contract id is nil")
+		return model.Contract{}
+	}
+	contract, err := GetOneContract(tk, *contractId)
+	if err != nil {
+		logger.Error("[ShouldGetOneContract] Unable to get contract information, ignoring")
+		return model.Contract{}
+	}
+	if contract == nil {
+		logger.Error("[ShouldGetOneContract] Call was successful but a nil contract was received")
+		return model.Contract{}
+	}
+	return *contract
+}
