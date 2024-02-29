@@ -85,6 +85,10 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
+	for i := range resp.Payload {
+		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
+	}
+
 	return resp.Payload, nil
 }
 
