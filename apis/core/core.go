@@ -74,22 +74,26 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	if err != nil {
 		return nil, err
 	}
+
+	var resp struct {
+		response.Response
+		Payload struct {
+			Users      []model.GetUserResponse `json:"users"`
+			TotalCount int                     `json:"totalCount"`
+		} `json:"payload"`
+	}
+
 	if !result.IsSuccess() {
 		return nil, errors.New("api returns status: " + result.Status())
 	}
-	type respType struct {
-		response.Response
-		Payload []model.GetUserResponse `json:"payload"`
-	}
-	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
-	for i := range resp.Payload {
-		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
+	for i := range resp.Payload.Users {
+		resp.Payload.Users[i].ShouldAddSystemFieldsFromDisplay()
 	}
 
-	return resp.Payload, nil
+	return resp.Payload.Users, nil
 }
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract, error) {

@@ -156,8 +156,7 @@ type (
 
 	GetUserResponse struct {
 		Model
-		TotalCount int            `json:"totalCount"`
-		Users      []UserCoreInfo `json:"users"`
+		UserCoreInfo
 	}
 )
 
