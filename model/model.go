@@ -147,6 +147,18 @@ type (
 		UserGroupName string `json:"usergroupName"`
 		Uuid          string `json:"uuid"`
 	}
+
+	UserCoreInfo struct {
+		UserInfo
+		ContractNames string `json:"contractNames"`
+		RoleNames     string `json:"roleNames"`
+	}
+
+	GetUserResponse struct {
+		Model
+		TotalCount int            `json:"totalCount"`
+		Users      []UserCoreInfo `json:"users"`
+	}
 )
 
 // GetIdFromInterface attempts to get the Id field of obj

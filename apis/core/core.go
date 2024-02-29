@@ -59,9 +59,9 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.UserInfo, e
 	return resp.Payload, nil
 }
 
-func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.UserInfo, error) {
+func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.GetUserResponse, error) {
 	if len(ids) == 0 && len(userKeyRefs) == 0 {
-		return []model.UserInfo{}, nil
+		return []model.GetUserResponse{}, nil
 	}
 	client := resty.New()
 	body := map[string]interface{}{
@@ -79,7 +79,7 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	}
 	type respType struct {
 		response.Response
-		Payload []model.UserInfo `json:"payload"`
+		Payload []model.GetUserResponse `json:"payload"`
 	}
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
@@ -165,7 +165,6 @@ func GetSupportInfo() (map[string]string, error) {
 	}
 	return resp.Payload, nil
 }
-
 
 // A version of GetSupportInfo that logs the error and retruns the initialized map value on error
 func ShouldGetSupportInfo() map[string]string {
