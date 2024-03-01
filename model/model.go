@@ -160,7 +160,6 @@ type (
 		UserCoreInfo
 	}
 
-
 	CoreContract struct {
 		Model
 		ContractNo       string   `json:"contractNo"`

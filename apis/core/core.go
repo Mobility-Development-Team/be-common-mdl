@@ -122,7 +122,7 @@ func GetAllContracts(tk string, projectId *string, contractIds ...intstring.IntS
 		Payload struct {
 			Contracts  []model.GetCoreContractResponse `json:"contracts"`
 			TotalCount int                             `json:"totalCount"`
-			Id         intstring.IntString             `json:"id"`
+			// Id         intstring.IntString             `json:"id"`
 		} `json:"payload"`
 	}
 	client := resty.New()
@@ -148,6 +148,7 @@ func GetAllContracts(tk string, projectId *string, contractIds ...intstring.IntS
 	output := map[intstring.IntString][]model.GetCoreContractResponse{}
 
 	for _, c := range resp.Payload.Contracts {
+		c.ShouldAddSystemFieldsFromDisplay()
 		output[c.Id] = append(output[c.Id], model.GetCoreContractResponse{
 			CoreContract: c.CoreContract,
 			Parties:      c.Parties,
