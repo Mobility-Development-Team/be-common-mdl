@@ -116,13 +116,13 @@ func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract,
 	return resp.Payload, nil
 }
 
-func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntString) (map[intstring.IntString][]model.ContractDisplay, error) {
+func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntString) (map[intstring.IntString][]model.CoreContractDisplay, error) {
 	var resp struct {
 		response.Response
 		Payload struct {
-			Contracts  []model.ContractDisplay `json:"contracts"`
-			TotalCount int                     `json:"totalCount"`
-			Ids        []intstring.IntString   `json:"ids"`
+			Contracts  []model.CoreContractDisplay `json:"contracts"`
+			TotalCount int                         `json:"totalCount"`
+			Id         intstring.IntString         `json:"id"`
 		} `json:"payload"`
 	}
 	client := resty.New()
@@ -145,18 +145,17 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
-	output := map[intstring.IntString][]model.ContractDisplay{}
+	output := map[intstring.IntString][]model.CoreContractDisplay{}
+
 	for i := range resp.Payload.Contracts {
-		for j := range resp.Payload.Ids {
-			output[resp.Payload.Ids[j]] = append(output[resp.Payload.Ids[j]], model.ContractDisplay{
-				Contract:   resp.Payload.Contracts[i].Contract,
-				Parties:    resp.Payload.Contracts[i].Parties,
-				UserCount:  resp.Payload.Contracts[i].UserCount,
-				PartyCount: resp.Payload.Contracts[i].PartyCount,
-				RoleNames:  resp.Payload.Contracts[i].RoleNames,
-				PartyType:  resp.Payload.Contracts[i].PartyType,
-			})
-		}
+		output[resp.Payload.Id] = append(output[resp.Payload.Id], model.CoreContractDisplay{
+			CoreContract: resp.Payload.Contracts[i].CoreContract,
+			Parties:      resp.Payload.Contracts[i].Parties,
+			UserCount:    resp.Payload.Contracts[i].UserCount,
+			PartyCount:   resp.Payload.Contracts[i].PartyCount,
+			RoleNames:    resp.Payload.Contracts[i].RoleNames,
+			PartyType:    resp.Payload.Contracts[i].PartyType,
+		})
 	}
 
 	return output, nil

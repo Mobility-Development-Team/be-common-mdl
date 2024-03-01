@@ -30,6 +30,7 @@ type (
 		UpdatedByDisplay interface{} `json:"updatedBy" gorm:"-" `
 	}
 	UserInfo struct {
+		Model
 		Uuid           string  `json:"uuid"`
 		FirstName      string  `json:"firstName"`
 		LastName       string  `json:"lastName"`
@@ -161,6 +162,28 @@ type (
 
 	ContractDisplay struct {
 		Contract
+		Parties    []interface{} `json:"parties"`
+		UserCount  int           `json:"userCount"`
+		PartyCount int           `json:"partyCount"`
+		RoleNames  string        `json:"roleNames"`
+		PartyType  string        `json:"partyType"`
+	}
+
+	CoreContract struct {
+		Model
+		ContractNo       string   `json:"contractNo"`
+		ContractDesc     *string  `json:"contractDesc"`
+		Address          *string  `json:"address"`
+		AddressLatitude  *float64 `json:"addressLatitude"`
+		AddressLongitude *float64 `json:"addressLongitude"`
+		BusinessUnit     *string  `json:"businessUnit"`
+		Status           string   `json:"status" gorm:"default:ACTIVE"`
+		ProjectIdRef     string   `json:"projectIdRef" gorm:"<-:create"`
+		DashboardUrl     *string  `json:"dashboardUrl"`
+	}
+
+	CoreContractDisplay struct {
+		CoreContract
 		Parties    []interface{} `json:"parties"`
 		UserCount  int           `json:"userCount"`
 		PartyCount int           `json:"partyCount"`
