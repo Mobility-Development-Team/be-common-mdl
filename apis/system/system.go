@@ -259,7 +259,7 @@ func ShouldPopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) {
 
 // PopulatePartyInfo Gets all parties in partyInfo, replace them with the updated version
 // It tries to look for the records by their id
-func PopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) error {
+func PopulatePartyInfo(tk string, partyInfo []*model.PartyInfo)  error {
 	var ids []intstring.IntString
 	idMap := map[intstring.IntString][]*model.PartyInfo{}
 	for _, info := range partyInfo {

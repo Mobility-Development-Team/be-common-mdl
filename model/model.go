@@ -160,14 +160,6 @@ type (
 		UserCoreInfo
 	}
 
-	ContractDisplay struct {
-		Contract
-		Parties    []interface{} `json:"parties"`
-		UserCount  int           `json:"userCount"`
-		PartyCount int           `json:"partyCount"`
-		RoleNames  string        `json:"roleNames"`
-		PartyType  string        `json:"partyType"`
-	}
 
 	CoreContract struct {
 		Model
@@ -182,7 +174,8 @@ type (
 		DashboardUrl     *string  `json:"dashboardUrl"`
 	}
 
-	CoreContractDisplay struct {
+	GetCoreContractResponse struct {
+		Model
 		CoreContract
 		Parties    []interface{} `json:"parties"`
 		UserCount  int           `json:"userCount"`

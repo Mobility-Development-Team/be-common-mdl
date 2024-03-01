@@ -116,18 +116,18 @@ func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract,
 	return resp.Payload, nil
 }
 
-func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntString) (map[intstring.IntString][]model.CoreContractDisplay, error) {
+func GetAllContracts(tk string, projectId *string, contractIds ...intstring.IntString) (map[intstring.IntString][]model.GetCoreContractResponse, error) {
 	var resp struct {
 		response.Response
 		Payload struct {
-			Contracts  []model.CoreContractDisplay `json:"contracts"`
-			TotalCount int                         `json:"totalCount"`
-			Id         intstring.IntString         `json:"id"`
+			Contracts  []model.GetCoreContractResponse `json:"contracts"`
+			TotalCount int                             `json:"totalCount"`
+			Id         intstring.IntString             `json:"id"`
 		} `json:"payload"`
 	}
 	client := resty.New()
 	req := map[string]interface{}{
-		"contractIds": append([]intstring.IntString{}, contractId...),
+		"contractIds": contractIds,
 	}
 	if projectId != nil {
 		req["projectIdRef"] = *projectId
@@ -145,19 +145,18 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
-	output := map[intstring.IntString][]model.CoreContractDisplay{}
+	output := map[intstring.IntString][]model.GetCoreContractResponse{}
 
-	for i := range resp.Payload.Contracts {
-		output[resp.Payload.Id] = append(output[resp.Payload.Id], model.CoreContractDisplay{
-			CoreContract: resp.Payload.Contracts[i].CoreContract,
-			Parties:      resp.Payload.Contracts[i].Parties,
-			UserCount:    resp.Payload.Contracts[i].UserCount,
-			PartyCount:   resp.Payload.Contracts[i].PartyCount,
-			RoleNames:    resp.Payload.Contracts[i].RoleNames,
-			PartyType:    resp.Payload.Contracts[i].PartyType,
+	for _, c := range resp.Payload.Contracts {
+		output[c.Id] = append(output[c.Id], model.GetCoreContractResponse{
+			CoreContract: c.CoreContract,
+			Parties:      c.Parties,
+			UserCount:    c.UserCount,
+			PartyCount:   c.PartyCount,
+			RoleNames:    c.RoleNames,
+			PartyType:    c.PartyType,
 		})
 	}
-
 	return output, nil
 }
 
