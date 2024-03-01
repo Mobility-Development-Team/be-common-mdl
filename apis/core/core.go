@@ -39,22 +39,22 @@ func GetAllUserInfoAsMap(tk string, body map[string]interface{}) (map[string]mod
 	return resp.Payload, nil
 }
 
-func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.UserInfo, error) {
+func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.GetUserResponse, error) {
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getAllUserInfo, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
-		return []model.UserInfo{}, err
+		return []model.GetUserResponse{}, err
 	}
 	if !result.IsSuccess() {
 		return nil, fmt.Errorf("user module returned status code: %d", result.StatusCode())
 	}
 	type respType struct {
 		response.Response
-		Payload []model.UserInfo `json:"payload"`
+		Payload []model.GetUserResponse `json:"payload"`
 	}
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return []model.UserInfo{}, err
+		return []model.GetUserResponse{}, err
 	}
 	return resp.Payload, nil
 }
@@ -96,11 +96,11 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	return resp.Payload.Users, nil
 }
 
-func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract, error) {
+func GetOneContract(tk string, contractId intstring.IntString) (*model.GetCoreContractResponse, error) {
 	type (
 		respType struct {
 			response.Response
-			Payload *model.Contract `json:"payload"`
+			Payload *model.GetCoreContractResponse `json:"payload"`
 		}
 	)
 	client := resty.New()
@@ -196,19 +196,19 @@ func ShouldGetSupportInfo() map[string]string {
 }
 
 // A version of GetOneContract that logs the error and retruns an empty value on error
-func ShouldGetOneContract(tk string, contractId *intstring.IntString) model.Contract {
+func ShouldGetOneContract(tk string, contractId *intstring.IntString) model.GetCoreContractResponse {
 	if contractId == nil {
 		logger.Warn("[ShouldGetOneContract] Contract id is nil")
-		return model.Contract{}
+		return model.GetCoreContractResponse{}
 	}
 	contract, err := GetOneContract(tk, *contractId)
 	if err != nil {
 		logger.Error("[ShouldGetOneContract] Unable to get contract information, ignoring")
-		return model.Contract{}
+		return model.GetCoreContractResponse{}
 	}
 	if contract == nil {
 		logger.Error("[ShouldGetOneContract] Call was successful but a nil contract was received")
-		return model.Contract{}
+		return model.GetCoreContractResponse{}
 	}
 	return *contract
 }

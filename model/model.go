@@ -41,6 +41,7 @@ type (
 		DefaultLang    *string `json:"defaultLang"`
 		Status         string  `json:"status" binding:"required"`
 		ProfileIconUrl *string `json:"profileIconUrl"`
+		Signature      *string `json:"signature"`
 		UserRefKey     string  `json:"userRefKey"`
 	}
 	PartyInfo struct {
