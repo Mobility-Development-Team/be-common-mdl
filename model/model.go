@@ -30,7 +30,6 @@ type (
 		UpdatedByDisplay interface{} `json:"updatedBy" gorm:"-" `
 	}
 	UserInfo struct {
-		Model
 		Uuid           string  `json:"uuid"`
 		FirstName      string  `json:"firstName"`
 		LastName       string  `json:"lastName"`
@@ -89,6 +88,7 @@ type (
 		ContractRefId *intstring.IntString `json:"contractId"`
 	}
 	Contract struct {
+		Model
 		Id           intstring.IntString `json:"id"`
 		ContractNo   string              `json:"contractNo"`
 		ContractDesc *string             `json:"contractDesc"`
@@ -157,6 +157,15 @@ type (
 	GetUserResponse struct {
 		Model
 		UserCoreInfo
+	}
+
+	ContractDisplay struct {
+		Contract
+		Parties    []interface{} `json:"parties"`
+		UserCount  int           `json:"userCount"`
+		PartyCount int           `json:"partyCount"`
+		RoleNames  string        `json:"roleNames"`
+		PartyType  string        `json:"partyType"`
 	}
 )
 
