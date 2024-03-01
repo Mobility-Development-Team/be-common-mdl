@@ -122,7 +122,7 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 		Payload struct {
 			Contracts  []model.ContractDisplay `json:"contracts"`
 			TotalCount int                     `json:"totalCount"`
-			Id         intstring.IntString    `json:"id"`
+			Ids        []intstring.IntString   `json:"ids"`
 		} `json:"payload"`
 	}
 	client := resty.New()
@@ -147,14 +147,16 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 	}
 	output := map[intstring.IntString][]model.ContractDisplay{}
 	for i := range resp.Payload.Contracts {
-		output[resp.Payload.Id] = append(output[resp.Payload.Id], model.ContractDisplay{
-			Contract:   resp.Payload.Contracts[i].Contract,
-			Parties:    resp.Payload.Contracts[i].Parties,
-			UserCount:  resp.Payload.Contracts[i].UserCount,
-			PartyCount: resp.Payload.Contracts[i].PartyCount,
-			RoleNames:  resp.Payload.Contracts[i].RoleNames,
-			PartyType:  resp.Payload.Contracts[i].PartyType,
-		})
+		for j := range resp.Payload.Ids {
+			output[resp.Payload.Ids[j]] = append(output[resp.Payload.Ids[j]], model.ContractDisplay{
+				Contract:   resp.Payload.Contracts[i].Contract,
+				Parties:    resp.Payload.Contracts[i].Parties,
+				UserCount:  resp.Payload.Contracts[i].UserCount,
+				PartyCount: resp.Payload.Contracts[i].PartyCount,
+				RoleNames:  resp.Payload.Contracts[i].RoleNames,
+				PartyType:  resp.Payload.Contracts[i].PartyType,
+			})
+		}
 	}
 
 	return output, nil
