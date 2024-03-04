@@ -220,3 +220,50 @@ func ShouldGetOneContract(tk string, contractId *intstring.IntString) model.GetC
 	}
 	return *contract
 }
+
+func PopulateUserInfo(tk string, userInfo []*model.GetUserResponse) error {
+	var ids []intstring.IntString
+	var keyRefs []string
+	idMap := map[intstring.IntString][]*model.GetUserResponse{}
+	keyRefMap := map[string][]*model.GetUserResponse{}
+	for _, info := range userInfo {
+		if info == nil {
+			logger.Warn("[PopulateUserInfo] Got a nil userInfo, ignoring...")
+			continue
+		}
+		if info.Id > 0 {
+			if _, ok := idMap[info.Id]; !ok {
+				ids = append(ids, info.Id)
+			}
+			idMap[info.Id] = append(idMap[info.Id], info)
+		}
+		if info.UserRefKey != "" {
+			if _, ok := keyRefMap[info.UserRefKey]; !ok {
+				keyRefs = append(keyRefs, info.UserRefKey)
+			}
+			keyRefMap[info.UserRefKey] = append(keyRefMap[info.UserRefKey], info)
+		}
+	}
+	if len(ids) == 0 && len(keyRefs) == 0 {
+		return nil
+	}
+	updatedInfos, err := GetUsersByIds(tk, ids, keyRefs)
+	if err != nil {
+		return err
+	}
+	for _, updated := range updatedInfos {
+		for _, userInfo := range idMap[updated.Id] {
+			if userInfo == nil {
+				continue
+			}
+			*userInfo = updated
+		}
+		for _, userInfo := range keyRefMap[updated.UserRefKey] {
+			if userInfo == nil {
+				continue
+			}
+			*userInfo = updated
+		}
+	}
+	return nil
+}
