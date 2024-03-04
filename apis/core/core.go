@@ -221,11 +221,11 @@ func ShouldGetOneContract(tk string, contractId *intstring.IntString) model.GetC
 	return *contract
 }
 
-func PopulateUserInfo(tk string, userInfo []*model.GetUserResponse) error {
+func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 	var ids []intstring.IntString
 	var keyRefs []string
-	idMap := map[intstring.IntString][]*model.GetUserResponse{}
-	keyRefMap := map[string][]*model.GetUserResponse{}
+	idMap := map[intstring.IntString][]*model.UserInfo{}
+	keyRefMap := map[string][]*model.UserInfo{}
 	for _, info := range userInfo {
 		if info == nil {
 			logger.Warn("[PopulateUserInfo] Got a nil userInfo, ignoring...")
@@ -256,13 +256,13 @@ func PopulateUserInfo(tk string, userInfo []*model.GetUserResponse) error {
 			if userInfo == nil {
 				continue
 			}
-			*userInfo = updated
+			*userInfo = updated.UserInfo
 		}
 		for _, userInfo := range keyRefMap[updated.UserRefKey] {
 			if userInfo == nil {
 				continue
 			}
-			*userInfo = updated
+			*userInfo = updated.UserInfo
 		}
 	}
 	return nil
