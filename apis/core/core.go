@@ -21,9 +21,8 @@ const (
 	getSupportInfo    = "%s/support/info"
 )
 
-
 // by id or useKeyRef to get user info
-func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model.GetUserResponse, error) {
+func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model.UserInfo, error) {
 	var ids []intstring.IntString
 	var userKeyRefs []string
 	if id == nil && userKeyRef == nil {
@@ -39,7 +38,7 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 	if err != nil {
 		return nil, err
 	}
-	var result *model.GetUserResponse
+	var result *model.UserInfo
 	if len(users) > 0 {
 		result = &users[0]
 	}
@@ -66,9 +65,9 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.GetUserResp
 	return resp.Payload, nil
 }
 
-func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.GetUserResponse, error) {
+func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.UserInfo, error) {
 	if len(ids) == 0 && len(userKeyRefs) == 0 {
-		return []model.GetUserResponse{}, nil
+		return []model.UserInfo{}, nil
 	}
 	client := resty.New()
 	body := map[string]interface{}{
@@ -90,6 +89,7 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 		} `json:"payload"`
 	}
 
+	var vArr []model.UserInfo
 	if !result.IsSuccess() {
 		return nil, errors.New("api returns status: " + result.Status())
 	}
@@ -98,11 +98,12 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	}
 	for i := range resp.Payload.Users {
 		resp.Payload.Users[i].ShouldAddSystemFieldsFromDisplay()
+		vArr = append(vArr, resp.Payload.Users[i].UserInfo)
+
 	}
 
-	return resp.Payload.Users, nil
+	return vArr, nil
 }
-
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.GetCoreContractResponse, error) {
 	type (
@@ -256,13 +257,13 @@ func PopulateUserInfo(tk string, userInfo []*model.UserCoreInfo) error {
 			if userInfo == nil {
 				continue
 			}
-			*userInfo = updated.UserInfo
+			*userInfo = updated
 		}
 		for _, userInfo := range keyRefMap[updated.UserRefKey] {
 			if userInfo == nil {
 				continue
 			}
-			*userInfo = updated.UserInfo
+			*userInfo = updated
 		}
 	}
 	return nil
