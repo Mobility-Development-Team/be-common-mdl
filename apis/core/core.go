@@ -84,12 +84,10 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	var resp struct {
 		response.Response
 		Payload struct {
-			Users      []model.GetUserResponse `json:"users"`
-			TotalCount int                     `json:"totalCount"`
+			Users      []model.UserInfo `json:"users"`
+			TotalCount int              `json:"totalCount"`
 		} `json:"payload"`
 	}
-
-	var vArr []model.UserInfo
 	if !result.IsSuccess() {
 		return nil, errors.New("api returns status: " + result.Status())
 	}
@@ -98,11 +96,10 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	}
 	for i := range resp.Payload.Users {
 		resp.Payload.Users[i].ShouldAddSystemFieldsFromDisplay()
-		vArr = append(vArr, resp.Payload.Users[i].UserInfo)
 
 	}
 
-	return vArr, nil
+	return resp.Payload.Users, nil
 }
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.GetCoreContractResponse, error) {
