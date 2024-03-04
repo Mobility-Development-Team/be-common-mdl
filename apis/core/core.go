@@ -21,22 +21,29 @@ const (
 	getSupportInfo    = "%s/support/info"
 )
 
-func GetAllUserInfoAsMap(tk string, body map[string]interface{}) (map[string]model.UserInfo, error) {
-	urlPath := getAllUserInfo + "?showAsMap=true"
-	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(urlPath, apis.V().GetString(apiCoreMdlUrlBase)))
+
+// by id or useKeyRef to get user info
+func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model.GetUserResponse, error) {
+	var ids []intstring.IntString
+	var userKeyRefs []string
+	if id == nil && userKeyRef == nil {
+		return nil, nil // Nothing specified, returns nil user
+	}
+	if id != nil {
+		ids = []intstring.IntString{*id}
+	}
+	if userKeyRef != nil {
+		userKeyRefs = []string{*userKeyRef}
+	}
+	users, err := GetUsersByIds(tk, ids, userKeyRefs)
 	if err != nil {
-		return map[string]model.UserInfo{}, err
+		return nil, err
 	}
-	type respType struct {
-		response.Response
-		Payload map[string]model.UserInfo `json:"payload"`
+	var result *model.GetUserResponse
+	if len(users) > 0 {
+		result = &users[0]
 	}
-	var resp respType
-	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return map[string]model.UserInfo{}, err
-	}
-	return resp.Payload, nil
+	return result, nil
 }
 
 func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.GetUserResponse, error) {
@@ -95,6 +102,7 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 
 	return resp.Payload.Users, nil
 }
+
 
 func GetOneContract(tk string, contractId intstring.IntString) (*model.GetCoreContractResponse, error) {
 	type (
