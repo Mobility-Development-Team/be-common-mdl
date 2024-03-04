@@ -221,7 +221,7 @@ func ShouldGetOneContract(tk string, contractId *intstring.IntString) model.GetC
 	return *contract
 }
 
-func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
+func PopulateUserInfo(tk string, userInfo []*model.UserCoreInfo) error {
 	var ids []intstring.IntString
 	var keyRefs []string
 	idMap := map[intstring.IntString][]*model.UserInfo{}
@@ -235,13 +235,13 @@ func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 			if _, ok := idMap[info.Id]; !ok {
 				ids = append(ids, info.Id)
 			}
-			idMap[info.Id] = append(idMap[info.Id], info)
+			idMap[info.Id] = append(idMap[info.Id], &info.UserInfo)
 		}
 		if info.UserRefKey != "" {
 			if _, ok := keyRefMap[info.UserRefKey]; !ok {
 				keyRefs = append(keyRefs, info.UserRefKey)
 			}
-			keyRefMap[info.UserRefKey] = append(keyRefMap[info.UserRefKey], info)
+			keyRefMap[info.UserRefKey] = append(keyRefMap[info.UserRefKey], &info.UserInfo)
 		}
 	}
 	if len(ids) == 0 && len(keyRefs) == 0 {
