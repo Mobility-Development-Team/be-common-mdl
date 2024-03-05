@@ -14,12 +14,13 @@ import (
 )
 
 const (
-	apiCoreMdlUrlBase = "apis.internal.core.module.url.base"
-	getAllUserInfo    = "%s/users/all"
-	getOneContract    = "%s/contracts/%s"
-	getAllContracts   = "%s/contracts/all"
-	getSupportInfo    = "%s/support/info"
-	getAllLocations   = "%s/locations/all"
+	apiCoreMdlUrlBase     = "apis.internal.core.module.url.base"
+	getAllUserInfo        = "%s/users/all"
+	getOneContract        = "%s/contracts/%s"
+	getAllContracts       = "%s/contracts/all"
+	getSupportInfo        = "%s/support/info"
+	getAllLocations       = "%s/locations/all"
+	getContractUserByUids = "%s/parties/assoc/users"
 )
 
 // by id or useKeyRef to get user info
@@ -321,4 +322,29 @@ func GetLocations(tk string, body map[string]interface{}) (map[intstring.IntStri
 	}
 
 	return output, nil
+}
+
+func GetContractUserByUids(tk string, contractId intstring.IntString, uids ...intstring.IntString) (map[intstring.IntString]*intstring.IntString, error) {
+	var resp struct {
+		response.Response
+		Payload map[intstring.IntString]*intstring.IntString `json:"payload"`
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"contractId": contractId,
+			"uids":       uids,
+		},
+	).Post(fmt.Sprintf(getContractUserByUids, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetContractUserByUids] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("Core module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
 }
