@@ -78,6 +78,7 @@ type (
 		ProfileIconUrl *string `json:"profileIconUrl"`
 	}
 	Location struct {
+		Model
 		Id            intstring.IntString  `json:"id"`
 		Uuid          string               `json:"uuid"`
 		Name          string               `json:"name"`

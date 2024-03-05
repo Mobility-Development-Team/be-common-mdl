@@ -19,6 +19,7 @@ const (
 	getOneContract    = "%s/contracts/%s"
 	getAllContracts   = "%s/contracts/all"
 	getSupportInfo    = "%s/support/info"
+	getAllLocations   = "%s/locations/all"
 )
 
 // by id or useKeyRef to get user info
@@ -264,4 +265,61 @@ func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 		}
 	}
 	return nil
+}
+
+func GetLocations(tk string, body map[string]interface{}) (map[intstring.IntString][]model.Location, error) {
+	urlPath := getAllLocations
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(urlPath, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetLocations]", "err:", err)
+		return map[intstring.IntString][]model.Location{}, err
+	}
+	type respType struct {
+		response.Response
+		Payload struct {
+			Locations  []*model.Location `json:"locations"`
+			TotalCount int               `json:"totalCount"`
+		} `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return map[intstring.IntString][]model.Location{}, err
+	}
+
+	output := map[intstring.IntString][]model.Location{}
+
+	for i, c := range resp.Payload.Locations {
+		resp.Payload.Locations[i].ShouldAddSystemFieldsFromDisplay()
+		if c.ContractRefId != nil {
+			output[*c.ContractRefId] = append(output[*c.ContractRefId], model.Location{
+				Id:            c.Id,
+				Uuid:          c.Uuid,
+				Name:          c.Name,
+				NameZh:        c.NameZh,
+				Status:        c.Status,
+				LocationType:  c.LocationType,
+				Latitude:      c.Latitude,
+				Longitude:     c.Longitude,
+				LocationId:    c.LocationId,
+				ContractRefId: c.ContractRefId,
+			})
+		} else {
+			output[c.Id] = append(output[c.Id], model.Location{
+				Id:            c.Id,
+				Uuid:          c.Uuid,
+				Name:          c.Name,
+				NameZh:        c.NameZh,
+				Status:        c.Status,
+				LocationType:  c.LocationType,
+				Latitude:      c.Latitude,
+				Longitude:     c.Longitude,
+				LocationId:    c.LocationId,
+				ContractRefId: c.ContractRefId,
+			})
+		}
+
+	}
+
+	return output, nil
 }
