@@ -271,8 +271,8 @@ func GetLocations(tk string, body map[string]interface{}) (map[intstring.IntStri
 	var resp struct {
 		response.Response
 		Payload struct {
-			Locations  map[intstring.IntString][]*model.Location `json:"locations"`
-			TotalCount int                                       `json:"totalCount"`
+			Locations  []*model.Location `json:"locations"`
+			TotalCount int               `json:"totalCount"`
 		} `json:"payload"`
 	}
 	urlPath := getAllLocations
@@ -286,5 +286,39 @@ func GetLocations(tk string, body map[string]interface{}) (map[intstring.IntStri
 		return map[intstring.IntString][]*model.Location{}, err
 	}
 
-	return resp.Payload.Locations, nil
+	output := map[intstring.IntString][]*model.Location{}
+
+	for _, c := range resp.Payload.Locations {
+		c.ShouldAddSystemFieldsFromDisplay()
+		if c.Id != 0 {
+			output[c.Id] = append(output[c.Id], &model.Location{
+				Id:            c.Id,
+				Uuid:          c.Uuid,
+				Name:          c.Name,
+				NameZh:        c.NameZh,
+				Status:        c.Status,
+				LocationType:  c.LocationType,
+				Latitude:      c.Latitude,
+				Longitude:     c.Longitude,
+				LocationId:    c.LocationId,
+				ContractRefId: c.ContractRefId,
+			})
+		} else {
+			output[*c.ContractRefId] = append(output[*c.ContractRefId], &model.Location{
+				Id:            c.Id,
+				Uuid:          c.Uuid,
+				Name:          c.Name,
+				NameZh:        c.NameZh,
+				Status:        c.Status,
+				LocationType:  c.LocationType,
+				Latitude:      c.Latitude,
+				Longitude:     c.Longitude,
+				LocationId:    c.LocationId,
+				ContractRefId: c.ContractRefId,
+			})
+		}
+
+	}
+
+	return output, nil
 }
