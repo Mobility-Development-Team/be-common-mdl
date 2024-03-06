@@ -21,6 +21,7 @@ const (
 	getSupportInfo        = "%s/support/info"
 	getAllLocations       = "%s/locations/all"
 	getContractUserByUids = "%s/parties/assoc/users"
+	getUserByRole         = "%s/roles/users"
 )
 
 // by id or useKeyRef to get user info
@@ -345,6 +346,26 @@ func GetContractUserByUids(tk string, contractId intstring.IntString, uids ...in
 	}
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
+	}
+	return resp.Payload, nil
+}
+
+func GetUsersIdByRole(tk string, body map[string]interface{}) ([]intstring.IntString, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getUserByRole, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		return []intstring.IntString{}, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("user module returned status code: %d", result.StatusCode())
+	}
+	type respType struct {
+		response.Response
+		Payload []intstring.IntString `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return []intstring.IntString{}, err
 	}
 	return resp.Payload, nil
 }
