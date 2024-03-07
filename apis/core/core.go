@@ -4,13 +4,22 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sync"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/apis/auth"
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+	"github.com/Mobility-Development-Team/be-common-mdl/util/apiutil"
+	"github.com/gin-gonic/gin"
 	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
+)
+
+// Gin context storage keys
+const (
+	tokenInfoUser = "userInfo"
 )
 
 const (
@@ -22,7 +31,11 @@ const (
 	getAllLocations       = "%s/locations/all"
 	getContractUserByUids = "%s/parties/assoc/users"
 	getUserByRole         = "%s/roles/users"
+	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
+	getManyParitesById    = "%s/parties/many"
 )
+
+var muGetCurrentUserInfoFromContext sync.Mutex
 
 // by id or useKeyRef to get user info
 func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model.UserInfo, error) {
@@ -366,6 +379,145 @@ func GetUsersIdByRole(tk string, body map[string]interface{}) ([]intstring.IntSt
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return []intstring.IntString{}, err
+	}
+	return resp.Payload, nil
+}
+
+
+func GetCurrentUserInfoFromContext(c *gin.Context) (*model.UserInfo, error) {
+	muGetCurrentUserInfoFromContext.Lock()
+	defer muGetCurrentUserInfoFromContext.Unlock()
+	refKey := auth.GetUserRefKeyFromContext(c)
+	tk, _ := apiutil.ParseBearerAuth(c)
+	v, ok := c.Get(tokenInfoUser)
+	switch {
+	case ok && v != nil:
+		logger.Debugf("[GetCurrentUserInfoFromContext] Reusing user info of creater %s...", refKey)
+	case ok && v == nil:
+		logger.Error("[GetCurrentUserInfoFromContext] Got a nil user info from cache, trying to get another one...")
+		fallthrough
+	default:
+		logger.Debugf("[GetCurrentUserInfoFromContext] Getting user info of creater %s...", refKey)
+		var err error
+		v, err = GetUserById(tk, nil, &refKey)
+		if err != nil {
+			return nil, err
+		}
+		c.Set(tokenInfoUser, v.(*model.UserInfo))
+	}
+	return v.(*model.UserInfo), nil
+}
+
+// move from user
+// GenerateModelUserDisplay generates empty userInfo for the models and returns them in a single list.
+// The UserInfo are filled with the users' refKey only.
+// To load the UserInfo with the correct values, call PopulateUserInfo() with the returned list
+func GenerateModelUserDisplay(models ...*model.Model) []*model.UserInfo {
+	userInfos := make([]*model.UserInfo, 0, len(models)*2)
+	for _, m := range models {
+		u := &model.UserInfo{
+			UserRefKey: m.CreatedBy,
+		}
+		m.CreatedByDisplay = u
+		userInfos = append(userInfos, u)
+		if m.UpdatedBy != nil {
+			u := &model.UserInfo{
+				UserRefKey: *m.UpdatedBy,
+			}
+			m.UpdatedByDisplay = u
+			userInfos = append(userInfos, u)
+		}
+	}
+	return userInfos
+}
+
+// move from system
+func GetContractParties(tk string, contractId intstring.IntString) (map[string]ContractParty, error) {
+	resp := struct {
+		Payload map[string]ContractParty `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getContractParties, apis.V().GetString(apiCoreMdlUrlBase), contractId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+// move from system
+func ShouldPopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) {
+	if err := PopulatePartyInfo(tk, partyInfo); err != nil {
+		logger.Error("[ShouldPopulatePartyInfo] Failed getting parties, ignoring ", err)
+	}
+}
+
+// move from system
+// PopulatePartyInfo Gets all parties in partyInfo, replace them with the updated version
+// It tries to look for the records by their id
+func PopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) error {
+	var ids []intstring.IntString
+	idMap := map[intstring.IntString][]*model.PartyInfo{}
+	for _, info := range partyInfo {
+		if info == nil {
+			logger.Warn("[PopulatePartyInfo] Got a nil partyInfo, ignoring...")
+			continue
+		}
+		if info.Id > 0 {
+			if _, ok := idMap[info.Id]; !ok {
+				ids = append(ids, info.Id)
+			}
+			idMap[info.Id] = append(idMap[info.Id], info)
+		}
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	updatedInfos, err := GetManyPartiesById(tk, ids...)
+	if err != nil {
+		return err
+	}
+	for _, updated := range updatedInfos {
+		if updated == nil {
+			continue
+		}
+		for _, partyInfo := range idMap[updated.Id] {
+			if partyInfo == nil {
+				continue
+			}
+			*partyInfo = *updated
+		}
+	}
+	return nil
+}
+
+// move from system 
+func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyInfo, error) {
+	var resp struct {
+		response.Response
+		Payload []*model.PartyInfo `json:"payload"`
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"ids": ids,
+		},
+	).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetManyPartiesById] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
 	}
 	return resp.Payload, nil
 }
