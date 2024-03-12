@@ -175,6 +175,24 @@ type (
 		DashboardUrl     *string  `json:"dashboardUrl"`
 	}
 
+	CorePartyInfo struct {
+		Model
+		Id            intstring.IntString `json:"id"`
+		PartyName     string              `json:"partyName"`
+		PartyNameZh   string              `json:"partyNameZh"`
+		Address       string              `json:"address"`
+		Email         string              `json:"email"`
+		Br            string              `json:"br"`
+		TradeCategory string              `json:"tradeCategory"`
+		PartyIconUrl  string              `json:"partyIconUrl"`
+		PartyPrefix   string              `json:"partyPrefix"`
+	}
+
+	CorePartyInfoDisplay struct {
+		CorePartyInfo
+		UserCount int `json:"userCount"`
+	}
+
 	GetCoreContractResponse struct {
 		Model
 		CoreContract

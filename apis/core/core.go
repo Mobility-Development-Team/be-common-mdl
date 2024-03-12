@@ -383,7 +383,6 @@ func GetUsersIdByRole(tk string, body map[string]interface{}) ([]intstring.IntSt
 	return resp.Payload, nil
 }
 
-
 func GetCurrentUserInfoFromContext(c *gin.Context) (*model.UserInfo, error) {
 	muGetCurrentUserInfoFromContext.Lock()
 	defer muGetCurrentUserInfoFromContext.Unlock()
@@ -452,7 +451,7 @@ func GetContractParties(tk string, contractId intstring.IntString) (map[string]C
 }
 
 // move from system
-func ShouldPopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) {
+func ShouldPopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) {
 	if err := PopulatePartyInfo(tk, partyInfo); err != nil {
 		logger.Error("[ShouldPopulatePartyInfo] Failed getting parties, ignoring ", err)
 	}
@@ -461,19 +460,23 @@ func ShouldPopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) {
 // move from system
 // PopulatePartyInfo Gets all parties in partyInfo, replace them with the updated version
 // It tries to look for the records by their id
-func PopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) error {
+func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error {
 	var ids []intstring.IntString
-	idMap := map[intstring.IntString][]*model.PartyInfo{}
+	idMap := map[intstring.IntString][]*model.CorePartyInfoDisplay{}
 	for _, info := range partyInfo {
 		if info == nil {
 			logger.Warn("[PopulatePartyInfo] Got a nil partyInfo, ignoring...")
 			continue
 		}
+		info.ShouldAddSystemFieldsFromDisplay()
 		if info.Id > 0 {
 			if _, ok := idMap[info.Id]; !ok {
 				ids = append(ids, info.Id)
 			}
-			idMap[info.Id] = append(idMap[info.Id], info)
+
+			idMap[info.Id] = append(idMap[info.Id], &model.CorePartyInfoDisplay{
+				CorePartyInfo: info.CorePartyInfo,
+			})
 		}
 	}
 	if len(ids) == 0 {
@@ -497,11 +500,14 @@ func PopulatePartyInfo(tk string, partyInfo []*model.PartyInfo) error {
 	return nil
 }
 
-// move from system 
-func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyInfo, error) {
+// move from system
+func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePartyInfoDisplay, error) {
 	var resp struct {
 		response.Response
-		Payload []*model.PartyInfo `json:"payload"`
+		Payload struct {
+			Parties    []*model.CorePartyInfoDisplay `json:"parties"`
+			TotalCount int                           `json:"totalCount"`
+		} `json:"payload"`
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(
@@ -519,5 +525,11 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyIn
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
-	return resp.Payload, nil
+
+	for i := range resp.Payload.Parties {
+		resp.Payload.Parties[i].ShouldAddSystemFieldsFromDisplay()
+
+	}
+
+	return resp.Payload.Parties, nil
 }
