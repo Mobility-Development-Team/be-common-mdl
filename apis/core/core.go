@@ -32,7 +32,7 @@ const (
 	getContractUserByUids = "%s/parties/assoc/users"
 	getUserByRole         = "%s/roles/users"
 	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
-	getManyParitesById    = "%s/parties/many"
+	getManyParitesById    = "%s/parties/all"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
