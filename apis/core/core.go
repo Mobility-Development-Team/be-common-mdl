@@ -470,12 +470,23 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 		}
 
 		if info.Id > 0 {
+			info.ShouldAddSystemFieldsFromDisplay()
 			if _, ok := idMap[info.Id]; !ok {
 				ids = append(ids, info.Id)
 			}
-			info.ShouldAddSystemFieldsFromDisplay()
 			idMap[info.Id] = append(idMap[info.Id], &model.CorePartyInfoDisplay{
-				CorePartyInfo: info.CorePartyInfo,
+				CorePartyInfo: model.CorePartyInfo{
+					Id:            info.Id,
+					PartyName:     info.PartyName,
+					PartyNameZh:   info.PartyNameZh,
+					Address:       info.Address,
+					Email:         info.Email,
+					Br:            info.Br,
+					TradeCategory: info.TradeCategory,
+					PartyIconUrl:  info.PartyIconUrl,
+					PartyPrefix:   info.PartyPrefix,
+				},
+				UserCount: len(partyInfo),
 			})
 		}
 	}
