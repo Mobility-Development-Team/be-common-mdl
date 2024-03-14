@@ -457,52 +457,48 @@ func ShouldPopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay)
 	}
 }
 
-// move from system
-// PopulatePartyInfo Gets all parties in partyInfo, replace them with the updated version
-// It tries to look for the records by their id
 func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error {
 	var ids []intstring.IntString
+	var keyRefs []intstring.IntString
 	idMap := map[intstring.IntString][]*model.CorePartyInfoDisplay{}
+	keyRefMap := map[intstring.IntString][]*model.CorePartyInfoDisplay{}
 	for _, info := range partyInfo {
 		if info == nil {
 			logger.Warn("[PopulatePartyInfo] Got a nil partyInfo, ignoring...")
 			continue
 		}
-		logger.Info("info.id----", info.Id)
 		if info.Id > 0 {
-			info.ShouldAddSystemFieldsFromDisplay()
 			if _, ok := idMap[info.Id]; !ok {
 				ids = append(ids, info.Id)
 			}
-			logger.Info("ids---", ids)
-			idMap[info.Id] = append(idMap[info.Id], &model.CorePartyInfoDisplay{
-				CorePartyInfo: info.CorePartyInfo,
-				UserCount:     len(partyInfo),
-			})
+			idMap[info.Id] = append(idMap[info.Id], info)
+		}
+		if info.Id != 0 {
+			if _, ok := keyRefMap[info.Id]; !ok {
+				keyRefs = append(keyRefs, info.Id)
+			}
+			keyRefMap[info.Id] = append(keyRefMap[info.Id], info)
 		}
 	}
-	if len(ids) == 0 {
+	if len(ids) == 0 && len(keyRefs) == 0 {
 		return nil
 	}
 	updatedInfos, err := GetManyPartiesById(tk, ids...)
-
 	if err != nil {
 		return err
 	}
 	for _, updated := range updatedInfos {
-		if updated == nil {
-			continue
+		for _, pInfo := range idMap[updated.Id] {
+			if pInfo == nil {
+				continue
+			}
+			*pInfo = *updated
 		}
-
-		logger.Info("updated---", updated)
-		logger.Info("idMap[updated.Id]----", idMap[updated.Id])
-		for _, partyInfo := range idMap[updated.Id] {
+		for _, partyInfo := range keyRefMap[updated.Id] {
 			if partyInfo == nil {
 				continue
 			}
 			*partyInfo = *updated
-			logger.Info("partyInfo----",*partyInfo)
-			logger.Info("partyInfo123----",*updated)
 		}
 	}
 	return nil
