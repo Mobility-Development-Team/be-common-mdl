@@ -500,8 +500,9 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 			if partyInfo == nil {
 				continue
 			}
-			logger.Info("partyInfo")
 			*partyInfo = *updated
+			logger.Info("partyInfo----",*partyInfo)
+			logger.Info("partyInfo123----",*updated)
 		}
 	}
 	return nil
