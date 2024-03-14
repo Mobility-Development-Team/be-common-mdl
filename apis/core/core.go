@@ -468,12 +468,12 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 			logger.Warn("[PopulatePartyInfo] Got a nil partyInfo, ignoring...")
 			continue
 		}
-		info.ShouldAddSystemFieldsFromDisplay()
+
 		if info.Id > 0 {
 			if _, ok := idMap[info.Id]; !ok {
 				ids = append(ids, info.Id)
 			}
-
+			info.ShouldAddSystemFieldsFromDisplay()
 			idMap[info.Id] = append(idMap[info.Id], &model.CorePartyInfoDisplay{
 				CorePartyInfo: info.CorePartyInfo,
 			})
@@ -494,7 +494,7 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 			if partyInfo == nil {
 				continue
 			}
-			*partyInfo = *updated
+			partyInfo.CorePartyInfo = updated.CorePartyInfo
 		}
 	}
 	return nil
@@ -502,6 +502,20 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 
 // move from system
 func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePartyInfoDisplay, error) {
+	if len(ids) == 0 {
+		return []*model.CorePartyInfoDisplay{}, nil
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"ids": ids,
+		}).Post(
+		fmt.Sprintf(getManyParitesById, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	var resp struct {
 		response.Response
 		Payload struct {
@@ -509,23 +523,12 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePar
 			TotalCount int                           `json:"totalCount"`
 		} `json:"payload"`
 	}
-	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(
-		map[string]interface{}{
-			"ids": ids,
-		},
-	).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiCoreMdlUrlBase)))
-	if err != nil {
-		logger.Error("[GetManyPartiesById] err: ", err)
-		return nil, err
-	}
 	if !result.IsSuccess() {
-		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+		return nil, errors.New("api returns status: " + result.Status())
 	}
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
-
 	for i := range resp.Payload.Parties {
 		resp.Payload.Parties[i].ShouldAddSystemFieldsFromDisplay()
 
