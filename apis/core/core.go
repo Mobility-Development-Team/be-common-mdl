@@ -475,18 +475,8 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 				ids = append(ids, info.Id)
 			}
 			idMap[info.Id] = append(idMap[info.Id], &model.CorePartyInfoDisplay{
-				CorePartyInfo: model.CorePartyInfo{
-					Id:            info.Id,
-					PartyName:     info.PartyName,
-					PartyNameZh:   info.PartyNameZh,
-					Address:       info.Address,
-					Email:         info.Email,
-					Br:            info.Br,
-					TradeCategory: info.TradeCategory,
-					PartyIconUrl:  info.PartyIconUrl,
-					PartyPrefix:   info.PartyPrefix,
-				},
-				UserCount: len(partyInfo),
+				CorePartyInfo: info.CorePartyInfo,
+				UserCount:     len(partyInfo),
 			})
 		}
 	}
@@ -498,9 +488,6 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 		return err
 	}
 	for _, updated := range updatedInfos {
-		if updated == nil {
-			continue
-		}
 		for _, partyInfo := range idMap[updated.Id] {
 			if partyInfo == nil {
 				continue
@@ -512,9 +499,9 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 }
 
 // move from system
-func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePartyInfoDisplay, error) {
+func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]model.CorePartyInfoDisplay, error) {
 	if len(ids) == 0 {
-		return []*model.CorePartyInfoDisplay{}, nil
+		return []model.CorePartyInfoDisplay{}, nil
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(
@@ -530,8 +517,8 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePar
 	var resp struct {
 		response.Response
 		Payload struct {
-			Parties    []*model.CorePartyInfoDisplay `json:"parties"`
-			TotalCount int                           `json:"totalCount"`
+			Parties    []model.CorePartyInfoDisplay `json:"parties"`
+			TotalCount int                          `json:"totalCount"`
 		} `json:"payload"`
 	}
 	if !result.IsSuccess() {
