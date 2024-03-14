@@ -468,12 +468,13 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 			logger.Warn("[PopulatePartyInfo] Got a nil partyInfo, ignoring...")
 			continue
 		}
-
+		logger.Info("info.id----", info.Id)
 		if info.Id > 0 {
 			info.ShouldAddSystemFieldsFromDisplay()
 			if _, ok := idMap[info.Id]; !ok {
 				ids = append(ids, info.Id)
 			}
+			logger.Info("ids---", ids)
 			idMap[info.Id] = append(idMap[info.Id], &model.CorePartyInfoDisplay{
 				CorePartyInfo: info.CorePartyInfo,
 				UserCount:     len(partyInfo),
@@ -485,8 +486,6 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 	}
 	updatedInfos, err := GetManyPartiesById(tk, ids...)
 
-
-
 	if err != nil {
 		return err
 	}
@@ -494,10 +493,14 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 		if updated == nil {
 			continue
 		}
+
+		logger.Info("updated---", updated)
+		logger.Info("idMap[updated.Id]----", idMap[updated.Id])
 		for _, partyInfo := range idMap[updated.Id] {
 			if partyInfo == nil {
 				continue
 			}
+			logger.Info("partyInfo")
 			*partyInfo = *updated
 		}
 	}
