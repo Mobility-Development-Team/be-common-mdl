@@ -485,19 +485,20 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 	}
 	updatedInfos, err := GetManyPartiesById(tk, ids...)
 
-	for _, u := range updatedInfos {
-		logger.Info("u---", u.PartyName)
-	}
+
 
 	if err != nil {
 		return err
 	}
 	for _, updated := range updatedInfos {
+		if updated == nil {
+			continue
+		}
 		for _, partyInfo := range idMap[updated.Id] {
 			if partyInfo == nil {
 				continue
 			}
-			partyInfo.CorePartyInfo = updated.CorePartyInfo
+			*partyInfo = *updated
 		}
 	}
 	return nil
@@ -536,8 +537,5 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePar
 		resp.Payload.Parties[i].ShouldAddSystemFieldsFromDisplay()
 
 	}
-
-	logger.Info("resp.Payload.Parties---", resp.Payload.Parties)
-
 	return resp.Payload.Parties, nil
 }
