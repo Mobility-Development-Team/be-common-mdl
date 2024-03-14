@@ -484,6 +484,11 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 		return nil
 	}
 	updatedInfos, err := GetManyPartiesById(tk, ids...)
+
+	for _, u := range updatedInfos {
+		logger.Info("u---", u.PartyName)
+	}
+
 	if err != nil {
 		return err
 	}
@@ -499,9 +504,9 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 }
 
 // move from system
-func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]model.CorePartyInfoDisplay, error) {
+func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePartyInfoDisplay, error) {
 	if len(ids) == 0 {
-		return []model.CorePartyInfoDisplay{}, nil
+		return []*model.CorePartyInfoDisplay{}, nil
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(
@@ -517,8 +522,8 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]model.CorePart
 	var resp struct {
 		response.Response
 		Payload struct {
-			Parties    []model.CorePartyInfoDisplay `json:"parties"`
-			TotalCount int                          `json:"totalCount"`
+			Parties    []*model.CorePartyInfoDisplay `json:"parties"`
+			TotalCount int                           `json:"totalCount"`
 		} `json:"payload"`
 	}
 	if !result.IsSuccess() {
@@ -531,6 +536,8 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]model.CorePart
 		resp.Payload.Parties[i].ShouldAddSystemFieldsFromDisplay()
 
 	}
+
+	logger.Info("resp.Payload.Parties---", resp.Payload.Parties)
 
 	return resp.Payload.Parties, nil
 }
