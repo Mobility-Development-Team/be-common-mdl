@@ -483,7 +483,7 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 	if len(ids) == 0 && len(keyRefs) == 0 {
 		return nil
 	}
-	updatedInfos, err := GetManyPartiesById(tk, ids...)
+	updatedInfos, _, err := GetManyPartiesById(tk, nil, ids...)
 	if err != nil {
 		return err
 	}
@@ -505,37 +505,39 @@ func PopulatePartyInfo(tk string, partyInfo []*model.CorePartyInfoDisplay) error
 }
 
 // move from system
-func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePartyInfoDisplay, error) {
+func GetManyPartiesById(tk string, contractId *intstring.IntString, ids ...intstring.IntString) ([]*model.CorePartyInfoDisplay, intstring.IntString, error) {
 	if len(ids) == 0 {
-		return []*model.CorePartyInfoDisplay{}, nil
+		return []*model.CorePartyInfoDisplay{}, 0, nil
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
-			"ids": ids,
+			"ids":        ids,
+			"contractId": contractId,
 		}).Post(
 		fmt.Sprintf(getManyParitesById, apis.V().GetString(apiCoreMdlUrlBase)),
 	)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var resp struct {
 		response.Response
 		Payload struct {
+			ContractId *intstring.IntString          `json:"contractId"`
 			Parties    []*model.CorePartyInfoDisplay `json:"parties"`
 			TotalCount int                           `json:"totalCount"`
 		} `json:"payload"`
 	}
 	if !result.IsSuccess() {
-		return nil, errors.New("api returns status: " + result.Status())
+		return nil, 0, errors.New("api returns status: " + result.Status())
 	}
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	for i := range resp.Payload.Parties {
 		resp.Payload.Parties[i].ShouldAddSystemFieldsFromDisplay()
 
 	}
-	return resp.Payload.Parties, nil
+	return resp.Payload.Parties, *resp.Payload.ContractId, nil
 }
