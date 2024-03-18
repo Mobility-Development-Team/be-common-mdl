@@ -186,6 +186,7 @@ type (
 		TradeCategory string              `json:"tradeCategory"`
 		PartyIconUrl  string              `json:"partyIconUrl"`
 		PartyPrefix   string              `json:"partyPrefix"`
+		IsPrimary     bool                `json:"isPrimary"`
 	}
 
 	CorePartyInfoDisplay struct {
