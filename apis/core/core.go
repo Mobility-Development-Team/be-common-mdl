@@ -521,12 +521,15 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.CorePar
 	return resp.Payload.Parties, nil
 }
 
-func GetContractParties(tk string, body map[string]interface{}) ([]model.CoreContractPartyInfoDisplay, error) {
+func GetContractParties(tk string, contractId intstring.IntString, showModuleInfo *bool) ([]model.CoreContractPartyInfoDisplay, error) {
 	resp := struct {
 		Payload []model.CoreContractPartyInfoDisplay `json:"payload"`
 	}{}
 	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiCoreMdlUrlBase)))
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+		"contractId":     contractId,
+		"showModuleInfo": showModuleInfo,
+	}).Post(fmt.Sprintf(getManyParitesById, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
 		return nil, err
 	}
@@ -540,6 +543,11 @@ func GetContractParties(tk string, body map[string]interface{}) ([]model.CoreCon
 
 	for i := range resp.Payload {
 		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
+		resp.Payload = append(resp.Payload, model.CoreContractPartyInfoDisplay{
+			ContractId: resp.Payload[i].ContractId,
+			Parties:    resp.Payload[i].Parties,
+			TotalCount: resp.Payload[i].TotalCount,
+		})
 	}
 
 	return resp.Payload, err

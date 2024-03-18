@@ -205,9 +205,10 @@ type (
 	}
 
 	CoreContractPartyInfoDisplay struct {
+		Model
 		ContractId intstring.IntString `json:"contractId"`
-		CorePartyInfoDisplay
-		TotalCount int `json:"totalCount"`
+		Parties    []CorePartyInfo     `json:"parties"`
+		TotalCount int                 `json:"totalCount"`
 	}
 )
 
