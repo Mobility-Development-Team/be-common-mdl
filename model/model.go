@@ -202,6 +202,12 @@ type (
 		RoleNames  string        `json:"roleNames"`
 		PartyType  string        `json:"partyType"`
 	}
+
+	CoreContractPartyInfoDisplay struct {
+		ContractId intstring.IntString `json:"contractId"`
+		CorePartyInfoDisplay
+		TotalCount int `json:"totalCount"`
+	}
 )
 
 // GetIdFromInterface attempts to get the Id field of obj
