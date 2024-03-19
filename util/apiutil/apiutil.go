@@ -47,8 +47,14 @@ func GenerateResponse(c *gin.Context, payload interface{}, message response.Mess
 	c.Abort()
 }
 
-func CommonResultIndicator(isSuccess bool) map[string]interface{} {
-	return map[string]interface{}{
+func CommonResultIndicator(isSuccess bool, additions ...map[string]interface{}) (result map[string]interface{}) {
+	result = map[string]interface{}{
 		"isSuccess": isSuccess,
 	}
+	for _, ad := range additions {
+		for k, v := range ad {
+			result[k] = v
+		}
+	}
+	return
 }
