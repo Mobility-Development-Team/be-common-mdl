@@ -1,6 +1,9 @@
 package arrutil
 
-import "github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+import (
+	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+	"strings"
+)
 
 // DiffStrSlice check the difference between two given string slices
 func DiffStrSlice(a, b []string) []string {
@@ -32,6 +35,17 @@ func Contains(intStrSlice []intstring.IntString, intStr intstring.IntString) boo
 func ContainsStr(strSlice []string, str string) bool {
 	for _, v := range strSlice {
 		if v != str {
+			continue
+		}
+		return true
+	}
+	return false
+}
+
+// IsWordContainStr check if the given intStr value exist in Slice intStrSlice
+func IsWordContainStr(str string, strWords ...string) bool {
+	for _, v := range strWords {
+		if strings.Contains(str, v) {
 			continue
 		}
 		return true
