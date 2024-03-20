@@ -549,22 +549,22 @@ func GetContractParties(tk string, contractId intstring.IntString, showModuleInf
 	return resp.Payload, err
 }
 
-func GetUserByRoleAndParty(tk string, body map[string]interface{}) (*model.UserInfo, error) {
+func GetUserByRoleAndParty(tk string, body map[string]interface{}) ([]model.UserInfo, error) {
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getUserByRoleAndParty, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
-		return &model.UserInfo{}, err
+		return []model.UserInfo{}, err
 	}
 	if !result.IsSuccess() {
-		return nil, fmt.Errorf("user module returned status code: %d", result.StatusCode())
+		return nil, fmt.Errorf("core module returned status code: %d", result.StatusCode())
 	}
 	type respType struct {
 		response.Response
-		Payload *model.UserInfo `json:"payload"`
+		Payload []model.UserInfo `json:"payload"`
 	}
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return &model.UserInfo{}, err
+		return []model.UserInfo{}, err
 	}
 	return resp.Payload, nil
 }
