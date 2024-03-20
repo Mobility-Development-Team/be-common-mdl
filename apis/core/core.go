@@ -549,8 +549,8 @@ func GetContractParties(tk string, contractId intstring.IntString, showModuleInf
 	return resp.Payload, err
 }
 
-func GetUserByRoleAndParty(tk string, roleName *string, contractId, partyId *intstring.IntString) ([]model.UserInfo, error) {
-	if nil == roleName || nil == contractId || nil == partyId {
+func GetUserByRoleAndParty(tk string, roleName string, contractId, partyId *intstring.IntString) ([]model.UserInfo, error) {
+	if roleName == "" || nil == contractId || nil == partyId {
 		return []model.UserInfo{}, nil // Nothing specified, returns nil user
 	}
 	client := resty.New()
