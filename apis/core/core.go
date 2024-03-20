@@ -549,14 +549,21 @@ func GetContractParties(tk string, contractId intstring.IntString, showModuleInf
 	return resp.Payload, err
 }
 
-func GetUserByRoleAndParty(tk string, body map[string]interface{}) ([]model.UserInfo, error) {
-	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getUserByRoleAndParty, apis.V().GetString(apiCoreMdlUrlBase)))
-	if err != nil {
-		return []model.UserInfo{}, err
+func GetUserByRoleAndParty(tk string, roleName *string, contractId, partyId *intstring.IntString) ([]model.UserInfo, error) {
+	if nil == roleName || nil == contractId || nil == partyId {
+		return []model.UserInfo{}, nil // Nothing specified, returns nil user
 	}
+	client := resty.New()
+	body := map[string]interface{}{
+		"roleName":   roleName,
+		"contractId": contractId,
+		"partyId":    partyId,
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
+		fmt.Sprintf(getUserByRoleAndParty, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
 	if !result.IsSuccess() {
-		return nil, fmt.Errorf("core module returned status code: %d", result.StatusCode())
+		return nil, errors.New("api returns status: " + result.Status())
 	}
 	type respType struct {
 		response.Response
@@ -564,7 +571,7 @@ func GetUserByRoleAndParty(tk string, body map[string]interface{}) ([]model.User
 	}
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return []model.UserInfo{}, err
+		return nil, err
 	}
 	return resp.Payload, nil
 }
