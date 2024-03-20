@@ -33,7 +33,7 @@ const (
 	getUserByRole         = "%s/roles/users"
 	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
 	getManyParitesById    = "%s/parties/all"
-	getUserByRoleAndParty = "%s/role/party"
+	getUserByRoleAndParty = "%s/users/role/party"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -548,7 +548,6 @@ func GetContractParties(tk string, contractId intstring.IntString, showModuleInf
 
 	return resp.Payload, err
 }
-
 
 func GetUserByRoleAndParty(tk string, roleName string, contractId, partyId intstring.IntString) (model.UserInfo, error) {
 	var resp struct {
