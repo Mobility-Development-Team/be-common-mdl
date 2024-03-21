@@ -35,6 +35,7 @@ const (
 	getManyParitesById    = "%s/parties/all"
 	getUserByRoleAndParty = "%s/users/role/party"
 	getAdminUser          = "%s/users/admin/user"
+	findAllRolesUnderUser = "%s/roles/assoc/all"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -610,3 +611,34 @@ func GetAdminUsers(tk string, contractId, partyId intstring.IntString) ([]model.
 	return resp.Payload, nil
 }
 
+func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntString, userKey string) (result []UserAssocRelatedInfo, err error) {
+	var (
+		resp struct {
+			response.Response
+			Payload []UserAssocRelatedInfo `json:"payload"`
+		}
+	)
+	client := resty.New()
+	r, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"userKey":    userKey,
+			"userId":     userId,
+			"partyId":    partyId,
+			"contractId": contractId,
+		},
+	).Post(fmt.Sprintf(findAllRolesUnderUser, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[FindAllRolesUnderUser] err: ", err)
+		return
+	}
+	if !r.IsSuccess() {
+		err = fmt.Errorf("core module returned status code: %d", r.StatusCode())
+		return
+	}
+	if err = json.Unmarshal(r.Body(), &result); err != nil {
+		return
+	}
+	result = resp.Payload
+	return
+}
+>>>>>>> Stashed changes
