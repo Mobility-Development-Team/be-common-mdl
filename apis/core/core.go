@@ -641,4 +641,3 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 	result = resp.Payload
 	return
 }
->>>>>>> Stashed changes
