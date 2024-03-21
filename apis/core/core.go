@@ -635,7 +635,7 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 		err = fmt.Errorf("core module returned status code: %d", r.StatusCode())
 		return
 	}
-	if err = json.Unmarshal(r.Body(), &result); err != nil {
+	if err = json.Unmarshal(r.Body(), &resp); err != nil {
 		return
 	}
 	result = resp.Payload
