@@ -602,10 +602,11 @@ func GetAdminUsers(tk string, contractId, partyId intstring.IntString) ([]model.
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return nil, err
 	}
-	for i := range resp.Payload {
-		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
+	// for i := range resp.Payload {
+	// 	resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
 
-	}
+	// }
 
 	return resp.Payload, nil
 }
+
