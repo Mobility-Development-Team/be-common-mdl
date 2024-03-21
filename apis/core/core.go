@@ -34,6 +34,7 @@ const (
 	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
 	getManyParitesById    = "%s/parties/all"
 	getUserByRoleAndParty = "%s/users/role/party"
+	getAdminUser          = "%s/users/admin/user"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -572,5 +573,39 @@ func GetUserByRoleAndParty(tk string, roleName string, contractId, partyId intst
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		return model.UserInfo{}, err
 	}
+	return resp.Payload, nil
+}
+
+func GetAdminUsers(tk string, contractId, partyId intstring.IntString) ([]model.UserInfo, error) {
+	if contractId == 0 && partyId == 0 {
+		return []model.UserInfo{}, nil
+	}
+	client := resty.New()
+	body := map[string]interface{}{
+		"contractId": contractId,
+		"partyId":    partyId,
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
+		fmt.Sprintf(getAdminUser, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp struct {
+		response.Response
+		Payload []model.UserInfo `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	for i := range resp.Payload {
+		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
+
+	}
+
 	return resp.Payload, nil
 }
