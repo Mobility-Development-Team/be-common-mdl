@@ -35,7 +35,7 @@ const (
 	getManyParitesById    = "%s/parties/all"
 	getUserByRoleAndParty = "%s/users/role/party"
 	getAdminUser          = "%s/users/admin/user"
-	findAllRolesUnderUser = "%s/roles/assoc/all"
+	findAllRolesUnderUser = "%s/users/roles/assoc/all"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
