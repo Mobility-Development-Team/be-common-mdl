@@ -643,8 +643,8 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 	return
 }
 
-func GetAllUserHashTags(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
-	if contractId == 0 {
+func GetAllUserHashTags(tk string, contractId string) ([]model.UsrHashtagInfo, error) {
+	if contractId == "" {
 		return []model.UsrHashtagInfo{}, nil
 	}
 	client := resty.New()
