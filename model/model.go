@@ -210,6 +210,13 @@ type (
 		Parties    []CorePartyInfo     `json:"parties"`
 		TotalCount int                 `json:"totalCount"`
 	}
+
+	UsrHashtagInfo struct {
+		Id         string `json:"id"`
+		Name       string `json:"name"`
+		Type       string `json:"type"`
+		UserRefKey string `json:"userRefKey"`
+	}
 )
 
 // GetIdFromInterface attempts to get the Id field of obj

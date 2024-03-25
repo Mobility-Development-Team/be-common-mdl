@@ -35,6 +35,7 @@ const (
 	getManyParitesById    = "%s/parties/all"
 	getUserByRoleAndParty = "%s/users/role/party"
 	getAdminUser          = "%s/users/admin/user"
+	getUserHashtags       = "%s/users/hashtags/all"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -610,3 +611,31 @@ func GetAdminUsers(tk string, contractId, partyId intstring.IntString) ([]model.
 	return resp.Payload, nil
 }
 
+func GetAllUserHashTags(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
+	if contractId == 0 {
+		return []model.UsrHashtagInfo{}, nil
+	}
+	client := resty.New()
+	body := map[string]interface{}{
+		"contractId": contractId,
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
+		fmt.Sprintf(getAdminUser, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp struct {
+		response.Response
+		Payload []model.UsrHashtagInfo `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+
+	return resp.Payload, nil
+}
