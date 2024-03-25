@@ -669,5 +669,16 @@ func GetAllUserHashTags(tk string, contractId string) ([]model.UsrHashtagInfo, e
 		return nil, err
 	}
 
-	return resp.Payload, nil
+	res := []model.UsrHashtagInfo{}
+
+	for i := range resp.Payload {
+		res = append(res, model.UsrHashtagInfo{
+			Id:         resp.Payload[i].Id,
+			Name:       resp.Payload[i].Name,
+			Type:       resp.Payload[i].Type,
+			UserRefKey: resp.Payload[i].UserRefKey,
+		})
+	}
+
+	return res, nil
 }
