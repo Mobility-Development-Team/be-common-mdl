@@ -672,6 +672,7 @@ func GetAllUserHashTags(tk string, contractId string) ([]model.UsrHashtagInfo, e
 	res := []model.UsrHashtagInfo{}
 
 	for i := range resp.Payload {
+		logger.Info("resp.Payload[i].Id----",resp.Payload[i].Id)
 		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
 		res = append(res, model.UsrHashtagInfo{
 			Id:         resp.Payload[i].Id,
