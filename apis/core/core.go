@@ -35,7 +35,11 @@ const (
 	getManyParitesById    = "%s/parties/all"
 	getUserByRoleAndParty = "%s/users/role/party"
 	getAdminUser          = "%s/users/admin/user"
+<<<<<<< HEAD
 	getUserHashtags       = "%s/users/hashtags/all"
+=======
+	findAllRolesUnderUser = "%s/users/roles/assoc/all"
+>>>>>>> 341fe449c861b4f2c396bebe78df3c48e4d172cc
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -611,6 +615,7 @@ func GetAdminUsers(tk string, contractId, partyId intstring.IntString) ([]model.
 	return resp.Payload, nil
 }
 
+<<<<<<< HEAD
 func GetAllUserHashTags(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
 	if contractId == 0 {
 		return []model.UsrHashtagInfo{}, nil
@@ -638,4 +643,35 @@ func GetAllUserHashTags(tk string, contractId intstring.IntString) ([]model.UsrH
 	}
 
 	return resp.Payload, nil
+=======
+func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntString, userKey string) (result []UserAssocRelatedInfo, err error) {
+	var (
+		resp struct {
+			response.Response
+			Payload []UserAssocRelatedInfo `json:"payload"`
+		}
+	)
+	client := resty.New()
+	r, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"userKey":    userKey,
+			"userId":     userId,
+			"partyId":    partyId,
+			"contractId": contractId,
+		},
+	).Post(fmt.Sprintf(findAllRolesUnderUser, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[FindAllRolesUnderUser] err: ", err)
+		return
+	}
+	if !r.IsSuccess() {
+		err = fmt.Errorf("core module returned status code: %d", r.StatusCode())
+		return
+	}
+	if err = json.Unmarshal(r.Body(), &resp); err != nil {
+		return
+	}
+	result = resp.Payload
+	return
+>>>>>>> 341fe449c861b4f2c396bebe78df3c48e4d172cc
 }
