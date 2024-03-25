@@ -643,36 +643,30 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 	return
 }
 
-func GetAllUserHashTags(tk string, contractId string) ([]model.UsrHashtagInfo, error) {
-	if contractId == "" {
-		return []model.UsrHashtagInfo{}, nil
-	}
-	client := resty.New()
-	body := map[string]interface{}{
-		"contractId": contractId,
-	}
-	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
-		fmt.Sprintf(getUserHashtags, apis.V().GetString(apiCoreMdlUrlBase)),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	var resp struct {
-		response.Response
+func GetAllUsrHashTag(tk, contractId string) ([]model.UsrHashtagInfo, error) {
+	resp := struct {
 		Payload []model.UsrHashtagInfo `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+		"contractId": contractId,
+	}).Post(fmt.Sprintf(getUserHashtags, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		return []model.UsrHashtagInfo{}, err
 	}
 	if !result.IsSuccess() {
-		return nil, errors.New("api returns status: " + result.Status())
+		return []model.UsrHashtagInfo{}, fmt.Errorf("core module returned status code: %d", result.StatusCode())
 	}
-	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return nil, err
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return []model.UsrHashtagInfo{}, err
 	}
 
 	res := []model.UsrHashtagInfo{}
+	logger.Info("123---", resp.Payload)
 
 	for i := range resp.Payload {
-		logger.Info("resp.Payload[i].Id----",resp.Payload[i].Id)
+		logger.Info(" resp.Payload[i].Id---", resp.Payload[i].Id)
 		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
 		res = append(res, model.UsrHashtagInfo{
 			Id:         resp.Payload[i].Id,
@@ -682,5 +676,5 @@ func GetAllUserHashTags(tk string, contractId string) ([]model.UsrHashtagInfo, e
 		})
 	}
 
-	return res, nil
+	return res, err
 }
