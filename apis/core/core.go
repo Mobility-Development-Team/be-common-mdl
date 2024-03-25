@@ -644,37 +644,37 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 }
 
 func GetAllUsrHashTag(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
-	resp := struct {
-		Payload []model.UsrHashtagInfo `json:"payload"`
-	}{}
+	if contractId == 0 {
+		return []model.UsrHashtagInfo{}, nil
+	}
 	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
+	body := map[string]interface{}{
 		"contractId": contractId,
-	}).Post(fmt.Sprintf(getUserHashtags, apis.V().GetString(apiCoreMdlUrlBase)))
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
+		fmt.Sprintf(getUserHashtags, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
 	if err != nil {
-		return []model.UsrHashtagInfo{}, err
+		return nil, err
+	}
+
+	var resp struct {
+		response.Response
+		Payload []model.UsrHashtagInfo `json:"payload"`
 	}
 	if !result.IsSuccess() {
-		return []model.UsrHashtagInfo{}, fmt.Errorf("core module returned status code: %d", result.StatusCode())
+		return nil, errors.New("api returns status: " + result.Status())
 	}
-	err = json.Unmarshal(result.Body(), &resp)
-	if err != nil {
-		return []model.UsrHashtagInfo{}, err
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
 	}
 
-	res := []model.UsrHashtagInfo{}
-	logger.Info("123---", resp.Payload)
+	logger.Info("res---", resp.Payload)
+	logger.Info("123---")
 
 	for i := range resp.Payload {
-		logger.Info(" resp.Payload[i].Id---", resp.Payload[i].Id)
 		resp.Payload[i].ShouldAddSystemFieldsFromDisplay()
-		res = append(res, model.UsrHashtagInfo{
-			Id:         resp.Payload[i].Id,
-			Name:       resp.Payload[i].Name,
-			Type:       resp.Payload[i].Type,
-			UserRefKey: resp.Payload[i].UserRefKey,
-		})
 	}
 
-	return res, err
+	return resp.Payload, nil
 }
