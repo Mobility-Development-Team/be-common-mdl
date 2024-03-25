@@ -643,7 +643,7 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 	return
 }
 
-func GetAllUsrHashTag(tk, contractId string) ([]model.UsrHashtagInfo, error) {
+func GetAllUsrHashTag(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
 	resp := struct {
 		Payload []model.UsrHashtagInfo `json:"payload"`
 	}{}
