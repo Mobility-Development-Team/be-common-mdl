@@ -643,7 +643,7 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 	return
 }
 
-func GetAllUsrHashTag(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
+func GetAllUserHashTag(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
 	var resp struct {
 		response.Response
 		Payload []model.UsrHashtagInfo `json:"payload"`
@@ -655,7 +655,7 @@ func GetAllUsrHashTag(tk string, contractId intstring.IntString) ([]model.UsrHas
 		},
 	).Post(fmt.Sprintf(getUserHashtags, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
-		logger.Error("[GetAllUsrHashTag] err: ", err)
+		logger.Error("[GetAllUserHashTag] err: ", err)
 		return []model.UsrHashtagInfo{}, err
 	}
 	if !result.IsSuccess() {
