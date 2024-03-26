@@ -243,10 +243,11 @@ func ResetUserIdentityCredential(tk string, body map[string]interface{}) error {
 	return nil
 }
 
-func UpdateAuthUserLockStatus(tk string, userRefKey string, lock bool) error {
+func UpdateAuthUserLockStatus(tk string, userRefKey string, lock bool, isActive bool) error {
 	body := map[string]interface{}{
-		"userKey": userRefKey,
-		"lock":    lock,
+		"userKey":  userRefKey,
+		"lock":     lock,
+		"isActive": isActive,
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(updateAuthUserlockStatus, apis.V().GetString(apiAuthMdlUrlBase)))
