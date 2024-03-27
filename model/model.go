@@ -218,6 +218,12 @@ type (
 		Type       string `json:"type"`
 		UserRefKey string `json:"userRefKey"`
 	}
+
+	ModelSoftDeletable struct {
+		Model
+		DeletedAt gorm.DeletedAt `json:"-"`
+	}
+
 )
 
 // GetIdFromInterface attempts to get the Id field of obj
