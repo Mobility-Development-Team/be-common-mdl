@@ -211,12 +211,12 @@ type (
 		TotalCount int                 `json:"totalCount"`
 	}
 
-	UsrHashtagInfo struct {
+	HashtagInfo struct {
 		// Model
-		Id         string `json:"id"`
-		Name       string `json:"name"`
-		Type       string `json:"type"`
-		UserRefKey string `json:"userRefKey"`
+		Id         intstring.IntString `json:"id"`
+		Name       string              `json:"name"`
+		Type       string              `json:"type"`
+		UserRefKey string              `json:"userRefKey"`
 	}
 
 	ModelSoftDeletable struct {
@@ -238,13 +238,6 @@ type (
 		RoleName     string               `json:"roleName"`
 		IsSystemRole bool                 `json:"isSystemRole"`
 		Permissions  []CoreRolePermission `json:"permissions"`
-	}
-
-	RoleHashtagInfo struct {
-		Id         intstring.IntString `json:"id"`
-		Name       string              `json:"name"`
-		Type       string              `json:"type"`
-		UserRefKey string              `json:"userRefKey"`
 	}
 )
 

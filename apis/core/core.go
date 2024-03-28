@@ -644,10 +644,10 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 	return
 }
 
-func GetAllUserHashTag(tk string, contractId intstring.IntString) ([]model.UsrHashtagInfo, error) {
+func GetAllUserHashTag(tk string, contractId intstring.IntString) ([]model.HashtagInfo, error) {
 	var resp struct {
 		response.Response
-		Payload []model.UsrHashtagInfo `json:"payload"`
+		Payload []model.HashtagInfo `json:"payload"`
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(
@@ -657,13 +657,13 @@ func GetAllUserHashTag(tk string, contractId intstring.IntString) ([]model.UsrHa
 	).Post(fmt.Sprintf(getUserHashtags, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetAllUserHashTag] err: ", err)
-		return []model.UsrHashtagInfo{}, err
+		return []model.HashtagInfo{}, err
 	}
 	if !result.IsSuccess() {
-		return []model.UsrHashtagInfo{}, fmt.Errorf("Core module returned status code: %d", result.StatusCode())
+		return []model.HashtagInfo{}, fmt.Errorf("Core module returned status code: %d", result.StatusCode())
 	}
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return []model.UsrHashtagInfo{}, err
+		return []model.HashtagInfo{}, err
 	}
 	return resp.Payload, nil
 }
@@ -697,9 +697,9 @@ func GetAllRole(tk string) ([]model.CoreRole, error) {
 	return resp.Payload.Roles, nil
 }
 
-func GetRoleHastag(tk string) ([]model.RoleHashtagInfo, error) {
+func GetRoleHastag(tk string) ([]model.HashtagInfo, error) {
 
-	rhi := []model.RoleHashtagInfo{}
+	rhi := []model.HashtagInfo{}
 
 	roleInfos, err := GetAllRole(tk)
 	if err != nil {
@@ -708,7 +708,7 @@ func GetRoleHastag(tk string) ([]model.RoleHashtagInfo, error) {
 
 	if len(roleInfos) > 0 {
 		for _, r := range roleInfos {
-			rhi = append(rhi, model.RoleHashtagInfo{
+			rhi = append(rhi, model.HashtagInfo{
 				Id:         r.Id,
 				Name:       r.RoleName,
 				Type:       "ROLE",
@@ -718,4 +718,29 @@ func GetRoleHastag(tk string) ([]model.RoleHashtagInfo, error) {
 	}
 
 	return rhi, nil
+}
+
+func GetLocationHashtagByContractId(tk string, contractId intstring.IntString) ([]model.HashtagInfo, error) {
+	lhi := []model.HashtagInfo{}
+	locInfos, err := GetLocations(tk, map[string]interface{}{
+		"contractId": contractId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if len(locInfos) > 0 {
+		for _, r := range locInfos {
+			for _, c := range r {
+				lhi = append(lhi, model.HashtagInfo{
+					Id:         c.Id,
+					Name:       fmt.Sprintf("%s %s", c.Name, *c.NameZh),
+					Type:       "LOCATION",
+					UserRefKey: c.Uuid,
+				})
+			}
+		}
+	}
+
+	return lhi, nil
 }
