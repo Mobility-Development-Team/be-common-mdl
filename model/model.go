@@ -224,6 +224,21 @@ type (
 		DeletedAt gorm.DeletedAt `json:"-"`
 	}
 
+	CoreRolePermission struct {
+		Model
+		Status        string `json:"status"`
+		FeatureKeyRef string `json:"featureKeyRef"`
+		PermissionKey string `json:"permissionKey"`
+	}
+
+	CoreRole struct {
+		Model
+		Uuid              string                   `json:"uuid"`
+		Status            string                   `json:"status"`
+		RoleName          string                   `json:"roleName"`
+		IsSystemRole      bool                     `json:"isSystemRole"`
+		Permissions       []CoreRolePermission     `json:"permissions"`
+	}
 )
 
 // GetIdFromInterface attempts to get the Id field of obj

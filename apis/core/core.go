@@ -37,6 +37,7 @@ const (
 	getAdminUser          = "%s/users/admin/user"
 	findAllRolesUnderUser = "%s/users/roles/assoc/all"
 	getUserHashtags       = "%s/users/hashtags/all"
+	getAllRoles           = "%s/roles/all"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -665,4 +666,33 @@ func GetAllUserHashTag(tk string, contractId intstring.IntString) ([]model.UsrHa
 		return []model.UsrHashtagInfo{}, err
 	}
 	return resp.Payload, nil
+}
+
+func GetAllRole(tk string) ([]model.CoreRole, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(nil).Post(
+		fmt.Sprintf(getAllRoles, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp struct {
+		response.Response
+		Payload struct {
+			Roles      []model.CoreRole `json:"roles"`
+			TotalCount int              `json:"totalCount"`
+		} `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	for i := range resp.Payload.Roles {
+		resp.Payload.Roles[i].ShouldAddSystemFieldsFromDisplay()
+
+	}
+	return resp.Payload.Roles, nil
 }
