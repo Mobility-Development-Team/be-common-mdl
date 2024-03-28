@@ -212,7 +212,7 @@ type (
 	}
 
 	UsrHashtagInfo struct {
-		Model
+		// Model
 		Id         string `json:"id"`
 		Name       string `json:"name"`
 		Type       string `json:"type"`
