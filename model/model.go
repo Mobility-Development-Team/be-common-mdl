@@ -233,11 +233,18 @@ type (
 
 	CoreRole struct {
 		Model
-		Uuid              string                   `json:"uuid"`
-		Status            string                   `json:"status"`
-		RoleName          string                   `json:"roleName"`
-		IsSystemRole      bool                     `json:"isSystemRole"`
-		Permissions       []CoreRolePermission     `json:"permissions"`
+		Uuid         string               `json:"uuid"`
+		Status       string               `json:"status"`
+		RoleName     string               `json:"roleName"`
+		IsSystemRole bool                 `json:"isSystemRole"`
+		Permissions  []CoreRolePermission `json:"permissions"`
+	}
+
+	RoleHashtagInfo struct {
+		Id         intstring.IntString `json:"id"`
+		Name       string              `json:"name"`
+		Type       string              `json:"type"`
+		UserRefKey string              `json:"userRefKey"`
 	}
 )
 

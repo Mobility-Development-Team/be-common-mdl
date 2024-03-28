@@ -696,3 +696,26 @@ func GetAllRole(tk string) ([]model.CoreRole, error) {
 	}
 	return resp.Payload.Roles, nil
 }
+
+func GetRoleHastag(tk string) ([]model.RoleHashtagInfo, error) {
+
+	rhi := []model.RoleHashtagInfo{}
+
+	roleInfos, err := GetAllRole(tk)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(roleInfos) > 0 {
+		for _, r := range roleInfos {
+			rhi = append(rhi, model.RoleHashtagInfo{
+				Id:         r.Id,
+				Name:       r.RoleName,
+				Type:       "ROLE",
+				UserRefKey: r.Uuid,
+			})
+		}
+	}
+
+	return rhi, nil
+}
