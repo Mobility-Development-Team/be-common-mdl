@@ -311,13 +311,9 @@ func GetAuthStatusByUserRefKeys(tk string, userRefKeys []string) (map[string]*Au
 	return values, nil
 }
 
-func UpdateUserInactive(tk string, userRefKey string) error {
-		body := map[string]interface{}{
-			"userKey": userRefKey,
-		}
-
+func UpdateUserInactive(tk string) error {
 	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getUserInactive, apis.V().GetString(apiAuthMdlUrlBase)))
+	result, err := client.R().SetAuthToken(tk).Post(fmt.Sprintf(getUserInactive, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return errors.New(result.String())
 	}
