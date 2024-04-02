@@ -43,9 +43,11 @@ const (
 var muGetCurrentUserInfoFromContext sync.Mutex
 
 // by id or useKeyRef to get user info
-func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model.UserInfo, error) {
+func GetUserById(tk string, id *intstring.IntString, userKeyRef *string, withSign *bool) (*model.UserInfo, error) {
 	var ids []intstring.IntString
 	var userKeyRefs []string
+	var users []model.UserInfo
+	var err error
 	if id == nil && userKeyRef == nil {
 		return nil, nil // Nothing specified, returns nil user
 	}
@@ -55,10 +57,12 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 	if userKeyRef != nil {
 		userKeyRefs = []string{*userKeyRef}
 	}
-	users, err := GetUsersByIds(tk, ids, userKeyRefs)
+
+	users, err = GetUsersByIds(tk, ids, userKeyRefs, withSign)
 	if err != nil {
 		return nil, err
 	}
+
 	var result *model.UserInfo
 	if len(users) > 0 {
 		result = &users[0]
@@ -86,14 +90,15 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.GetUserResp
 	return resp.Payload, nil
 }
 
-func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.UserInfo, error) {
+func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string, withSign *bool) ([]model.UserInfo, error) {
 	if len(ids) == 0 && len(userKeyRefs) == 0 {
 		return []model.UserInfo{}, nil
 	}
 	client := resty.New()
 	body := map[string]interface{}{
-		"ids":         ids,
-		"userKeyRefs": userKeyRefs,
+		"ids":           ids,
+		"userKeyRefs":   userKeyRefs,
+		"withSignature": withSign,
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
 		fmt.Sprintf(getAllUserInfo, apis.V().GetString(apiCoreMdlUrlBase)),
@@ -117,7 +122,6 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	}
 	for i := range resp.Payload.Users {
 		resp.Payload.Users[i].ShouldAddSystemFieldsFromDisplay()
-
 	}
 
 	return resp.Payload.Users, nil
@@ -266,7 +270,7 @@ func PopulateUserInfo(tk string, userInfo []*model.UserInfo) error {
 	if len(ids) == 0 && len(keyRefs) == 0 {
 		return nil
 	}
-	updatedInfos, err := GetUsersByIds(tk, ids, keyRefs)
+	updatedInfos, err := GetUsersByIds(tk, ids, keyRefs, nil)
 	if err != nil {
 		return err
 	}
@@ -403,7 +407,8 @@ func GetCurrentUserInfoFromContext(c *gin.Context) (*model.UserInfo, error) {
 	default:
 		logger.Debugf("[GetCurrentUserInfoFromContext] Getting user info of creater %s...", refKey)
 		var err error
-		v, err = GetUserById(tk, nil, &refKey)
+		var withSign *bool
+		v, err = GetUserById(tk, nil, &refKey, withSign)
 		if err != nil {
 			return nil, err
 		}
