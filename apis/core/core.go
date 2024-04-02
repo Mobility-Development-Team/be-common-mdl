@@ -43,9 +43,11 @@ const (
 var muGetCurrentUserInfoFromContext sync.Mutex
 
 // by id or useKeyRef to get user info
-func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model.UserInfo, error) {
+func GetUserById(tk string, id *intstring.IntString, userKeyRef *string, withSignature *bool) (*model.UserInfo, error) {
 	var ids []intstring.IntString
 	var userKeyRefs []string
+	var users []model.UserInfo
+	var err error
 	if id == nil && userKeyRef == nil {
 		return nil, nil // Nothing specified, returns nil user
 	}
@@ -55,9 +57,16 @@ func GetUserById(tk string, id *intstring.IntString, userKeyRef *string) (*model
 	if userKeyRef != nil {
 		userKeyRefs = []string{*userKeyRef}
 	}
-	users, err := GetUsersByIds(tk, ids, userKeyRefs)
-	if err != nil {
-		return nil, err
+	if !*withSignature {
+		users, err = GetUsersByIds(tk, ids, userKeyRefs, false)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		users, err = GetUsersByIds(tk, ids, userKeyRefs, true)
+		if err != nil {
+			return nil, err
+		}
 	}
 	var result *model.UserInfo
 	if len(users) > 0 {
@@ -86,7 +95,7 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.GetUserResp
 	return resp.Payload, nil
 }
 
-func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.UserInfo, error) {
+func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string, withSignature bool) ([]model.UserInfo, error) {
 	if len(ids) == 0 && len(userKeyRefs) == 0 {
 		return []model.UserInfo{}, nil
 	}
@@ -117,6 +126,10 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	}
 	for i := range resp.Payload.Users {
 		resp.Payload.Users[i].ShouldAddSystemFieldsFromDisplay()
+
+		if !withSignature {
+			resp.Payload.Users[i].Signature = nil
+		}
 
 	}
 
