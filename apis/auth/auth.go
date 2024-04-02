@@ -37,6 +37,7 @@ const (
 	findAllLoginHistory           = "%s/users/login/histories"
 	updateAuthUserlockStatus      = "%s/users/lock/status"
 	getManyUserLockInfo           = "%s/users/lock/info"
+	getUserInactive               = "%s/users/inactive/batch"
 )
 
 type (
@@ -308,4 +309,17 @@ func GetAuthStatusByUserRefKeys(tk string, userRefKeys []string) (map[string]*Au
 		return nil, err
 	}
 	return values, nil
+}
+
+func UserInactivate(c *gin.Context) (*resty.Response, error) {
+	client := resty.New()
+	tk, _ := apiutil.ParseBearerAuth(c)
+	v, _ := apiutil.ParseCustAuthExt(c, "")
+	result, err := client.R().SetAuthToken(tk).SetHeader(apiutil.HeaderCustom, fmt.Sprintf("%s%s", apiutil.AuthHeaderPrefixBasic, v)).Post(fmt.Sprintf(getUserInactive , apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		// c.Abort()
+		// api.GenerateResponse(c, nil, message.MsgCodeCommon19002)
+		return nil, errors.New(result.String())
+	}
+	return result, nil
 }
