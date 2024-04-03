@@ -1,6 +1,8 @@
 package auth
 
-import "time"
+import (
+	"time"
+)
 
 type (
 	AuthUserMaster struct {
@@ -17,16 +19,10 @@ type (
 		Uuid    string `json:"userKey"`
 	}
 
-	UserMaster struct {
-		Uuid              string                      `json:"userKey" binding:"required"`
-		Status            string                      `json:"status" binding:"required"`
-		LastFailedLogin   *time.Time                  `json:"lastFailedLogin"`
-		LastSuccessLogin  *time.Time                  `json:"lastSuccessLogin"`
-		LoginAttempt      int                         `json:"loginAttempt"`
-		DeviceRegdAttempt bool                        `json:"deviceRegdAttempt"`
-		HasProfile        bool                        `json:"hasProfile"`
-		IsLocked          bool                        `json:"isLocked"`
-		IsApiAccount      bool                        `json:"isApiAccount"`
+	UserMaster struct {	
+		Uuid              string     `json:"userKey" binding:"required"`
+		Status            string     `json:"status" binding:"required"`
+		LastFailedLogin   *time.Time `json:"lastFailedLogin"`
+		LastSuccessLogin  *time.Time `json:"lastSuccessLogin"`
 	}
-
 )

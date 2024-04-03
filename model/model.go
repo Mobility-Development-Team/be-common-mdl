@@ -11,7 +11,6 @@ import (
 	"github.com/Mobility-Development-Team/be-common-mdl/genericjson"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/floatstring"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
-
 	"github.com/gin-gonic/gin"
 	logger "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
