@@ -38,6 +38,7 @@ const (
 	findAllRolesUnderUser = "%s/users/roles/assoc/all"
 	getUserHashtags       = "%s/users/hashtags/all"
 	getAllRoles           = "%s/roles/all"
+	inactiveUser          = "%s/users/inactivate"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -748,4 +749,16 @@ func GetLocationHashtagByContractId(tk string, contractId intstring.IntString) (
 	}
 
 	return lhi, nil
+}
+
+func InactivateUserAcc(tk string, userRefKey string) error {
+	body := map[string]interface{}{
+		"userRefKey":  userRefKey,
+	}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(inactiveUser, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		return errors.New(result.String())
+	}
+	return nil
 }
