@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/model/pagination"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/util/apiutil"
 	"github.com/gin-gonic/gin"
@@ -278,10 +279,10 @@ func UpdateAuthUserDeviceRegisterAttempt(tk string, userRefKey string) error {
 	return nil
 }
 
-func FindAllUserLoginHistory(tk string, userRefKey string, isDesc bool) (interface{}, error) {
+func FindAllUserLoginHistory(tk string, userRefKey string, p pagination.Pagination) (interface{}, error) {
 	body := map[string]interface{}{
 		"userKey":    userRefKey,
-		"descending": isDesc,
+		"isPaginate": p.IsPaginate,
 	}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findAllLoginHistory, apis.V().GetString(apiAuthMdlUrlBase)))
