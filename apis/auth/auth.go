@@ -279,9 +279,26 @@ func UpdateAuthUserDeviceRegisterAttempt(tk string, userRefKey string) error {
 	return nil
 }
 
-func FindAllUserLoginHistory(tk string, body map[interface{}]interface{}) (interface{}, error) {
+func historyBody(useRefKey string, p *pagination.Pagination) interface{} {
+var body interface{}
+if useRefKey != "" {
+	body = map[string]interface{}{
+		"userKey": useRefKey,
+	}
+}
+if p != nil {
+	body = map[string]interface{}{
+		"isPaginate": p.IsPaginate,
+		"limit" : p.Limit,
+		"page" :p.Page,
+	}
+}
+	return body
+}
+
+func FindAllUserLoginHistory(tk string, userRefKey string, p *pagination.Pagination) (interface{}, error) {
 	client := resty.New()
-	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findAllLoginHistory, apis.V().GetString(apiAuthMdlUrlBase)))
+	result, err := client.R().SetAuthToken(tk).SetBody(historyBody).Post(fmt.Sprintf(findAllLoginHistory, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return nil, errors.New(result.String())
 	}
