@@ -286,8 +286,9 @@ func historyBody(useRefKey string, p *pagination.Pagination) interface{} {
 			"userKey": useRefKey,
 		}
 	}
-	if p != nil {
+	if p != nil && useRefKey != "" {
 		body = map[string]interface{}{
+			"userKey": useRefKey,
 			"isPaginate": p.IsPaginate,
 			"limit":      p.Limit,
 			"page":       p.Page,
