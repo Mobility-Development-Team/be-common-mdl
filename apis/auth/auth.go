@@ -279,7 +279,7 @@ func UpdateAuthUserDeviceRegisterAttempt(tk string, userRefKey string) error {
 	return nil
 }
 
-func FindAllUserLoginHistory(tk string, body map[string]interface{}) (interface{}, error) {
+func FindAllUserLoginHistory(tk string, body map[interface{}]interface{}) (interface{}, error) {
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findAllLoginHistory, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
