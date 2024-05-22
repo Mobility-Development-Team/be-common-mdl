@@ -394,40 +394,27 @@ func GetUsersIdByRole(tk string, body map[string]interface{}) ([]intstring.IntSt
 }
 
 func GetCurrentUserInfoFromContext(c *gin.Context) (*model.UserInfo, error) {
-	logger.Info("[common] - 1")
 	muGetCurrentUserInfoFromContext.Lock()
-	logger.Info("[common] - 2")
 	defer muGetCurrentUserInfoFromContext.Unlock()
-	logger.Info("[common] - 3")
 	refKey := auth.GetUserRefKeyFromContext(c)
-	logger.Info("[common] - refKey---", refKey)
 	tk, _ := apiutil.ParseBearerAuth(c)
-	logger.Info("[common] - tk---", tk)
 	v, ok := c.Get(tokenInfoUser)
-	logger.Info("[common] - v1---", v)
-	logger.Info("[common] - ok---", ok)
 	switch {
 	case ok && v != nil:
-		logger.Info("[common] --- suit1 ----")
 		logger.Debugf("[GetCurrentUserInfoFromContext] Reusing user info of creater %s...", refKey)
 	case ok && v == nil:
-		logger.Info("[common] --- suit2 ----")
 		logger.Error("[GetCurrentUserInfoFromContext] Got a nil user info from cache, trying to get another one...")
-		logger.Info("fallthrough---")
 		fallthrough
 	default:
 		logger.Debugf("[GetCurrentUserInfoFromContext] Getting user info of creater %s...", refKey)
 		var err error
 		var withSign *bool
 		v, err = GetUserById(tk, nil, &refKey, withSign)
-		logger.Info("[common] - v2---", v)
-		logger.Info("[common] - err---", err)
 		if err != nil {
 			return nil, err
 		}
 		c.Set(tokenInfoUser, v.(*model.UserInfo))
 	}
-	logger.Info("[common] - v.Set---", v.(*model.UserInfo))
 	return v.(*model.UserInfo), nil
 }
 

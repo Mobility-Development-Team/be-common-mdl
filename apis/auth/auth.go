@@ -289,9 +289,20 @@ func FindAllUserLoginHistory(tk string, userRefKey string, p pagination.Paginati
 	if err != nil || result.StatusCode() != 200 {
 		return nil, errors.New(result.String())
 	}
-	var histories []interface{}
-	_ = json.Unmarshal(result.Body(), &histories)
-	return histories, nil
+	var resp struct {
+		response.Response
+		Payload struct {
+			Pager        pagination.Pagination `json:"pager"`
+			LoginHistory []LoginHistory        `json:"loginHistory"`
+		} `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
 }
 
 func GetAuthStatusByUserRefKeys(tk string, userRefKeys []string) (map[string]*AuthUserMaster, error) {
