@@ -279,11 +279,7 @@ func UpdateAuthUserDeviceRegisterAttempt(tk string, userRefKey string) error {
 	return nil
 }
 
-func FindAllUserLoginHistory(tk string, userRefKey string, p pagination.Pagination) (interface{}, error) {
-	body := map[string]interface{}{
-		"userKey":    userRefKey,
-		"isPaginate": p.IsPaginate,
-	}
+func FindAllUserLoginHistory(tk string, body map[string]interface{}) (interface{}, error) {
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findAllLoginHistory, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
@@ -292,16 +288,11 @@ func FindAllUserLoginHistory(tk string, userRefKey string, p pagination.Paginati
 	var resp struct {
 		response.Response
 		Payload struct {
-			Pager        pagination.Pagination `json:"pager"`
-			LoginHistory []LoginHistory        `json:"loginHistory"`
+			Pager        *pagination.Pagination `json:"pager"`
+			LoginHistory []LoginHistory         `json:"loginHistory"`
 		} `json:"payload"`
 	}
-	if !result.IsSuccess() {
-		return nil, errors.New("api returns status: " + result.Status())
-	}
-	if err = json.Unmarshal(result.Body(), &resp); err != nil {
-		return nil, err
-	}
+	_ = json.Unmarshal(result.Body(), &resp.Payload)
 	return resp.Payload, nil
 }
 
