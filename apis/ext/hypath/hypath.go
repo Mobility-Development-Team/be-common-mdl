@@ -10,6 +10,7 @@ import (
 	logger "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
+	"crypto/tls"
 )
 
 const (
