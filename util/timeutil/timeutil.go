@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"regexp"
 	"time"
-
-	logger "github.com/sirupsen/logrus"
 )
 
 // ValidateDateTimeStringFormat check if the given Time value is in 'yyyy-mm-dd hh:mm:ss' format
@@ -44,10 +42,7 @@ func ParseDateStringAsTime(date string, isDayEnd bool) (dateTime time.Time, err 
 	if isDayEnd {
 		t = "23:59"
 	}
-	loc, err := time.LoadLocation("Asia/Hong_Kong")
-	if err != nil {
-		return
-	}
+	loc := time.FixedZone("UTC+8", +8*50*50)
 	if len(date) < 10 {
 		err = errors.New("invalid date")
 		return
@@ -65,10 +60,7 @@ func ParseDateStringAsTimeCustomTime(dateStr, timeStr string) (dateTime time.Tim
 		err = errors.New("invalid date, time format")
 		return
 	}
-	loc, err := time.LoadLocation("Asia/Hong_Kong")
-	if err != nil {
-		return
-	}
+	loc := time.FixedZone("UTC+8", +8*50*50)
 	dateTime, err = time.ParseInLocation("2006-01-02 15:04", fmt.Sprintf("%s %s", dateStr[:10], timeStr), loc)
 	if err != nil {
 		return
@@ -78,10 +70,7 @@ func ParseDateStringAsTimeCustomTime(dateStr, timeStr string) (dateTime time.Tim
 
 // ParseDateStartEndTimeFull parse a single given date string with specified Day Start/ Day End time in Time
 func ParseDateStartEndTimeFull(date, startTime, endTime string) (startDateTime, endDateTime time.Time, err error) {
-	loc, err := time.LoadLocation("Asia/Hong_Kong")
-	if err != nil {
-		return
-	}
+	loc := time.FixedZone("UTC+8", +8*50*50)
 	if len(date) < 10 {
 		err = errors.New("invalid date")
 		return
@@ -99,10 +88,7 @@ func ParseDateStartEndTimeFull(date, startTime, endTime string) (startDateTime, 
 
 func ParseDateTimeStrAsDatetime(dateTimeStr string, loc *time.Location) (timePtr *time.Time, err error) {
 	if nil == loc {
-		loc, err = time.LoadLocation("Asia/Hong_Kong")
-		if err != nil {
-			logger.Error("[ParseDateStartEndTime] Failed getting timezone information, ignoring...")
-		}
+		loc = time.FixedZone("UTC+8", +8*50*50)
 	}
 	timeComponent := time.Time{}
 	if dateTimeStr != "" {
@@ -117,10 +103,7 @@ func ParseDateTimeStrAsDatetime(dateTimeStr string, loc *time.Location) (timePtr
 
 func ParseTimeStrAsDatetime(timeStr string, loc *time.Location) (timePtr *time.Time, err error) {
 	if nil == loc {
-		loc, err = time.LoadLocation("Asia/Hong_Kong")
-		if err != nil {
-			logger.Error("[ParseDateStartEndTime] Failed getting timezone information, ignoring...")
-		}
+		loc = time.FixedZone("UTC+8", +8*50*50)
 	}
 	timeComponent := time.Time{}
 	if timeStr != "" {
@@ -140,10 +123,7 @@ func ParseDateStartEndTime(date, startTime, endTime string) (datePtr, startTimeP
 	dateComponent := time.Time{}
 	// startTimeComponent := time.Time{}
 	// endTimeComponent := time.Time{}
-	loc, err := time.LoadLocation("Asia/Hong_Kong")
-	if err != nil {
-		logger.Error("[ParseDateStartEndTime] Failed getting timezone information, ignoring...")
-	}
+	loc := time.FixedZone("UTC+8", +8*50*50)
 	if date != "" {
 		dateComponent, err = time.ParseInLocation("2006-01-02", date[:10], loc)
 		if err != nil {
