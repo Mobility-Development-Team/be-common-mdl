@@ -43,6 +43,7 @@ func AuthenticateHyPath() (result HyPathAuthenResponse, err error) {
 		err = ErrHyPathInvalidCredential
 		return
 	}
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	resp, err := client.R().SetBody(HyPathAuthenRequest{
 		Username: un,
 		Password: fmt.Sprintf("%s", pwDecoded),
@@ -68,6 +69,7 @@ func GetProjectList(tk string) (result GetProjectListResponse, err error) {
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	// Get Token if not provided
 	if tk == "" {
 		authResp, err = AuthenticateHyPath()
@@ -97,6 +99,8 @@ func GetConfinedSpaceByProjectCode(tk, projectCode string) (result GetCSByProjec
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
+	
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	if projectCode == "" {
 		err = ErrHyPathInvalidParam
 		return
@@ -130,6 +134,8 @@ func GetConfinedSpaceBySpaceIdAndProjectCode(tk, spaceId, projectCode string) (r
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
+	
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	if spaceId == "" || projectCode == "" {
 		err = ErrHyPathInvalidParam
 		return
@@ -163,6 +169,8 @@ func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result Po
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
+	
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	// Get Token if not provided
 	if tk == "" {
 		authResp, err = AuthenticateHyPath()
@@ -198,6 +206,8 @@ func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (r
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
+	
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	// Get Token if not provided
 	if tk == "" {
 		// Get Token
