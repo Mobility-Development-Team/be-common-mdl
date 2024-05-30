@@ -619,7 +619,7 @@ func GetAdminUsers(tk string, contractId, partyId intstring.IntString) ([]model.
 	return resp.Payload, nil
 }
 
-func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntString, userKey string) (result []UserAssocRelatedInfo, err error) {
+func FindAllRolesUnderUser(tk string, userId, partyId *intstring.IntString, contractId intstring.IntString, userKey string) (result []UserAssocRelatedInfo, err error) {
 	var (
 		resp struct {
 			response.Response
@@ -630,8 +630,8 @@ func FindAllRolesUnderUser(tk string, userId, partyId, contractId intstring.IntS
 	r, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"userKey":    userKey,
-			"userId":     userId,
-			"partyId":    partyId,
+			"userId":     *userId,
+			"partyId":    *partyId,
 			"contractId": contractId,
 		},
 	).Post(fmt.Sprintf(findAllRolesUnderUser, apis.V().GetString(apiCoreMdlUrlBase)))
