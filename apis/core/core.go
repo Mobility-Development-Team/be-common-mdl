@@ -625,16 +625,25 @@ func FindAllRolesUnderUser(tk string, userId, partyId *intstring.IntString, cont
 			response.Response
 			Payload []UserAssocRelatedInfo `json:"payload"`
 		}
+		r    *resty.Response
+		body = map[string]interface{}{}
 	)
 	client := resty.New()
-	r, err := client.R().SetAuthToken(tk).SetBody(
-		map[string]interface{}{
+	if userId == nil && partyId == nil {
+		body = map[string]interface{}{
+			"userKey":    userKey,
+			"contractId": contractId,
+		}
+	} else {
+		body = map[string]interface{}{
 			"userKey":    userKey,
 			"userId":     *userId,
 			"partyId":    *partyId,
 			"contractId": contractId,
-		},
-	).Post(fmt.Sprintf(findAllRolesUnderUser, apis.V().GetString(apiCoreMdlUrlBase)))
+		}
+	}
+
+	r, err = client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findAllRolesUnderUser, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
 		logger.Error("[FindAllRolesUnderUser] err: ", err)
 		return
