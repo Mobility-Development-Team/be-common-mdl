@@ -246,6 +246,20 @@ func MapMediaById(media []model.MediaParam, err error, mapfunc func(m model.Medi
 	return mediaMap, nil
 }
 
+func MapMediaByUuid(media []model.MediaParam, err error, mapfunc func(m model.MediaParam) string) (
+	map[string][]model.MediaParam, error,
+) {
+	if err != nil {
+		return nil, err
+	}
+	mediaMap := map[string][]model.MediaParam{}
+	for _, m := range media {
+		id := mapfunc(m)
+		mediaMap[id] = append(mediaMap[id], m)
+	}
+	return mediaMap, nil
+}
+
 // CloneMediaToBatch Clones the media into a specified batch, overwriting exsiting batch with truncation if possible.
 //
 // `scope` determines the subset of media to be affected, if scope is specified, only existing media inside the batch that
