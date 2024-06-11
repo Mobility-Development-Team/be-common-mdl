@@ -188,7 +188,8 @@ type (
 		InvolveUgPipeWkPtOne      bool                 `json:"involveUgPipeWkPtOne"`
 		EquipBreathApptPtOne      bool                 `json:"equipBreathApptPtOne"`
 		RequireSafetyMeasurePtOne bool                 `json:"requireSafetyMeasurePtOne"`
-		NoOfIdKept                bool                 `json:"noOfIdKept"`
+		NoOfIdKeptPtOne           intstring.IntString  `json:"noOfIdKeptPtOne"`
+		NoOfIdKeptPtTwo           intstring.IntString  `json:"noOfIdKeptPtTwo"`
 		WorkNature                string               `json:"workNature"`
 		WorkerCompany             string               `json:"workerCompany"`
 		InvolveUgPipeWkPtTwo      bool                 `json:"involveUgPipeWkPtTwo"`
