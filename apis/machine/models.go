@@ -176,6 +176,49 @@ type (
 		Workers              []LSWorker          `json:"workers"`
 	}
 
+	DWPermit struct {
+		MasterPermit
+		PitDepth                  string               `json:"pitDepth"`
+		WorkLocation              string               `json:"workLocation"`
+		WorkDate                  string               `json:"workDate"`
+		GasDetectorNo             string               `json:"gasDetectorNo"`
+		GasSerialNo               string               `json:"gasSerialNo"`
+		GasExpiryDate             *string              `json:"gasExpiryDate"`
+		SafetyAdvise              string               `json:"safetyAdvise"`
+		InvolveUgPipeWkPtOne      bool                 `json:"involveUgPipeWkPtOne"`
+		EquipBreathApptPtOne      bool                 `json:"equipBreathApptPtOne"`
+		RequireSafetyMeasurePtOne bool                 `json:"requireSafetyMeasurePtOne"`
+		NoOfIdKept                bool                 `json:"noOfIdKept"`
+		WorkNature                string               `json:"workNature"`
+		WorkerCompany             string               `json:"workerCompany"`
+		InvolveUgPipeWkPtTwo      bool                 `json:"involveUgPipeWkPtTwo"`
+		EquipBreathApptPtTwo      bool                 `json:"equipBreathApptPtTwo"`
+		RequireSafetyMeasurePtTwo bool                 `json:"requireSafetyMeasurePtTwo"`
+		RequireNoWindCoalPipeWork bool                 `json:"requireNoWindCoalPipeWork"`
+		SuperviseDate             *string              `json:"superviseDate"`
+		CertValidFrom             string               `json:"certValidFrom"`
+		CertValidTo               string               `json:"certValidTo"`
+		CertValidHour             intstring.IntString  `json:"certValidHour"`
+		DcwEnterTime              string               `json:"dcwEnterTime"`
+		DcwDepartTime             string               `json:"dcwDepartTime"`
+		DisplayStatus             string               `json:"displayStatus"`
+		IsAcknowledged            bool                 `json:"isAcknowledged"`
+		AcknowledgedBy            *string              `json:"acknowledgedBy"`
+		AcknowledgedAt            *string              `json:"acknowledgedAt"`
+		CmpConnected              bool                 `json:"cmpConnected"`
+		CmpPermitRefId            *intstring.IntString `json:"cmpPermitRefId"`
+		CmpSpaceRefId             *intstring.IntString `json:"cmpSpaceRefId"`
+		ContractId                intstring.IntString  `json:"contractId"`
+		EligiblePersons           []EigiblePersons     `json:"eligiblePersons"`
+		DetectiveReports          []DetectiveReports   `json:"detectiveReports"`
+		EmergencyContacts         []EmergencyContacts  `json:"emergencyContacts"`
+		PermitMasterId            intstring.IntString  `json:"permitMasterId"`
+		// IcItems
+		// Inspectiors
+		Workers
+		Media []model.MediaParam `json:"media"`
+	}
+
 	PermitAppointment struct {
 		model.Model
 		ApptStatus      string              `json:"apptStatus"`
@@ -479,5 +522,59 @@ type (
 		WorkerName        *string             `json:"workerName"`
 		WorkerCompanyName *string             `json:"workerCompanyName"`
 		LiftShaftId       intstring.IntString `json:"liftShaftId"`
+	}
+
+	EigiblePersons struct {
+		model.Model
+		SubmitterType       string              `json:"submitterType"`
+		SubmitterName       string              `json:"SubmitterName"`
+		SubmittedAt         string              `json:"submittedAt"`
+		SubmitterCertNo     string              `json:"submitterCertNo"`
+		SubmitterCertExpiry *string             `json:"submitterCertExpiry"`
+		SubmitterSignature  *string             `json:"submitterSignature"`
+		HasVerifiedAbove    bool                `json:"hasVerifiedAbove"`
+		Seq                 intstring.IntString `json:"seq"`
+		ConfinedSpaceId     intstring.IntString `json:"confinedSpaceId"`
+	}
+
+	DetectiveReports struct {
+		model.Model
+		LocationDepth     string              `json:"locationDepth"`
+		ReportDate        string              `json:"reportDate"`
+		OxygenVal         string              `json:"oxygenVal"`
+		OxygenUuid        string              `json:"oxygenUuid"`
+		FlammableGasVal   string              `json:"flammableGasVal"`
+		FlammableGasUuid  string              `json:"flammableGasUuid"`
+		H2sVal            string              `json:"h2sVal"`
+		H2sUuid           string              `json:"h2sUuid"`
+		CoVal             string              `json:"coVal"`
+		CoUuid            string              `json:"coUuid"`
+		OxygenMedia       []model.MediaParam  `json:"oxygenMedia"`
+		FlammableGasMedia []model.MediaParam  `json:"flammableGasMedia"`
+		H2sMedia          []model.MediaParam  `json:"h2sMedia"`
+		CoMedia           []model.MediaParam  `json:"coMedia"`
+		ConfinedSpaceId   intstring.IntString `json:"confinedSpaceId"`
+	}
+
+	EmergencyContacts struct {
+		model.Model
+		ContractType    string              `json:"contractType"`
+		ContractName    *string             `json:"contractName"`
+		ContractNo      *string             `json:"contractNo"`
+		Seq             string              `json:"seq"`
+		ConfinedSpaceId intstring.IntString `json:"confinedSpaceId"`
+	}
+
+	DSDWorker struct {
+		model.Model
+		WorkerType                 string              `json:"workerType"`
+		WorkerName                 *string             `json:"workerName"`
+		WorkerCompanyName          *string             `json:"workerCompanyName"`
+		WorkerCertNo               *string             `json:"workerCertNo"`
+		WorkerSitePassNo           *string             `json:"workerSitePassNo"`
+		WorkerSignature            *string             `json:"wsorkerSignature"`
+		ConfinedSpaceId            intstring.IntString `json:"confinedSpaceId"`
+		WorkerCertExpiryDate       *string             `json:"workerCertExpiryDate"`
+		WorkerSitePassNoExpiryDate *string             `json:"workerSitePassNoExpiryDate"`
 	}
 )
