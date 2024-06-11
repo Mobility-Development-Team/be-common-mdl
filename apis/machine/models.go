@@ -176,7 +176,7 @@ type (
 		Workers              []LSWorker          `json:"workers"`
 	}
 
-	DWPermit struct {
+	CDPermit struct {
 		MasterPermit
 		PitDepth                  string               `json:"pitDepth"`
 		WorkLocation              string               `json:"workLocation"`
@@ -215,8 +215,8 @@ type (
 		PermitMasterId            intstring.IntString  `json:"permitMasterId"`
 		// IcItems
 		// Inspectiors
-		Workers
-		Media []model.MediaParam `json:"media"`
+		Workers []DSDWorker        `json:"workers"`
+		Media   []model.MediaParam `json:"media"`
 	}
 
 	PermitAppointment struct {
