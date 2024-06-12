@@ -560,8 +560,8 @@ type (
 	EmergencyContacts struct {
 		model.Model
 		ContactType    string              `json:"contactType"`
-		ContractName    *string             `json:"contractName"`
-		ContractNo      *string             `json:"contractNo"`
+		ContactName    string             `json:"contactName"`
+		ContactNo      string             `json:"contactNo"`
 		Seq             string              `json:"seq"`
 		ConfinedSpaceId intstring.IntString `json:"confinedSpaceId"`
 	}
