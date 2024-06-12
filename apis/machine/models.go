@@ -559,7 +559,7 @@ type (
 
 	EmergencyContacts struct {
 		model.Model
-		ContractType    string              `json:"contractType"`
+		ContactType    string              `json:"contactType"`
 		ContractName    *string             `json:"contractName"`
 		ContractNo      *string             `json:"contractNo"`
 		Seq             string              `json:"seq"`
