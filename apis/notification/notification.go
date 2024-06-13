@@ -68,8 +68,8 @@ func createOneOrManyNotifications(tk string, body interface{}) error {
 	// Set retries
 	client.
 		SetRetryCount(5).
-		SetRetryWaitTime(2 * time.Second).
-		SetRetryMaxWaitTime(20 * time.Second).
+		SetRetryWaitTime(5 * time.Minute).
+		SetRetryMaxWaitTime(10 * time.Minute).
 		AddRetryCondition(func(r *resty.Response, err error) bool {
 			if !r.IsSuccess() {
 				logger.Warnf("[CreateNotification]: API returns status code %d. Retrying...", r.StatusCode())
