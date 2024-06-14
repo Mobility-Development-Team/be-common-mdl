@@ -214,10 +214,10 @@ type (
 		DetectiveReports          []DetectiveReports   `json:"detectiveReports"`
 		EmergencyContacts         []EmergencyContacts  `json:"emergencyContacts"`
 		PermitMasterId            intstring.IntString  `json:"permitMasterId"`
-		// IcItems
-		// Inspectiors
-		Workers []DSDWorker        `json:"workers"`
-		Media   []model.MediaParam `json:"media"`
+		IcItems                   []IcItems            `json:"icItems"`
+		Inspectors                []Inspectors         `json:"inspectors"`
+		Workers                   []DSDWorker          `json:"workers"`
+		Media                     []model.MediaParam   `json:"media"`
 	}
 
 	PermitAppointment struct {
@@ -555,13 +555,14 @@ type (
 		H2sMedia          []model.MediaParam  `json:"h2sMedia"`
 		CoMedia           []model.MediaParam  `json:"coMedia"`
 		ConfinedSpaceId   intstring.IntString `json:"confinedSpaceId"`
+		ReportTime        *string             `json:"reportTime"`
 	}
 
 	EmergencyContacts struct {
 		model.Model
-		ContactType    string              `json:"contactType"`
-		ContactName    string             `json:"contactName"`
-		ContactNo      string             `json:"contactNo"`
+		ContactType     string              `json:"contactType"`
+		ContactName     string              `json:"contactName"`
+		ContactNo       string              `json:"contactNo"`
 		Seq             string              `json:"seq"`
 		ConfinedSpaceId intstring.IntString `json:"confinedSpaceId"`
 	}
@@ -577,5 +578,24 @@ type (
 		ConfinedSpaceId            intstring.IntString `json:"confinedSpaceId"`
 		WorkerCertExpiryDate       *string             `json:"workerCertExpiryDate"`
 		WorkerSitePassNoExpiryDate *string             `json:"workerSitePassNoExpiryDate"`
+	}
+
+	IcItems struct {
+		model.Model
+		InspectorSignature *string             `json:"inspectorSignature"`
+		ConfinedSpaceId    intstring.IntString `json:"confinedSpaceId"`
+		InspectionDate     string              `json:"inspectionDate"`
+	}
+
+	Inspectors struct {
+		model.Model
+		InspectorName   string              `json:"inspectorName"`
+		CsCertNo        string              `json:"csCertNo"`
+		ApprWorkerNo    string              `json:"apprWorkerNo"`
+		CompanyName     string              `json:"companyName"`
+		Remark          string              `json:"remark"`
+		Signature       *string             `json:"signature"`
+		ConfinedSpaceId intstring.IntString `json:"confinedSpaceId"`
+		ExpiryDate      *string             `json:"expiryDate"`
 	}
 )
