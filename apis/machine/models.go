@@ -182,12 +182,14 @@ type (
 		WorkLocation              string               `json:"workLocation"`
 		WorkDate                  string               `json:"workDate"`
 		GasDetectorNo             string               `json:"gasDetectorNo"`
+		Detectorvaliduntil        string               `json:"detectorvaliduntil"`
 		GasSerialNo               string               `json:"gasSerialNo"`
 		GasExpiryDate             *string              `json:"gasExpiryDate"`
 		SafetyAdvise              string               `json:"safetyAdvise"`
 		InvolveUgPipeWkPtOne      bool                 `json:"involveUgPipeWkPtOne"`
 		EquipBreathApptPtOne      bool                 `json:"equipBreathApptPtOne"`
 		RequireSafetyMeasurePtOne bool                 `json:"requireSafetyMeasurePtOne"`
+		Safetymeasureverified     bool                 `json:"safetymeasureverified"`
 		NoOfIdKeptPtOne           intstring.IntString  `json:"noOfIdKeptPtOne"`
 		NoOfIdKeptPtTwo           intstring.IntString  `json:"noOfIdKeptPtTwo"`
 		WorkNature                string               `json:"workNature"`
@@ -196,6 +198,7 @@ type (
 		EquipBreathApptPtTwo      bool                 `json:"equipBreathApptPtTwo"`
 		RequireSafetyMeasurePtTwo bool                 `json:"requireSafetyMeasurePtTwo"`
 		RequireNoWindCoalPipeWork bool                 `json:"requireNoWindCoalPipeWork"`
+		Windcoldpipeworkverified  bool                 `json:"windcoldpipeworkverified"`
 		SuperviseDate             *string              `json:"superviseDate"`
 		CertValidFrom             string               `json:"certValidFrom"`
 		CertValidTo               string               `json:"certValidTo"`
@@ -582,20 +585,22 @@ type (
 
 	IcItems struct {
 		model.Model
+		InspectorName     string              `json:"inspectorName"`
+		InspectorPosition string              `json:"inspectorPosition"`
+		InspectionDate    string              `json:"inspectionDate"`
 		InspectorSignature *string             `json:"inspectorSignature"`
 		ConfinedSpaceId    intstring.IntString `json:"confinedSpaceId"`
-		InspectionDate     string              `json:"inspectionDate"`
 	}
 
 	Inspectors struct {
 		model.Model
-		InspectorName   string              `json:"inspectorName"`
-		CsCertNo        string              `json:"csCertNo"`
-		ApprWorkerNo    string              `json:"apprWorkerNo"`
-		CompanyName     string              `json:"companyName"`
-		Remark          string              `json:"remark"`
-		Signature       *string             `json:"signature"`
-		ConfinedSpaceId intstring.IntString `json:"confinedSpaceId"`
-		ExpiryDate      *string             `json:"expiryDate"`
+		InspectorName     string              `json:"inspectorName"`
+		CsCertNo          string              `json:"csCertNo"`
+		ApprWorkerNo      string              `json:"apprWorkerNo"`
+		CompanyName       string              `json:"companyName"`
+		Remark            string              `json:"remark"`
+		Signature         *string             `json:"signature"`
+		ConfinedSpaceId   intstring.IntString `json:"confinedSpaceId"`
+		ExpiryDate        *string             `json:"expiryDate"`
 	}
 )
