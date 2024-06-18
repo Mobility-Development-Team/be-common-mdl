@@ -535,6 +535,7 @@ type (
 		SubmittedAt         string              `json:"submittedAt"`
 		SubmitterCertNo     string              `json:"submitterCertNo"`
 		SubmitterCertExpiry *string             `json:"submitterCertExpiry"`
+		SubmitterPosition   *string             `json:"submitterPosition"`
 		SubmitterSignature  *string             `json:"submitterSignature"`
 		HasVerifiedAbove    bool                `json:"hasVerifiedAbove"`
 		Seq                 intstring.IntString `json:"seq"`
@@ -585,22 +586,22 @@ type (
 
 	IcItems struct {
 		model.Model
-		InspectorName     string              `json:"inspectorName"`
-		InspectorPosition string              `json:"inspectorPosition"`
-		InspectionDate    string              `json:"inspectionDate"`
+		InspectorName      string              `json:"inspectorName"`
+		InspectorPosition  string              `json:"inspectorPosition"`
+		InspectionDate     string              `json:"inspectionDate"`
 		InspectorSignature *string             `json:"inspectorSignature"`
 		ConfinedSpaceId    intstring.IntString `json:"confinedSpaceId"`
 	}
 
 	Inspectors struct {
 		model.Model
-		InspectorName     string              `json:"inspectorName"`
-		CsCertNo          string              `json:"csCertNo"`
-		ApprWorkerNo      string              `json:"apprWorkerNo"`
-		CompanyName       string              `json:"companyName"`
-		Remark            string              `json:"remark"`
-		Signature         *string             `json:"signature"`
-		ConfinedSpaceId   intstring.IntString `json:"confinedSpaceId"`
-		ExpiryDate        *string             `json:"expiryDate"`
+		InspectorName   string              `json:"inspectorName"`
+		CsCertNo        string              `json:"csCertNo"`
+		ApprWorkerNo    string              `json:"apprWorkerNo"`
+		CompanyName     string              `json:"companyName"`
+		Remark          string              `json:"remark"`
+		Signature       *string             `json:"signature"`
+		ConfinedSpaceId intstring.IntString `json:"confinedSpaceId"`
+		ExpiryDate      *string             `json:"expiryDate"`
 	}
 )
