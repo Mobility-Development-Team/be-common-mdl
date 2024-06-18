@@ -532,7 +532,7 @@ type (
 		model.Model
 		SubmitterType       string              `json:"submitterType"`
 		SubmitterName       string              `json:"SubmitterName"`
-		SubmittedAt         time.Time           `json:"submittedAt"`
+		SubmittedAt         string              `json:"submittedAt"`
 		SubmitterCertNo     string              `json:"submitterCertNo"`
 		SubmitterCertExpiry *string             `json:"submitterCertExpiry"`
 		SubmitterPosition   *string             `json:"submitterPosition"`
