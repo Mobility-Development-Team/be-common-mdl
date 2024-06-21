@@ -578,7 +578,7 @@ type (
 		WorkerCompanyName          *string             `json:"workerCompanyName"`
 		WorkerCertNo               *string             `json:"workerCertNo"`
 		WorkerSitePassNo           *string             `json:"workerSitePassNo"`
-		WorkerSignature            *string             `json:"wsorkerSignature"`
+		WorkerSignature            *string             `json:"workerSignature"`
 		ConfinedSpaceId            intstring.IntString `json:"confinedSpaceId"`
 		WorkerCertExpiryDate       *string             `json:"workerCertExpiryDate"`
 		WorkerSitePassNoExpiryDate *string             `json:"workerSitePassNoExpiryDate"`
