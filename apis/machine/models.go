@@ -209,9 +209,9 @@ type (
 		IsAcknowledged            bool                 `json:"isAcknowledged"`
 		AcknowledgedBy            *string              `json:"acknowledgedBy"`
 		AcknowledgedAt            *string              `json:"acknowledgedAt"`
-		CmpConnected              bool                 `json:"cmpConnected"`
-		CmpPermitRefId            *intstring.IntString `json:"cmpPermitRefId"`
-		CmpSpaceRefId             *intstring.IntString `json:"cmpSpaceRefId"`
+		// CmpConnected              bool                 `json:"cmpConnected"`
+		// CmpPermitRefId            *intstring.IntString `json:"cmpPermitRefId"`
+		// CmpSpaceRefId             *intstring.IntString `json:"cmpSpaceRefId"`
 		ContractId                intstring.IntString  `json:"contractId"`
 		EligiblePersons           []EigiblePersons     `json:"eligiblePersons"`
 		DetectiveReports          []DetectiveReports   `json:"detectiveReports"`
