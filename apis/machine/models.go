@@ -591,6 +591,7 @@ type (
 		InspectionDate     string              `json:"inspectionDate"`
 		InspectorSignature *string             `json:"inspectorSignature"`
 		ConfinedSpaceId    intstring.IntString `json:"confinedSpaceId"`
+		Media              []model.MediaParam  `json:"media"`
 	}
 
 	Inspectors struct {
