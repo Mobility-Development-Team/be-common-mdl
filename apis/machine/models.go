@@ -198,7 +198,7 @@ type (
 		EquipBreathApptPtTwo      bool                 `json:"equipBreathApptPtTwo"`
 		RequireSafetyMeasurePtTwo bool                 `json:"requireSafetyMeasurePtTwo"`
 		RequireNoWindCoalPipeWork bool                 `json:"requireNoWindCoalPipeWork"`
-		Windcoldpipeworkverified  bool                 `json:"windcoldpipeworkverified"`
+		WindColdPipeWorkVerified  bool                 `json:"windcoldpipeworkverified"`
 		SuperviseDate             *string              `json:"superviseDate"`
 		CertValidFrom             string               `json:"certValidFrom"`
 		CertValidTo               string               `json:"certValidTo"`
