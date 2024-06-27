@@ -42,7 +42,7 @@ func (p *Pagination) GetSort() string {
 
 func Paginate(value interface{}, pagination *Pagination, db *gorm.DB) func(db *gorm.DB) *gorm.DB {
 	var totalRows int64
-	db.Model(value).Count(&totalRows)
+	db.Model(value).Distinct().Count(&totalRows)
 	pagination.TotalRows = totalRows
 	l := pagination.Limit
 	if l == 0 {
