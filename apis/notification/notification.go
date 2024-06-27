@@ -3,7 +3,6 @@ package notification
 import (
 	"fmt"
 
-	"time"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/apis/user"
