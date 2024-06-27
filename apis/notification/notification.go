@@ -65,18 +65,18 @@ func CreateNotifications(tk string, notifications ...*Notification) error {
 
 func createOneOrManyNotifications(tk string, body interface{}) error {
 	client := resty.New()
-	// Set retries
-	client.
-		SetRetryCount(5).
-		SetRetryWaitTime(5 * time.Minute).
-		SetRetryMaxWaitTime(10 * time.Minute).
-		AddRetryCondition(func(r *resty.Response, err error) bool {
-			if !r.IsSuccess() {
-				logger.Warnf("[CreateNotification]: API returns status code %d. Retrying...", r.StatusCode())
-				return true
-			}
-			return false
-		})
+	// Set retries (base on legor requiremnt since duplicate notifications)
+	// client.
+	// 	SetRetryCount(5).
+	// 	SetRetryWaitTime(5 * time.Minute).
+	// 	SetRetryMaxWaitTime(10 * time.Minute).
+	// 	AddRetryCondition(func(r *resty.Response, err error) bool {
+	// 		if !r.IsSuccess() {
+	// 			logger.Warnf("[CreateNotification]: API returns status code %d. Retrying...", r.StatusCode())
+	// 			return true
+	// 		}
+	// 		return false
+	// 	})
 	// Send request
 	result, err := client.R().
 		SetAuthToken(tk).
