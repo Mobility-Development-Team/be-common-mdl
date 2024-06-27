@@ -6,13 +6,14 @@ import (
 )
 
 type Pagination struct {
-	Limit      int         `json:"limit,omitempty;query:limit"`
-	Page       int         `json:"page,omitempty;query:page"`
-	Sort       string      `json:"sort,omitempty;query:sort"`
-	TotalRows  int64       `json:"totalRows"`
-	TotalPages int         `json:"totalPages"`
-	Rows       interface{} `json:"rows"`
-	IsPaginate bool        `json:"isPaginate"`
+	Limit         int         `json:"limit,omitempty;query:limit"`
+	Page          int         `json:"page,omitempty;query:page"`
+	Sort          string      `json:"sort,omitempty;query:sort"`
+	TotalRows     int64       `json:"totalRows"`
+	TotalPages    int         `json:"totalPages"`
+	Rows          interface{} `json:"rows"`
+	IsPaginate    bool        `json:"isPaginate"`
+	DistinctValue string      `json:"-"`
 }
 
 func (p *Pagination) GetOffset() int {
@@ -41,8 +42,15 @@ func (p *Pagination) GetSort() string {
 }
 
 func Paginate(value interface{}, pagination *Pagination, db *gorm.DB) func(db *gorm.DB) *gorm.DB {
-	var totalRows int64
-	db.Model(value).Distinct().Count(&totalRows)
+	var (
+		totalRows int64
+	)
+	if pagination.DistinctValue != "" {
+		// In format eg: count(distinct(`%s`.id))
+		db.Model(value).Select(pagination.DistinctValue).Count(&totalRows)
+	} else {
+		db.Model(value).Count(&totalRows)
+	}
 	pagination.TotalRows = totalRows
 	l := pagination.Limit
 	if l == 0 {
