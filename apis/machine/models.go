@@ -178,49 +178,49 @@ type (
 
 	CDPermit struct {
 		MasterPermit
-		PitDepth                  string               `json:"pitDepth"`
-		WorkLocation              string               `json:"workLocation"`
-		WorkDate                  string               `json:"workDate"`
-		GasDetectorNo             string               `json:"gasDetectorNo"`
-		Detectorvaliduntil        string               `json:"detectorvaliduntil"`
-		GasSerialNo               string               `json:"gasSerialNo"`
-		GasExpiryDate             *string              `json:"gasExpiryDate"`
-		SafetyAdvise              string               `json:"safetyAdvise"`
-		InvolveUgPipeWkPtOne      bool                 `json:"involveUgPipeWkPtOne"`
-		EquipBreathApptPtOne      bool                 `json:"equipBreathApptPtOne"`
-		RequireSafetyMeasurePtOne bool                 `json:"requireSafetyMeasurePtOne"`
-		Safetymeasureverified     bool                 `json:"safetymeasureverified"`
-		NoOfIdKeptPtOne           intstring.IntString  `json:"noOfIdKeptPtOne"`
-		NoOfIdKeptPtTwo           intstring.IntString  `json:"noOfIdKeptPtTwo"`
-		WorkNature                string               `json:"workNature"`
-		WorkerCompany             string               `json:"workerCompany"`
-		InvolveUgPipeWkPtTwo      bool                 `json:"involveUgPipeWkPtTwo"`
-		EquipBreathApptPtTwo      bool                 `json:"equipBreathApptPtTwo"`
-		RequireSafetyMeasurePtTwo bool                 `json:"requireSafetyMeasurePtTwo"`
-		RequireNoWindCoalPipeWork bool                 `json:"requireNoWindCoalPipeWork"`
-		WindColdPipeWorkVerified  bool                 `json:"windcoldpipeworkverified"`
-		SuperviseDate             *string              `json:"superviseDate"`
-		CertValidFrom             string               `json:"certValidFrom"`
-		CertValidTo               string               `json:"certValidTo"`
-		CertValidHour             intstring.IntString  `json:"certValidHour"`
-		DcwEnterTime              string               `json:"dcwEnterTime"`
-		DcwDepartTime             string               `json:"dcwDepartTime"`
-		DisplayStatus             string               `json:"displayStatus"`
-		IsAcknowledged            bool                 `json:"isAcknowledged"`
-		AcknowledgedBy            *string              `json:"acknowledgedBy"`
-		AcknowledgedAt            *string              `json:"acknowledgedAt"`
+		PitDepth                  string              `json:"pitDepth"`
+		WorkLocation              string              `json:"workLocation"`
+		WorkDate                  string              `json:"workDate"`
+		GasDetectorNo             string              `json:"gasDetectorNo"`
+		Detectorvaliduntil        string              `json:"detectorvaliduntil"`
+		GasSerialNo               string              `json:"gasSerialNo"`
+		GasExpiryDate             *string             `json:"gasExpiryDate"`
+		SafetyAdvise              string              `json:"safetyAdvise"`
+		InvolveUgPipeWkPtOne      bool                `json:"involveUgPipeWkPtOne"`
+		EquipBreathApptPtOne      bool                `json:"equipBreathApptPtOne"`
+		RequireSafetyMeasurePtOne bool                `json:"requireSafetyMeasurePtOne"`
+		Safetymeasureverified     bool                `json:"safetymeasureverified"`
+		NoOfIdKeptPtOne           intstring.IntString `json:"noOfIdKeptPtOne"`
+		NoOfIdKeptPtTwo           intstring.IntString `json:"noOfIdKeptPtTwo"`
+		WorkNature                string              `json:"workNature"`
+		WorkerCompany             string              `json:"workerCompany"`
+		InvolveUgPipeWkPtTwo      bool                `json:"involveUgPipeWkPtTwo"`
+		EquipBreathApptPtTwo      bool                `json:"equipBreathApptPtTwo"`
+		RequireSafetyMeasurePtTwo bool                `json:"requireSafetyMeasurePtTwo"`
+		RequireNoWindCoalPipeWork bool                `json:"requireNoWindCoalPipeWork"`
+		WindColdPipeWorkVerified  bool                `json:"windcoldpipeworkverified"`
+		SuperviseDate             *string             `json:"superviseDate"`
+		CertValidFrom             string              `json:"certValidFrom"`
+		CertValidTo               string              `json:"certValidTo"`
+		CertValidHour             intstring.IntString `json:"certValidHour"`
+		DcwEnterTime              string              `json:"dcwEnterTime"`
+		DcwDepartTime             string              `json:"dcwDepartTime"`
+		DisplayStatus             string              `json:"displayStatus"`
+		IsAcknowledged            bool                `json:"isAcknowledged"`
+		AcknowledgedBy            *string             `json:"acknowledgedBy"`
+		AcknowledgedAt            *string             `json:"acknowledgedAt"`
 		// CmpConnected              bool                 `json:"cmpConnected"`
 		// CmpPermitRefId            *intstring.IntString `json:"cmpPermitRefId"`
 		// CmpSpaceRefId             *intstring.IntString `json:"cmpSpaceRefId"`
-		ContractId                intstring.IntString  `json:"contractId"`
-		EligiblePersons           []EigiblePersons     `json:"eligiblePersons"`
-		DetectiveReports          []DetectiveReports   `json:"detectiveReports"`
-		EmergencyContacts         []EmergencyContacts  `json:"emergencyContacts"`
-		PermitMasterId            intstring.IntString  `json:"permitMasterId"`
-		IcItems                   []IcItems            `json:"icItems"`
-		Inspectors                []Inspectors         `json:"inspectors"`
-		Workers                   []DSDWorker          `json:"workers"`
-		Media                     []model.MediaParam   `json:"media"`
+		ContractId        intstring.IntString `json:"contractId"`
+		EligiblePersons   []EigiblePersons    `json:"eligiblePersons"`
+		DetectiveReports  []DetectiveReports  `json:"detectiveReports"`
+		EmergencyContacts []EmergencyContacts `json:"emergencyContacts"`
+		PermitMasterId    intstring.IntString `json:"permitMasterId"`
+		IcItems           []IcItems           `json:"icItems"`
+		Inspectors        []Inspectors        `json:"inspectors"`
+		Workers           []DSDWorker         `json:"workers"`
+		Media             []model.MediaParam  `json:"media"`
 	}
 
 	PermitAppointment struct {
@@ -588,7 +588,7 @@ type (
 		model.Model
 		InspectorName      string              `json:"inspectorName"`
 		InspectorPosition  string              `json:"inspectorPosition"`
-		InspectionDate     string              `json:"inspectionDate"`
+		InspectionDate     *time.Time          `json:"inspectionDate"`
 		InspectorSignature *string             `json:"inspectorSignature"`
 		ConfinedSpaceId    intstring.IntString `json:"confinedSpaceId"`
 		Media              []model.MediaParam  `json:"media"`
