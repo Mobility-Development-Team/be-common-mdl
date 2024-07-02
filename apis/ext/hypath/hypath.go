@@ -1,6 +1,7 @@
 package hypath
 
 import (
+	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -10,7 +11,6 @@ import (
 	logger "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
-	"crypto/tls"
 )
 
 const (
@@ -20,6 +20,7 @@ const (
 	getCSByProjectCode           = "%s/confinedspace/ext_permit/confinedspace?projectcode=%s"
 	getCSBySpaceIdAndProjectCode = "%s/confinedspace/ext_permit/confinedspace/%s?projectcode=%s"
 	postCreateCSPermit           = "%s/confinedspace/ext_permit/permit/create"
+	postUpdateCSPermit           = "%s/confinedspace/ext_permit/permit/update"
 	postUpdateCSPermitWorkflow   = "%s/confinedspace/ext_permit/permit/%s/status/%s"
 	// getForm              = "%s/permits/internal/all"
 )
@@ -100,7 +101,7 @@ func GetConfinedSpaceByProjectCode(tk, projectCode string) (result GetCSByProjec
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
-	
+
 	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	if projectCode == "" {
 		err = ErrHyPathInvalidParam
@@ -135,7 +136,7 @@ func GetConfinedSpaceBySpaceIdAndProjectCode(tk, spaceId, projectCode string) (r
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
-	
+
 	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	if spaceId == "" || projectCode == "" {
 		err = ErrHyPathInvalidParam
@@ -170,7 +171,7 @@ func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result Po
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
-	
+
 	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	// Get Token if not provided
 	if tk == "" {
@@ -200,6 +201,41 @@ func PostCreateCSPermit(tk string, request PostCreateCSPermitRequest) (result Po
 	return
 }
 
+func PostUpdateCSPermit(tk string, request PostUpdateCSPermitRequest) (result PostUpdateCSPermitResponse, url string, requestBody []byte, err error) {
+	var (
+		client   = resty.New()
+		resp     *resty.Response
+		authResp HyPathAuthenResponse
+	)
+	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	// Get Token if not provided
+	if tk == "" {
+		authResp, err = AuthenticateHyPath()
+		if err != nil || len(authResp.Token) == 0 {
+			return
+		}
+		tk = authResp.Token
+	}
+	// prepare post body for logging
+	url = fmt.Sprintf(postUpdateCSPermit, apis.V().GetString(apiHypathUrlBase))
+	if b, err := json.Marshal(request); err != nil {
+		logger.Error("[UpdateOneConfinedSpaceDSD][PostUpdateCSPermit] unable to marshal request")
+	} else {
+		requestBody = b
+	}
+	resp, err = client.R().SetAuthToken(tk).SetBody(request).Post(url)
+	if err != nil || resp.StatusCode() != http.StatusOK {
+		err = ErrHyPathInvalidApiCall
+		return
+	}
+	err = json.Unmarshal(resp.Body(), &result)
+	if err != nil {
+		err = ErrHyPathInvalidApiResponse
+		return
+	}
+	return
+}
+
 func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (result PostCommonCSPermitWorkflowResponse, url string, requestBody []byte, err error) {
 	var (
 		client   = resty.New()
@@ -207,7 +243,7 @@ func PostUpdateCSPermitWorkflow(tk, projectFormId, actionType, pdfUrl string) (r
 		resp     *resty.Response
 		authResp HyPathAuthenResponse
 	)
-	
+
 	client.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	// Get Token if not provided
 	if tk == "" {

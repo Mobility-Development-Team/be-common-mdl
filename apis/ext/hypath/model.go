@@ -80,6 +80,26 @@ type (
 		IsSZWorker bool   `json:"isSZWorker"`
 	}
 
+	// PostUpdateCSPermitRequest identical with PostCreateCSPermitRequest
+	// PostUpdateCSPermitResponse identical with PostCreateCSPermitResponse
+	// PostUpdateCSPermitResponseResponseDetail identical with PostCreateCSPermitResponseResponseDetail
+	// For EMAT-7791
+	PostUpdateCSPermitRequest struct {
+		ProjectCode     string   `json:"projectCode"`
+		ConfinedSpaceId string   `json:"confinedSpaceId"`
+		StartDateTime   string   `json:"startDateTime"` // could be time.Time
+		EndDateTime     string   `json:"endDateTime"`   // could be time.Time
+		PDFUrl          string   `json:"PDFUrl"`
+		Workers         []Worker `json:"workers"`
+	}
+	PostUpdateCSPermitResponse struct {
+		HyPathApiBase
+		Data PostUpdateCSPermitResponseResponseDetail `json:"data"`
+	}
+	PostUpdateCSPermitResponseResponseDetail struct {
+		PermitFormId string `json:"permitFormId"`
+	}
+
 	PostCommonCSPermitWorkflowRequest struct {
 		PDFUrl string `json:"PDFUrl"`
 	}
