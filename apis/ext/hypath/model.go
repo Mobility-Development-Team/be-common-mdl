@@ -77,7 +77,7 @@ type (
 	Worker struct {
 		WorkerType string `json:"workerType"`
 		MappingKey string `json:"mappingKey"`
-		IsSZWorker bool   `json:"isSZWorker"`
+		// IsSZWorker bool   `json:"isSZWorker"`  // by lego request , no need pass this params to check safeZone worker or not 
 	}
 
 	// PostUpdateCSPermitRequest identical with PostCreateCSPermitRequest
