@@ -23,22 +23,23 @@ const (
 )
 
 const (
-	apiCoreMdlUrlBase     = "apis.internal.core.module.url.base"
-	getAllUserInfo        = "%s/users/all"
-	getOneContract        = "%s/contracts/%s"
-	getAllContracts       = "%s/contracts/all"
-	getSupportInfo        = "%s/support/info"
-	getAllLocations       = "%s/locations/all"
-	getContractUserByUids = "%s/parties/assoc/users"
-	getUserByRole         = "%s/roles/users"
-	getContractParties    = "%s/parties/assoc/%s?groupBy=party"
-	getManyParitesById    = "%s/parties/all"
-	getUserByRoleAndParty = "%s/users/role/party"
-	getAdminUser          = "%s/users/admin/user"
-	findAllRolesUnderUser = "%s/users/roles/assoc/all"
-	getUserHashtags       = "%s/users/hashtags/all"
-	getAllRoles           = "%s/roles/all"
-	inactiveUser          = "%s/users/inactivate"
+	apiCoreMdlUrlBase       = "apis.internal.core.module.url.base"
+	getAllUserInfo          = "%s/users/all"
+	getOneContract          = "%s/contracts/%s"
+	getAllContracts         = "%s/contracts/all"
+	getSupportInfo          = "%s/support/info"
+	getAllLocations         = "%s/locations/all"
+	getContractUserByUids   = "%s/parties/assoc/users"
+	getUserByRole           = "%s/roles/users"
+	getContractParties      = "%s/parties/assoc/%s?groupBy=party"
+	getManyParitesById      = "%s/parties/all"
+	getUserByRoleAndParty   = "%s/users/role/party"
+	getAdminUser            = "%s/users/admin/user"
+	findAllRolesUnderUser   = "%s/users/roles/assoc/all"
+	getUserHashtags         = "%s/users/hashtags/all"
+	getAllRoles             = "%s/roles/all"
+	inactiveUser            = "%s/users/inactivate"
+	getUsersByGroupCriteria = "%s/users/grouped"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -761,4 +762,34 @@ func InactivateUserAcc(tk string, userRefKey string) error {
 		return errors.New(result.String())
 	}
 	return nil
+}
+
+func GetUsersByGroupCriteria(tk string, partyId, contractId intstring.IntString, roleNames []string) (result map[string][]model.UserInfo, err error) {
+	var (
+		resp struct {
+			response.Response
+			Payload map[string][]model.UserInfo `json:"payload"`
+		}
+	)
+	client := resty.New()
+	r, err := client.R().SetAuthToken(tk).SetBody(
+		map[string]interface{}{
+			"roleNames":  roleNames,
+			"partyId":    partyId,
+			"contractId": contractId,
+		},
+	).Post(fmt.Sprintf(getUsersByGroupCriteria, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetUsersByGroupCriteria] err: ", err)
+		return
+	}
+	if !r.IsSuccess() {
+		err = fmt.Errorf("core module returned status code: %d", r.StatusCode())
+		return
+	}
+	if err = json.Unmarshal(r.Body(), &resp); err != nil {
+		return
+	}
+	result = resp.Payload
+	return
 }
