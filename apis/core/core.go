@@ -39,7 +39,7 @@ const (
 	getUserHashtags         = "%s/users/hashtags/all"
 	getAllRoles             = "%s/roles/all"
 	inactiveUser            = "%s/users/inactivate"
-	getUsersByGroupCriteria = "%s/users/grouped"
+	getUsersByGroupCriteria = "%s/roles/users/grouped"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -764,32 +764,22 @@ func InactivateUserAcc(tk string, userRefKey string) error {
 	return nil
 }
 
-func GetUsersByGroupCriteria(tk string, partyId, contractId intstring.IntString, roleNames []string) (result map[string][]model.UserInfo, err error) {
-	var (
-		resp struct {
-			response.Response
-			Payload map[string][]model.UserInfo `json:"payload"`
-		}
-	)
+func GetUsersByGroupCriteria(tk string, body map[string]interface{}) (map[string][]model.UserInfo, error) {
 	client := resty.New()
-	r, err := client.R().SetAuthToken(tk).SetBody(
-		map[string]interface{}{
-			"roleNames":  roleNames,
-			"partyId":    partyId,
-			"contractId": contractId,
-		},
-	).Post(fmt.Sprintf(getUsersByGroupCriteria, apis.V().GetString(apiCoreMdlUrlBase)))
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getUsersByGroupCriteria, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
-		logger.Error("[GetUsersByGroupCriteria] err: ", err)
-		return
+		return nil, err
 	}
-	if !r.IsSuccess() {
-		err = fmt.Errorf("core module returned status code: %d", r.StatusCode())
-		return
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("user module returned status code: %d", result.StatusCode())
 	}
-	if err = json.Unmarshal(r.Body(), &resp); err != nil {
-		return
+	type respType struct {
+		response.Response
+		Payload map[string][]model.UserInfo `json:"payload"`
 	}
-	result = resp.Payload
-	return
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
 }
