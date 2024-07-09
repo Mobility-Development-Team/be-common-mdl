@@ -91,6 +91,7 @@ type (
 		EndDateTime     string   `json:"endDateTime"`   // could be time.Time
 		PDFUrl          string   `json:"PDFUrl"`
 		Workers         []Worker `json:"workers"`
+		PermitFormId    string   `json:"permitFormId"`
 	}
 	PostUpdateCSPermitResponse struct {
 		HyPathApiBase
