@@ -16,15 +16,16 @@ const (
 type (
 	NotificationParams []interface{}
 	Notification       struct {
-		NotificationType string               `json:"notificationType"`
-		TemplateType     string               `json:"templateType"`
-		ContractID       *intstring.IntString `json:"contractId,omitempty"`
-		Recipients       Recipients           `json:"recipients"`
-		Params           NotificationParams   `json:"params"`
-		Actions          []Action             `json:"actions"`
-		WithMail         *MailOptions         `json:"withMail"`
-		WithPush         []*CloudMessage      `json:"withPush"`
-		AutoPush         *AutoPushParams      `json:"autoPush"`
+		NotificationType    string               `json:"notificationType"`
+		TemplateType        string               `json:"templateType"`
+		ContractID          *intstring.IntString `json:"contractId,omitempty"`
+		Recipients          Recipients           `json:"recipients"`
+		Params              NotificationParams   `json:"params"`
+		Actions             []Action             `json:"actions"`
+		WithMail            *MailOptions         `json:"withMail"`
+		WithPush            []*CloudMessage      `json:"withPush"`
+		AutoPush            *AutoPushParams      `json:"autoPush"`
+		EnableExtraSendUser bool                 `json:"enableExtraSendUser"`
 
 		// Setting this to true will not ignore the sender (caller of this API) if the sender
 		// is the recipient user or as a group member of the recipent group / party.
@@ -184,6 +185,11 @@ func (n *Notification) AttachPushAutoDefault(additionalBody ...string) *Notifica
 		n.AutoPush.Body = strutil.NewPtr(mergedBody)
 		n.AutoPush.BodyZh = strutil.NewPtr(mergedBody)
 	}
+	return n
+}
+
+func (n *Notification) SetupEnableExtraSendUser(extra bool) *Notification {
+	n.EnableExtraSendUser = extra
 	return n
 }
 

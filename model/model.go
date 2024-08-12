@@ -211,6 +211,26 @@ type (
 		TotalCount int                 `json:"totalCount"`
 	}
 
+	ContractToUserMap struct {
+		Model
+		UserId      intstring.IntString `json:"userId"`
+		ContractId  intstring.IntString `json:"contractId"`
+		PartyRefId  intstring.IntString `json:"partyRefId"`
+		Status      string              `json:"status" gorm:"default:ACTIVE"`
+		IsExtraSend string              `json:"isExtraSend" gorm:"default:off"`
+	}
+
+	ContractToUserDetailMap struct {
+		ContractToUserMap
+		Email               string `json:"email"`
+		ContactNo           string `json:"contactNo"`
+		UserRefKey          string `json:"userRefKey"`
+		DisplayName         string `json:"displayName"`
+		ContractNo          string `json:"contractNo"`
+		ContractStatus      string `json:"contractStatus"`
+		ContractIsExtraSend string `json:"contractIsExtraSend"`
+	}
+
 	HashtagInfo struct {
 		// Model
 		Id         intstring.IntString `json:"id"`

@@ -27,6 +27,7 @@ const (
 	getAllUserInfo          = "%s/users/all"
 	getOneContract          = "%s/contracts/%s"
 	getAllContracts         = "%s/contracts/all"
+	getManyContractMapUsers = "%s/contracts/users/map"
 	getSupportInfo          = "%s/support/info"
 	getAllLocations         = "%s/locations/all"
 	getContractUserByUids   = "%s/parties/assoc/users"
@@ -192,6 +193,29 @@ func GetAllContracts(tk string, projectId *string, contractIds ...intstring.IntS
 		})
 	}
 	return output, nil
+}
+
+func GetManyContractMapUsers(tk string, req map[string]interface{}) ([]model.ContractToUserDetailMap, error) {
+	var resp struct {
+		response.Response
+		Payload []model.ContractToUserDetailMap `json:"payload"`
+	}
+	client := resty.New()
+
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		req,
+	).Post(fmt.Sprintf(getManyContractMapUsers, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetManyContractMapUsers] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
 }
 
 func GetSupportInfo() (map[string]string, error) {
