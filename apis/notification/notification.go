@@ -82,6 +82,7 @@ func checkSuffix(typeName string) bool {
 	return false
 }
 func CreateNotifications(tk string, notifications ...*Notification) error {
+	logger.Info(fmt.Sprintf("[CreateNotification] extra notifcation : %v", notifications))
 	validNotifications := make([]*Notification, 0, len(notifications))
 	for _, notification := range notifications {
 		notification.SetupEnableExtraSendUser(checkSuffix(notification.TemplateType))
