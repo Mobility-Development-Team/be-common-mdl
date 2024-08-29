@@ -125,13 +125,17 @@ func SubmitWorkflowAction(tk string, actions []WorkflowActionParam) (map[string]
 		SetBody(actions).
 		Post(fmt.Sprintf(submitWorkflowAction, apis.V().GetString(apiWorkflowMdlUrlBase)))
 	if err != nil {
-		return nil, err
-	}
-	if err := json.Unmarshal(result.Body(), &resp); err != nil {
+		logger.Errorf("[SubmitWorkflowAction] post api err:%v,actions: %+v", err, actions)
 		return nil, err
 	}
 	if !result.IsSuccess() {
+		logger.Errorf("[SubmitWorkflowAction] post api result is fail:%v,actions: %+v", result, actions)
 		return nil, fmt.Errorf("API returns status: %s message: %s %s", result.Status(), resp.MsgCode, resp.Message)
 	}
+	if err := json.Unmarshal(result.Body(), &resp); err != nil {
+		logger.Errorf("[SubmitWorkflowAction] json unmarshal fail:%v,actions: %+v", result, actions)
+		return nil, err
+	}
+
 	return resp.Payload, nil
 }
