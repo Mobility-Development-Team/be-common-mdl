@@ -3,10 +3,10 @@ package document
 import (
 	"encoding/json"
 	"fmt"
-	"net/http"
-
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
+	logger "github.com/sirupsen/logrus"
+	"net/http"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -64,15 +64,21 @@ func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId int
 		fmt.Sprintf(generateFollowUpReport, apis.V().GetString(urlBase)),
 	)
 	if err != nil {
+		logger.Errorf("[GenerateTaskFollowUpReport] happen err: %+v,params %+v, taskId %+v, contractId%+v",
+			err, params, taskId, contractId)
 		return "", err
 	}
 	if result.StatusCode() != http.StatusCreated {
+		logger.Errorf("[GenerateTaskFollowUpReport] StatusCode happen err: %+v,result %+v, params %+v, taskId %+v, contractId%+v",
+			err, result, params, taskId, contractId)
 		return "", fmt.Errorf(
 			"[GenerateTaskFollowUpReport] status code not 201: %d", result.StatusCode(),
 		)
 	}
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {
+		logger.Errorf("[GenerateTaskFollowUpReport] json.Unmarshal happen err: %+v,result.Body() %+v, params %+v, taskId %+v, contractId%+v",
+			err, result.Body(), params, taskId, contractId)
 		return "", err
 	}
 	return resp.Payload.Url, nil
@@ -90,13 +96,19 @@ func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish 
 		"publish": publish,
 	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
 	if err != nil {
+		logger.Errorf("[GenerateSiteWalk] happen err: %+v,apiPath %+v, id %+v, publish%+v",
+			err, apiPath, id, publish)
 		return "", err
 	}
 	if result.StatusCode() != http.StatusCreated {
+		logger.Errorf("[GenerateSiteWalk] StatusCode happen err: %+v,result: %+v,apiPath %+v, id %+v, publish%+v",
+			err, result, apiPath, id, publish)
 		return "", fmt.Errorf("[GenerateSiteWalk] status code not 201: %d", result.StatusCode())
 	}
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {
+		logger.Errorf("[GenerateSiteWalk] json.Unmarshal happen err: %+v,result.Body(): %+v,apiPath %+v, id %+v, publish%+v",
+			err, result.Body(), apiPath, id, publish)
 		return "", err
 	}
 	return resp.Payload.Url, nil
@@ -150,11 +162,9 @@ func GenerateLSReport(tk string, permitMasterId intstring.IntString) (string, er
 	return generatePermitType(tk, generateLSReport, permitMasterId, true)
 }
 
-
 func GenerateCDReport(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generateCDReport, permitMasterId, true)
 }
-
 
 func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
 	client := resty.New()
@@ -167,14 +177,21 @@ func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntS
 		"permitMasterId": permitMasterId,
 		"publish":        publish,
 	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
+
 	if err != nil {
+		logger.Errorf("[GeneratePermitType] happen err: %+v,apiPath %+v, permitMasterId %+v, publish%+v",
+			err, apiPath, permitMasterId, publish)
 		return "", err
 	}
 	if result.StatusCode() != http.StatusCreated {
+		logger.Errorf("[GeneratePermitType] StatusCode happen err result: %+v,apiPath %+v, permitMasterId %+v, publish%+v",
+			result, apiPath, permitMasterId, publish)
 		return "", fmt.Errorf("[generatePlantPermitType] status code not 201: %d", result.StatusCode())
 	}
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {
+		logger.Errorf("[GeneratePermitType] json.Unmarshal happen err: %+v,apiPath %+v, permitMasterId %+v, publish%+v, result%+v",
+			err, apiPath, permitMasterId, publish, result)
 		return "", err
 	}
 	return resp.Payload.Url, nil
@@ -196,13 +213,19 @@ func generateDoc(tk, apiPath string, reportId intstring.IntString, publish bool)
 		"publish":  publish,
 	}).Post(fmt.Sprintf(apiPath, apis.V().GetString(urlBase)))
 	if err != nil {
+		logger.Errorf("[GenerateDocReport] happen err: %+v,apiPath %+v, reportId %+v, publish%+v",
+			err, apiPath, reportId, publish)
 		return "", err
 	}
 	if result.StatusCode() != http.StatusCreated {
+		logger.Errorf("[GenerateDocReport] StatusCode happen err: %+v,result%+v,apiPath %+v, reportId %+v, publish%+v",
+			err, result, apiPath, reportId, publish)
 		return "", fmt.Errorf("[GenerateDocReport] status code not 201: %d", result.StatusCode())
 	}
 	err = json.Unmarshal(result.Body(), &resp)
 	if err != nil {
+		logger.Errorf("[GenerateDocReport] json.Unmarshal happen err: %+v,result.Body()%+v,apiPath %+v, reportId %+v, publish%+v",
+			err, result.Body(), apiPath, reportId, publish)
 		return "", err
 	}
 	return resp.Payload.Url, nil
