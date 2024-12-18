@@ -28,6 +28,7 @@ const (
 	apiUserMdlUrlBase      = "apis.internal.user.module.url.base"
 	getCurrentUserInfo     = "%s/users/profile?isSimple=true"
 	getAllUserInfo         = "%s/users/all"
+	getUserList            = "%s/users/list"
 	getUsersByGroupDetails = "%s/users/groups/details"
 	getUserSignatures      = "%s/users/signatures"
 	getAllGroupInfo        = "%s/groups/all"
@@ -143,7 +144,7 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 		"userKeyRefs": userKeyRefs,
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
-		fmt.Sprintf(getAllUserInfo, apis.V().GetString(apiUserMdlUrlBase)),
+		fmt.Sprintf(getUserList, apis.V().GetString(apiUserMdlUrlBase)),
 	)
 	if err != nil {
 		return nil, err

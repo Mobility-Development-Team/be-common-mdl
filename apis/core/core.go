@@ -41,6 +41,7 @@ const (
 	getAllRoles             = "%s/roles/all"
 	inactiveUser            = "%s/users/inactivate"
 	getUsersByGroupCriteria = "%s/roles/users/grouped"
+	getUserList             = "%s/users/list"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -104,7 +105,7 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string, w
 		"withSignature": withSign,
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
-		fmt.Sprintf(getAllUserInfo, apis.V().GetString(apiCoreMdlUrlBase)),
+		fmt.Sprintf(getUserList, apis.V().GetString(apiCoreMdlUrlBase)),
 	)
 	if err != nil {
 		return nil, err
