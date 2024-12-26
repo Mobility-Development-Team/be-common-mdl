@@ -220,6 +220,11 @@ type (
 		IsExtraSend string              `json:"isExtraSend" gorm:"default:off"`
 	}
 
+	ContractIdsUserMap struct {
+		UserRefKey  string                `json:"userRefKey"`
+		ContractIds []intstring.IntString `json:"contractIds"`
+	}
+
 	ContractToUserDetailMap struct {
 		ContractToUserMap
 		Email               string `json:"email"`

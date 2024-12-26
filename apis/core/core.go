@@ -28,6 +28,7 @@ const (
 	getOneContract          = "%s/contracts/%s"
 	getAllContracts         = "%s/contracts/all"
 	getManyContractMapUsers = "%s/contracts/users/map"
+	getContractIdsUserMap   = "%s/contracts/users/map/contractIds"
 	getSupportInfo          = "%s/support/info"
 	getAllLocations         = "%s/locations/all"
 	getContractUserByUids   = "%s/parties/assoc/users"
@@ -208,6 +209,29 @@ func GetManyContractMapUsers(tk string, req map[string]interface{}) ([]model.Con
 	).Post(fmt.Sprintf(getManyContractMapUsers, apis.V().GetString(apiCoreMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetManyContractMapUsers] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("system module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+
+func GetContractIdsUserMap(tk string, req map[string]interface{}) (*model.ContractIdsUserMap, error) {
+	var resp struct {
+		response.Response
+		Payload *model.ContractIdsUserMap `json:"payload"`
+	}
+	client := resty.New()
+
+	result, err := client.R().SetAuthToken(tk).SetBody(
+		req,
+	).Post(fmt.Sprintf(getContractIdsUserMap, apis.V().GetString(apiCoreMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetContractIdsUserMap] err: ", err)
 		return nil, err
 	}
 	if !result.IsSuccess() {
