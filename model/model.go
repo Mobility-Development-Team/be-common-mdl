@@ -124,6 +124,10 @@ type (
 		Hashtags             json.RawMessage         `json:"hashtags"`
 		MediaRefInfo         json.RawMessage         `json:"mediaRefInfo"`
 	}
+
+	UsersFirebaseToken struct {
+		Token string `json:"token"`
+	}
 	// HashTags related object - Replicated for report
 	HashTags struct {
 		Custom    []CustomHashTag    `json:"custom"`

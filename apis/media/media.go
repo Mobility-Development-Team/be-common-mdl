@@ -17,16 +17,17 @@ import (
 )
 
 const (
-	apiMediaMdlUrlBase    = "apis.internal.media.module.url.base"
-	getMediaMany          = "%s/media/all"
-	getMediaManyByRefId   = "%s/media/many?showAsMap=true"
-	getBatchMany          = "%s/media/batch/many"
-	uploadSitePlanPicture = "%s/file/upload/siteplan"
-	cloneMediaToBatch     = "%s/media/batch/clone"
-	sendCloudMessage      = "%s/fcm/messaging"
-	getFileKeys           = "%s/file/upload/worker-mgt/file/k"
-	uploadUrlBase         = "%s/file/upload/%s/%s"
-	uploadFileUrlBase     = "%s/file/upload/%s"
+	apiMediaMdlUrlBase          = "apis.internal.media.module.url.base"
+	getMediaMany                = "%s/media/all"
+	getNoAuthUsersFirebaseToken = "%s/fb/custom/token"
+	getMediaManyByRefId         = "%s/media/many?showAsMap=true"
+	getBatchMany                = "%s/media/batch/many"
+	uploadSitePlanPicture       = "%s/file/upload/siteplan"
+	cloneMediaToBatch           = "%s/media/batch/clone"
+	sendCloudMessage            = "%s/fcm/messaging"
+	getFileKeys                 = "%s/file/upload/worker-mgt/file/k"
+	uploadUrlBase               = "%s/file/upload/%s/%s"
+	uploadFileUrlBase           = "%s/file/upload/%s"
 
 	previewFolderName   = "preview"
 	publishedFolderName = "publish"
@@ -81,6 +82,25 @@ func GetMedia(tk string, body map[string]interface{}) ([]model.MediaParam, error
 	var resp respType
 	if err = json.Unmarshal(result.Body(), &resp); err != nil {
 		logger.Error("[getMedia]", "Unmarshal err:", err)
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+func GetUsersFirebaseToken(tk string, body map[string]string) (*model.UsersFirebaseToken, error) {
+	client := resty.New()
+	url := apis.V().GetString(apiMediaMdlUrlBase)
+	result, err := client.R().SetAuthToken(tk).SetQueryParams(body).Get(fmt.Sprintf(getNoAuthUsersFirebaseToken, url))
+	if err != nil {
+		logger.Error("[GetUsersFirebaseToken]", "err:", err)
+		return nil, err
+	}
+	type respType struct {
+		response.Response
+		Payload *model.UsersFirebaseToken `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		logger.Error("[GetUsersFirebaseToken]", "Unmarshal err:", err)
 		return nil, err
 	}
 	return resp.Payload, nil
