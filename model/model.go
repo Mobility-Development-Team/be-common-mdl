@@ -28,6 +28,14 @@ type (
 		UpdatedBy        *string     `json:"-" gorm:"column:updated_by"`
 		UpdatedByDisplay interface{} `json:"updatedBy" gorm:"-" `
 	}
+
+	SimpleModel struct {
+		Id        intstring.IntString `gorm:"primaryKey" json:"id,omitempty"`
+		CreatedAt time.Time           `json:"createdAt" gorm:"<-:create"`
+		CreatedBy string              `json:"-" gorm:"column:created_by;<-:create"`
+		UpdatedAt time.Time           `json:"updatedAt"`
+		UpdatedBy *string             `json:"-" gorm:"column:updated_by"`
+	}
 	UserInfo struct {
 		Model
 		Uuid           string  `json:"uuid"`
