@@ -43,6 +43,7 @@ const (
 	inactiveUser            = "%s/users/inactivate"
 	getUsersByGroupCriteria = "%s/roles/users/grouped"
 	getUserList             = "%s/users/list"
+	getSimpleUserList       = "%s/users/simple/list"
 )
 
 var muGetCurrentUserInfoFromContext sync.Mutex
@@ -127,6 +128,39 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string, w
 	}
 	for i := range resp.Payload.Users {
 		resp.Payload.Users[i].ShouldAddSystemFieldsFromDisplay()
+	}
+
+	return resp.Payload.Users, nil
+}
+
+func GetSimpleUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) ([]model.SimpleUserInfo, error) {
+	if len(ids) == 0 && len(userKeyRefs) == 0 {
+		return []model.SimpleUserInfo{}, nil
+	}
+	client := resty.New()
+	body := map[string]interface{}{
+		"ids":         ids,
+		"userKeyRefs": userKeyRefs,
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(
+		fmt.Sprintf(getSimpleUserList, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	var resp struct {
+		response.Response
+		Payload struct {
+			Users      []model.SimpleUserInfo `json:"users"`
+			TotalCount int                    `json:"totalCount"`
+		} `json:"payload"`
+	}
+	if !result.IsSuccess() {
+		return nil, errors.New("api returns status: " + result.Status())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
 	}
 
 	return resp.Payload.Users, nil

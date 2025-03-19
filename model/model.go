@@ -51,6 +51,14 @@ type (
 		Signature      *string `json:"signature"`
 		UserRefKey     string  `json:"userRefKey"`
 	}
+	SimpleUserInfo struct {
+		Id             intstring.IntString `gorm:"primaryKey" json:"id,omitempty"`
+		DisplayName    string              `json:"displayName"`
+		Email          string              `json:"email"`
+		Status         string              `json:"status" binding:"required"`
+		ProfileIconUrl *string             `json:"profileIconUrl"`
+		UserRefKey     string              `json:"userRefKey"`
+	}
 	PartyInfo struct {
 		Id            intstring.IntString `json:"id"`
 		PartyName     string              `json:"partyName"`
