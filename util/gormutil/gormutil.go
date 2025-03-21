@@ -13,6 +13,11 @@ type BuildOption struct {
 	PreloadName      string
 	OnlySelectFields []string
 	WhereMap         map[string]interface{}
+	Limit            *int
+	Offset           *int
+	Group            string
+	Order            string
+	HavingMap        map[string]interface{}
 }
 type GormScopesOption struct {
 	Obj            interface{}
@@ -40,7 +45,7 @@ const ConstTagExtractField = "extractField"
 const ConstFirstParentKey = "Obj"
 const ConstAnonymousParent = "AnonymousEmbed"
 
-// Deprecated: 切片指针获取不出来，有问题
+// Deprecated: 指针切片获取不出来，有问题
 func ReflectStruct(s interface{}, parent string, result map[string][]string) (string, error) {
 	valueOf := reflect.ValueOf(s)
 	if valueOf.Kind() != reflect.Struct {
@@ -100,14 +105,14 @@ func ReflectStruct(s interface{}, parent string, result map[string][]string) (st
 				}
 			}
 
-		case IsSliceOfPrt(fieldValue):
-			if fieldValue.Len() > 0 && !fieldValue.IsNil() {
-				// 只处理非空切片指针
-				_, err := ReflectStruct(fieldValue.Index(0).Interface(), nextParent, result)
-				if err != nil {
-					return "", err
-				}
-			}
+		// case IsSliceOfPrt(fieldValue):
+		// 	if fieldValue.Len() > 0 && !fieldValue.IsNil() {
+		// 		// 只处理非空指针切片
+		// 		_, err := ReflectStruct(fieldValue.Index(0).Interface(), nextParent, result)
+		// 		if err != nil {
+		// 			return "", err
+		// 		}
+		// 	}
 		case isAnonymousStruct:
 			// 是匿名结构体，需要把匿名结构体Fields提取出来放到它的嵌套的节点Fields里
 			aEmbedNewResult := map[string][]string{}
@@ -153,7 +158,7 @@ func IsSliceOfPrt(fieldValue reflect.Value) bool {
 }
 
 /*
-Deprecated: 切片指针获取不出来，有问题
+Deprecated: 指针切片获取不出来，有问题
   - @description: 提取obj struct 字段，自动生成preload select 等语句；eg:
     -- []func(*gorm.DB) *gorm.DB{
     SelectBuild(db, []string{"name", "id"}),
@@ -228,7 +233,7 @@ func GetGormScopes(db *gorm.DB, option GormScopesOption) (scopesFunc []func(*gor
 	return scopesFunc, nil
 }
 
-// Deprecated: 切片指针获取不出来，有问题
+// Deprecated: 指针切片获取不出来，有问题
 func GetGormScopesEasily(db *gorm.DB, option GormScopesEasilyOption) (scopesFunc []func(*gorm.DB) *gorm.DB, err error) {
 
 	preloadOptions := []PreloadOption{}
@@ -258,7 +263,7 @@ func GetGormScopesEasily(db *gorm.DB, option GormScopesEasilyOption) (scopesFunc
 
 func PreloadBuild(db *gorm.DB, option BuildOption) func(*gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		return db.Preload(option.PreloadName, WhereBuild(db, option.WhereMap), SelectBuild(db, option.OnlySelectFields))
+		return db.Preload(option.PreloadName, HandleBuildOption(db, option))
 	}
 }
 
@@ -268,12 +273,39 @@ func PreloadGet(db *gorm.DB, preloadName string, onlySelectFields []string) func
 	}
 }
 
-func WhereBuild(db *gorm.DB, whereMap map[string]interface{}) func(*gorm.DB) *gorm.DB {
+func HandleBuildOption(db *gorm.DB, option BuildOption) func(*gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		if len(whereMap) == 0 {
-			return db
+		if len(option.OnlySelectFields) != 0 {
+			db = db.Select(option.OnlySelectFields)
 		}
-		return db.Where(whereMap)
+
+		if len(option.WhereMap) != 0 {
+			for k, v := range option.WhereMap {
+				db = db.Where(k, v)
+			}
+		}
+		if option.Group != "" {
+			db = db.Group(option.Group)
+		}
+
+		if len(option.HavingMap) != 0 {
+			for k, v := range option.HavingMap {
+				db = db.Having(k, v)
+			}
+		}
+		if option.Order != "" {
+			db = db.Order(option.Order)
+		}
+
+		if option.Limit != nil {
+			db = db.Limit(*option.Limit)
+		}
+
+		if option.Offset != nil {
+			db = db.Offset(*option.Offset)
+		}
+
+		return db
 	}
 }
 
@@ -284,4 +316,9 @@ func SelectBuild(db *gorm.DB, onlySelectFields []string) func(*gorm.DB) *gorm.DB
 		}
 		return db.Select(onlySelectFields)
 	}
+}
+
+// AnyPtr defines a generic function that creates and returns a pointer to the given value.
+func AnyPtr[T any](s T) *T {
+	return &s
 }
