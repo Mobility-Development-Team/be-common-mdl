@@ -30,11 +30,13 @@ type (
 	}
 
 	SimpleModel struct {
-		Id        intstring.IntString `gorm:"primaryKey" json:"id,omitempty"`
-		CreatedAt time.Time           `json:"createdAt" gorm:"<-:create"`
-		CreatedBy string              `json:"-" gorm:"column:created_by;<-:create"`
-		UpdatedAt time.Time           `json:"updatedAt"`
-		UpdatedBy *string             `json:"-" gorm:"column:updated_by"`
+		Id               intstring.IntString `gorm:"primaryKey" json:"id,omitempty"`
+		CreatedAt        time.Time           `json:"createdAt" gorm:"<-:create"`
+		CreatedBy        string              `json:"createdBy" gorm:"column:created_by;<-:create"`
+		UpdatedAt        time.Time           `json:"updatedAt"`
+		UpdatedBy        *string             `json:"updatedBy" gorm:"column:updated_by"`
+		CreatedByDisplay interface{}         `json:"createdByDisplay" gorm:"-" `
+		UpdatedByDisplay interface{}         `json:"updatedByDisplay" gorm:"-" `
 	}
 	UserInfo struct {
 		Model
