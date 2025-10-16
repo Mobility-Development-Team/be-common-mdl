@@ -19,6 +19,7 @@ import (
 const (
 	apiMediaMdlUrlBase          = "apis.internal.media.module.url.base"
 	getMediaMany                = "%s/media/all"
+	getMediaManySimple          = "%s/media/many/simple"
 	getNoAuthUsersFirebaseToken = "%s/fb/custom/token"
 	getMediaManyByRefId         = "%s/media/many?showAsMap=true"
 	getBatchMany                = "%s/media/batch/many"
@@ -68,11 +69,30 @@ type CloneMediaParams struct {
 	BatchId string
 }
 
+func GetManySimpleMedia(tk string, body map[string]interface{}) ([]model.SimpleMediaItems, error) {
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getMediaManySimple, apis.V().GetString(apiMediaMdlUrlBase)))
+	if err != nil {
+		logger.Error("[GetManySimpleMedia]", "err:", err)
+		return nil, err
+	}
+	type respType struct {
+		response.Response
+		Payload []model.SimpleMediaItems `json:"payload"`
+	}
+	var resp respType
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		logger.Error("[GetManySimpleMedia]", "Unmarshal err:", err)
+		return nil, err
+	}
+	return resp.Payload, nil
+}
+
 func GetMedia(tk string, body map[string]interface{}) ([]model.MediaParam, error) {
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getMediaMany, apis.V().GetString(apiMediaMdlUrlBase)))
 	if err != nil {
-		logger.Error("[GetMediaByBatchId]", "err:", err)
+		logger.Error("[GetMedia]", "err:", err)
 		return nil, err
 	}
 	type respType struct {
@@ -86,6 +106,7 @@ func GetMedia(tk string, body map[string]interface{}) ([]model.MediaParam, error
 	}
 	return resp.Payload, nil
 }
+
 func GetUsersFirebaseToken(tk string, body map[string]string) (*model.UsersFirebaseToken, error) {
 	client := resty.New()
 	url := apis.V().GetString(apiMediaMdlUrlBase)

@@ -2,10 +2,11 @@ package strutil
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"reflect"
 	"strconv"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 // IsValidUUID returns a boolean value representing if given string is a valid UUID,
@@ -138,4 +139,40 @@ func ScreamCaseToTitle(scream string) string {
 		words[i] = strings.Title(strings.ToLower(words[i]))
 	}
 	return strings.Join(words, " ")
+}
+
+// SplitAndTrim splits the input string by the given separator, trims spaces from each element,
+// and optionally omits empty elements. Examples:
+//
+//	SplitAndTrim("a, b, , c", ",", false) => ["a", "b", "", "c"]
+//	SplitAndTrim("a, b, , c", ",", true)  => ["a", "b", "c"]
+//	SplitAndTrim("a; b; c", ";", false)   => ["a", "b", "c"]
+//	SplitAndTrim("", ",", false)          => []
+func SplitAndTrim(str, sep string, omitEmpty bool) []string {
+	// 处理空字符串情况
+	if str == "" {
+		return []string{}
+	}
+
+	// 使用传入的分隔符而不是硬编码的逗号
+	slice := strings.Split(str, sep)
+
+	// 如果不需要忽略空字符串，直接修剪所有元素并返回
+	if !omitEmpty {
+		for i := range slice {
+			slice[i] = strings.TrimSpace(slice[i])
+		}
+		return slice
+	}
+
+	// 处理需要忽略空字符串的情况
+	result := make([]string, 0, len(slice))
+	for _, item := range slice {
+		trimmed := strings.TrimSpace(item)
+		if trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+
+	return result
 }

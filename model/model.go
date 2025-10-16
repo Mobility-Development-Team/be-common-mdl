@@ -142,6 +142,16 @@ type (
 		Hashtags             json.RawMessage         `json:"hashtags"`
 		MediaRefInfo         json.RawMessage         `json:"mediaRefInfo"`
 	}
+	SimpleMediaItems struct {
+		Id                   intstring.IntString `gorm:"primaryKey" json:"id,omitempty"`
+		LocalPath            string              `json:"localPath"`
+		LocalPathThumbnail   string              `json:"localPathThumbnail"`
+		Description          string              `json:"description"`
+		UploadStatus         string              `json:"uploadStatus"`
+		FirebaseUrl          string              `json:"firebaseUrl"`
+		FirebaseUrlThumbnail string              `json:"firebaseUrlThumbnail"`
+		ContractId           string              `json:"contractId"`
+	}
 
 	UsersFirebaseToken struct {
 		Token string `json:"token"`
