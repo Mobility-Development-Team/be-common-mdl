@@ -144,6 +144,7 @@ type (
 	}
 	SimpleMediaItems struct {
 		Id                   intstring.IntString `gorm:"primaryKey" json:"id,omitempty"`
+		FbRefId              string              `json:"fbRefId"`
 		LocalPath            string              `json:"localPath"`
 		LocalPathThumbnail   string              `json:"localPathThumbnail"`
 		Description          string              `json:"description"`

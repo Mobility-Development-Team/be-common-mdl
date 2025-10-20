@@ -90,7 +90,22 @@ type (
 		WorkLocation   *string             `json:"workLocation"`
 		WorkPeriodFrom string              `json:"workPeriodFrom"`
 		WorkPeriodTo   string              `json:"workPeriodTo"`
+		NeedIcCheck    *int                `json:"needIcCheck"`
+		IcCheckResult  *int                `json:"icCheckResult"`
+		IcRemark       *string             `json:"icRemark"`
 		PermitMasterId intstring.IntString `json:"permitMasterId"`
+		ICItems        []ICItem            `json:"icItems"`
+	}
+	ICItem struct {
+		model.Model
+		InspectorName      *string                  `json:"inspectorName"`
+		InspectorPosition  *string                  `json:"inspectorPosition"`
+		InspectionDate     *time.Time               `json:"inspectionDate"`
+		InspectorSignature []byte                   `json:"inspectorSignature"`
+		InspectionResult   *string                  `json:"inspectionResult"`
+		MediaIds           string                   `json:"mediaIds"`
+		MediaItems         []model.SimpleMediaItems `json:"mediaItems" gorm:"-"`
+		ConfinedSpaceID    *intstring.IntString     `json:"confinedSpaceId"`
 	}
 
 	EXPermit struct {
