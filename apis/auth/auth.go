@@ -143,6 +143,26 @@ func CreateAuthUser(c *gin.Context, body map[string]interface{}) (*resty.Respons
 	return result, nil
 }
 
+func CreateAuthUserV2(c *gin.Context, body map[string]interface{}) (map[string]interface{}, error) {
+	client := resty.New()
+	tk, _ := apiutil.ParseBearerAuth(c)
+	v, _ := apiutil.ParseCustAuthExt(c, "")
+	result, err := client.R().SetAuthToken(tk).SetHeader(apiutil.HeaderCustom, fmt.Sprintf("%s%s", apiutil.AuthHeaderPrefixBasic, v)).
+		SetBody(body).Post(fmt.Sprintf(createUserWithIdentities, apis.V().GetString(apiAuthMdlUrlBase)))
+	if err != nil || result.StatusCode() != 200 {
+		// c.Abort()
+		// api.GenerateResponse(c, nil, message.MsgCodeCommon19002)
+		return nil, errors.New(result.String())
+	}
+
+	var u map[string]interface{}
+	err = json.Unmarshal(result.Body(), &u)
+	if err != nil {
+		return nil, err
+	}
+	return u, nil
+}
+
 func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 	value, ok := c.Get(keyTokenInfo)
 	if !ok {
@@ -288,7 +308,7 @@ func historyBody(useRefKey string, p *pagination.Pagination) interface{} {
 	}
 	if p != nil && useRefKey != "" {
 		body = map[string]interface{}{
-			"userKey": useRefKey,
+			"userKey":    useRefKey,
 			"isPaginate": p.IsPaginate,
 			"limit":      p.Limit,
 			"page":       p.Page,

@@ -3,13 +3,16 @@ package labour
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/go-resty/resty/v2"
 )
 
 const (
-	apiLabourMdlUrlBase         = "apis.internal.labour.module.url.base"
-	getAllUnsafeCasesForMyTasks = "%s/unsafe-cases/all/internal"
+	apiLabourMdlUrlBase          = "apis.internal.labour.module.url.base"
+	apiLabourWorkerMgtMdlUrlBase = "apis.internal.labour.workerMgt.module.url.base"
+	getAllUnsafeCasesForMyTasks  = "%s/unsafe-cases/all/internal"
+	getAllSimpleWorkerProfile    = "%s/workers/profile/simple/all"
 )
 
 func GetAllUnsafeCasesForMyTasks(tk string, criteria UnsafeCaseCriteria) ([]*UnsafeCase, error) {
@@ -37,4 +40,28 @@ func GetAllUnsafeCasesForMyTasks(tk string, criteria UnsafeCaseCriteria) ([]*Uns
 		return nil, err
 	}
 	return resp.Payload, err
+}
+
+func GetAllSimpleWorkerProfile(tk string, criteria WorkerSimpleProfileCriteria) ([]*WorkerSimpleProfile, error) {
+	resp := struct {
+		Payload struct {
+			Profiles []*WorkerSimpleProfile `json:"profiles"`
+		} `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).SetBody(criteria).Post(
+		fmt.Sprintf(getAllSimpleWorkerProfile, apis.V().GetString(apiLabourWorkerMgtMdlUrlBase)),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("[GetAllSimpleWorkerProfile]labour module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload.Profiles, err
 }
