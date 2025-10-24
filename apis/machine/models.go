@@ -98,14 +98,15 @@ type (
 	}
 	ICItem struct {
 		model.Model
-		InspectorName      *string                  `json:"inspectorName"`
-		InspectorPosition  *string                  `json:"inspectorPosition"`
-		InspectionDate     *time.Time               `json:"inspectionDate"`
-		InspectorSignature []byte                   `json:"inspectorSignature"`
-		InspectionResult   *string                  `json:"inspectionResult"`
-		MediaIds           string                   `json:"mediaIds"`
-		MediaItems         []model.SimpleMediaItems `json:"mediaItems" gorm:"-"`
-		ConfinedSpaceID    *intstring.IntString     `json:"confinedSpaceId"`
+		InspectorName         *string                  `json:"inspectorName"`
+		InspectorPosition     *string                  `json:"inspectorPosition"`
+		InspectionDate        *time.Time               `json:"inspectionDate"`
+		InspectorSignature    []byte                   `json:"inspectorSignature"`
+		InspectionResult      *string                  `json:"inspectionResult"`
+		MediaIds              string                   `json:"mediaIds"`
+		MediaItems            []model.SimpleMediaItems `json:"mediaItems" gorm:"-"`
+		InspectionResultItems []InspectionResultItem   `json:"InspectionResultItems" gorm:"-"`
+		ConfinedSpaceID       *intstring.IntString     `json:"confinedSpaceId"`
 	}
 
 	EXPermit struct {
@@ -619,5 +620,14 @@ type (
 		Signature       *string             `json:"signature"`
 		ConfinedSpaceId intstring.IntString `json:"confinedSpaceId"`
 		ExpiryDate      *string             `json:"expiryDate"`
+	}
+
+	InspectionResultItem struct {
+		Key      string                   `json:"key"`      // 项目标识符
+		LabelEn  string                   `json:"labelEn"`  // 英文标签
+		LabelZh  string                   `json:"labelZh"`  // 中文标签
+		Value    interface{}              `json:"value"`    // 值（可以是字符串或数字）
+		Img      []string                 `json:"img"`      // 图片UUIDs
+		ImgItems []model.SimpleMediaItems `json:"imgItems"` // 图片URLs
 	}
 )
