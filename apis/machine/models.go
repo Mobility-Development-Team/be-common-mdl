@@ -629,5 +629,6 @@ type (
 		Value    interface{}              `json:"value"`    // 值（可以是字符串或数字）
 		Img      []string                 `json:"img"`      // 图片UUIDs
 		ImgItems []model.SimpleMediaItems `json:"imgItems"` // 图片URLs
+		Unit     string                   `json:"unit"`     // 單位
 	}
 )
