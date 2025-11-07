@@ -91,8 +91,6 @@ type (
 		WorkPeriodFrom string              `json:"workPeriodFrom"`
 		WorkPeriodTo   string              `json:"workPeriodTo"`
 		NeedIcCheck    *int                `json:"needIcCheck"`
-		IcCheckResult  *int                `json:"icCheckResult"`
-		IcRemark       *string             `json:"icRemark"`
 		PermitMasterId intstring.IntString `json:"permitMasterId"`
 		ICItems        []ICItem            `json:"icItems"`
 	}
@@ -107,6 +105,9 @@ type (
 		MediaItems            []model.SimpleMediaItems `json:"mediaItems" gorm:"-"`
 		InspectionResultItems []InspectionResultItem   `json:"InspectionResultItems" gorm:"-"`
 		ConfinedSpaceID       *intstring.IntString     `json:"confinedSpaceId"`
+		ArpFollowUpRemark     *string                  `json:"arpFollowUpRemark"`
+		ArpFollowUpMediaIds   string                   `json:"arpFollowUpMediaIds"`
+		ArpFollowUpMediaItems []model.SimpleMediaItems `json:"arpFollowUpMediaItems" gorm:"-"`
 	}
 
 	EXPermit struct {
@@ -623,12 +624,21 @@ type (
 	}
 
 	InspectionResultItem struct {
+		TopicLabelEn  string                       `json:"topicLabelEn"`  // 主題英文標籤
+		TopicLabelZh  string                       `json:"topicLabelZh"`  // 主題中文標籤
+		ICCheckResult string                       `json:"icCheckResult"` // 檢查結果 (0 未處理 1 滿意 2 需要跟進)
+		Remark        string                       `json:"remark"`        // 備註
+		Items         []InspectionResultItemDetail `json:"items"`         // 檢查項目列表
+	}
+	InspectionResultItemDetail struct {
 		Key      string                   `json:"key"`      // 项目标识符
 		LabelEn  string                   `json:"labelEn"`  // 英文标签
 		LabelZh  string                   `json:"labelZh"`  // 中文标签
 		Value    interface{}              `json:"value"`    // 值（可以是字符串或数字）
 		Img      []string                 `json:"img"`      // 图片UUIDs
-		ImgItems []model.SimpleMediaItems `json:"imgItems"` // 图片URLs
+		ImgItems []model.SimpleMediaItems `json:"imgItems"` // 图片OBJECTS
 		Unit     string                   `json:"unit"`     // 單位
+		Seq      int                      `json:"seq"`      // 排序
+		Remark   string                   `json:"remark"`   // 備註
 	}
 )
