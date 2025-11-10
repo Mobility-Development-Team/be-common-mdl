@@ -103,7 +103,7 @@ type (
 		InspectionResult      *string                  `json:"inspectionResult"`
 		MediaIds              string                   `json:"mediaIds"`
 		MediaItems            []model.SimpleMediaItems `json:"mediaItems" gorm:"-"`
-		InspectionResultItems []InspectionResultItem   `json:"InspectionResultItems" gorm:"-"`
+		InspectionResultItems []InspectionResultItem   `json:"inspectionResultItems" gorm:"-"`
 		ConfinedSpaceID       *intstring.IntString     `json:"confinedSpaceId"`
 		ArpFollowUpRemark     *string                  `json:"arpFollowUpRemark"`
 		ArpFollowUpMediaIds   string                   `json:"arpFollowUpMediaIds"`
