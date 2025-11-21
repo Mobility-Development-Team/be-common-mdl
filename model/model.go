@@ -152,6 +152,7 @@ type (
 		FirebaseUrl          string              `json:"firebaseUrl"`
 		FirebaseUrlThumbnail string              `json:"firebaseUrlThumbnail"`
 		ContractId           string              `json:"contractId"`
+		MediaRefInfo         json.RawMessage     `json:"mediaRefInfo"`
 	}
 
 	UsersFirebaseToken struct {
@@ -364,6 +365,14 @@ func (mp *MediaParam) ShouldSetRefInfo(refType string, obj interface{}) *MediaPa
 func (mp MediaParam) ShouldGetRefInfo() (result genericjson.Object) {
 	if err := json.Unmarshal(mp.MediaRefInfo, &result); err != nil {
 		logger.Debugf("[MediaParam][ShouldGetRefInfo] No valid refInfo for media: %s (%s)", mp.Id, err.Error())
+	}
+	return result
+}
+
+// SimpleMediaItems
+func (smi SimpleMediaItems) ShouldGetRefInfo() (result genericjson.Object) {
+	if err := json.Unmarshal(smi.MediaRefInfo, &result); err != nil {
+		logger.Debugf("[SimpleMediaItems][ShouldGetRefInfo] No valid refInfo for media: %s (%s)", smi.Id, err.Error())
 	}
 	return result
 }
