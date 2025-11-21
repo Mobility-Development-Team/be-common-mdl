@@ -434,6 +434,13 @@ func (m *Model) ShouldAddSystemFields(c *gin.Context) {
 	// }
 }
 
+func (m *Model) ShouldUpsertSystemFields(c *gin.Context) {
+	m.ShouldAddUpdatedBy(c)
+	if m.Id == 0 {
+		m.ShouldAddCreatedBy(c)
+	}
+}
+
 // Attempts to parse and extract userRefKey from CreatedByDisplay and UpdatedByDisplay
 // and set to their corresponding fields. Useful after a json unmarshal during internal calls
 func (m *Model) ShouldAddSystemFieldsFromDisplay() *Model {
