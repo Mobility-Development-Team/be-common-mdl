@@ -240,6 +240,25 @@ type (
 		Media             []model.MediaParam  `json:"media"`
 	}
 
+	CDV2Permit struct {
+		Master                   MasterPermit        `json:"master"`
+		WorkLocation             string              `json:"workLocation"`             // 工作場地
+		WorkContent              string              `json:"workContent"`              // 工作內容
+		Contractor               string              `json:"contractor"`               // 承建商/東主
+		RiskAssessmentDate       *time.Time          `json:"riskAssessmentDate"`       // 危險評估報告日期
+		EntryCdSpaceDateFrom     *time.Time          `json:"entryCdSpaceDateFrom"`     // 進入密閉空間的開始時間
+		EntryCdSpaceDateTo       *time.Time          `json:"entryCdSpaceDateTo"`       // 進入密閉空間的結束時間
+		CertifiedWorkerHour      *uint8              `json:"certifiedWorkerHour"`      // 核准工人進入密閉空間內最長可逗留時間：小時
+		GasTestDate              *time.Time          `json:"gasTestDate"`              // 測試日期
+		GasDetectorModel         string              `json:"gasDetectorModel"`         // 氣體測試儀器型號
+		GasSerialNo              string              `json:"gasSerialNo"`              // 氣體測試儀器序列號
+		GasCalibrationExpiryDate *time.Time          `json:"gasCalibrationExpiryDate"` // 氣體測試儀器校準到期日期
+		PermitMasterId           intstring.IntString `json:"permitMasterId"`
+		DetectiveReports         []DetectiveReports  `json:"detectiveReports"`
+		Workers                  []DSDWorker         `json:"workers"`
+		Eligibles                []EigiblePersons    `json:"eligibles"`
+		Medias                   []model.MediaParam  `json:"media"`
+	}
 	PermitAppointment struct {
 		model.Model
 		ApptStatus      string              `json:"apptStatus"`
@@ -339,6 +358,9 @@ type (
 		ItemGrpNameZh         string                     `json:"itemGrpNameZh"`
 		IsMandatory           bool                       `json:"isMandatory"`
 		Remark                string                     `json:"remark"`
+		ItemLevel             *string                    `json:"itemLevel"`
+		ParentItemLevel       *string                    `json:"parentItemLevel"`
+		Children              []ChecklistItem            `json:"children"`
 		Media                 []model.MediaParam         `json:"media" gorm:"-"`
 		ChecklistSuppInfos    []ChecklistItemSupportInfo `json:"suppInfos"`
 	}

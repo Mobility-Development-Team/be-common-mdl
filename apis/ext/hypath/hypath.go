@@ -6,11 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net/http"
+	"strings"
+
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
-	"net/http"
-	"strings"
 )
 
 const (

@@ -3,10 +3,11 @@ package document
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 	logger "github.com/sirupsen/logrus"
-	"net/http"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -30,6 +31,7 @@ const (
 	generateEFReport         = "%s/documents/machine/permits/ef/report/generate"
 	generateLSReport         = "%s/documents/machine/permits/ls/report/generate"
 	generateCDReport         = "%s/documents/machine/permits/cd/report/generate"
+	generateCDV2Report       = "%s/documents/machine/permits/cdv2/report/generate"
 	generateDocReport        = "%s/reports/generate"
 )
 
@@ -164,6 +166,10 @@ func GenerateLSReport(tk string, permitMasterId intstring.IntString) (string, er
 
 func GenerateCDReport(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generateCDReport, permitMasterId, true)
+}
+
+func GenerateCDV2Report(tk string, permitMasterId intstring.IntString) (string, error) {
+	return generatePermitType(tk, generateCDV2Report, permitMasterId, true)
 }
 
 func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {

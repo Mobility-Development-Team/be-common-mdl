@@ -26,6 +26,7 @@ const (
 	getOneCSPermit                = "%s/permits/cs/%s"
 	getOneLSPermit                = "%s/permits/ls/%s"
 	getOneCDPermit                = "%s/permits/cd/%s"
+	getOneCDV2Permit              = "%s/permits/cdv2/%s"
 )
 
 func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
@@ -325,6 +326,25 @@ func GetOneCDPermit(tk string, permitMasterId intstring.IntString) (*CDPermit, e
 	}{}
 	client := resty.New()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCDPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetOneCDV2Permit(tk string, permitMasterId intstring.IntString) (*CDV2Permit, error) {
+	resp := struct {
+		Payload *CDV2Permit `json:"payload"`
+	}{}
+	client := resty.New()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCDV2Permit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
 	}
