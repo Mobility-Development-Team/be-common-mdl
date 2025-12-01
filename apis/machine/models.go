@@ -257,7 +257,7 @@ type (
 		DetectiveReports         []DetectiveReports  `json:"detectiveReports"`
 		Workers                  []DSDWorker         `json:"workers"`
 		Eligibles                []EigiblePersons    `json:"eligibles"`
-		Medias                   []model.MediaParam  `json:"media"`
+		Medias                   []model.MediaParam  `json:"medias"`
 	}
 	PermitAppointment struct {
 		model.Model
@@ -324,11 +324,15 @@ type (
 	}
 	Participant struct {
 		model.UserInfo
-		ParticipantType string               `json:"participantType"`
-		PartyRefId      *intstring.IntString `json:"partyRefId"`
-		UserSource      string               `json:"userSource"`
-		Party           *model.PartyInfo     `json:"party"`
-		SignatureB64    *string              `json:"signature,omitempty"`
+		ParticipantType        string               `json:"participantType"`
+		PartyRefId             *intstring.IntString `json:"partyRefId"`
+		UserSource             string               `json:"userSource"`
+		Party                  *model.PartyInfo     `json:"party"`
+		ParticipantDisplayName *string              `json:"participantDisplayName"`
+		ParticipantUserId      intstring.IntString  `json:"participantUserId"`
+		ParticipantUserRefKey  string               `json:"participantUserRefKey"`
+		ParticipantEmail       *string              `json:"participantEmail"`
+		SignatureB64           *string              `json:"signature,omitempty"`
 	}
 	PermitApproval struct {
 		model.Model
@@ -618,6 +622,7 @@ type (
 		WorkerCertNo               *string             `json:"workerCertNo"`
 		WorkerSitePassNo           *string             `json:"workerSitePassNo"`
 		WorkerSignature            *string             `json:"workerSignature"`
+		TrainingDate               *string             `json:"trainingDate"`
 		ConfinedSpaceId            intstring.IntString `json:"confinedSpaceId"`
 		WorkerCertExpiryDate       *string             `json:"workerCertExpiryDate"`
 		WorkerSitePassNoExpiryDate *string             `json:"workerSitePassNoExpiryDate"`
