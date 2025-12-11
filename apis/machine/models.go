@@ -361,6 +361,7 @@ type (
 		ItemGrpNameEn         string                     `json:"itemGrpNameEn"`
 		ItemGrpNameZh         string                     `json:"itemGrpNameZh"`
 		IsMandatory           bool                       `json:"isMandatory"`
+		IsFocus               bool                       `json:"isFocus"`
 		Remark                string                     `json:"remark"`
 		ItemLevel             *string                    `json:"itemLevel"`
 		ParentItemLevel       *string                    `json:"parentItemLevel"`
