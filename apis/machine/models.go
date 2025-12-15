@@ -137,6 +137,30 @@ type (
 		Applicant            *ApplicantDisplay `json:"applicant"`
 	}
 
+	ELV2Permit struct {
+		MasterPermit
+		CertExpiryDate       string                 `json:"certExpiryDate"`
+		WorkDurationFromDate string                 `json:"workDurationFromDate"`
+		WorkDurationFromTime string                 `json:"workDurationFromTime"`
+		WorkDurationToDate   string                 `json:"workDurationToDate"`
+		WorkDurationToTime   string                 `json:"workDurationToTime"`
+		WorkLocation         *string                `json:"workLocation"`
+		CraneType            *string                `json:"craneType"`
+		CraneTypeRemark      *string                `json:"craneTypeRemark"`
+		CraneSerialNo        *string                `json:"craneSerialNo"`
+		Applicant            *ApplicantDisplay      `json:"applicant"`
+		Weather              *string                `json:"weather"`
+		CheckMaxWeightKg     *float64               `json:"checkMaxWeightKg"`   // 預計最重物件的重量(於相對的吊重範圍)kg 公⽄
+		CheckMaxWeightM      *float64               `json:"checkMaxWeightM"`    // 預計最重物件的重量(於相對的吊重範圍)公尺/⽶
+		CheckMaxRadiusKg     *float64               `json:"checkMaxRadiusKg"`   // 最⼤吊重範圍(於相對預計物件的重量)kg 公⽄
+		CheckMaxRadiusM      *float64               `json:"checkMaxRadiusM"`    // 最⼤吊重範圍(於相對預計物件的重量)公尺/⽶
+		CheckConfirmWeight   *int                   `json:"checkConfirmWeight"` // 該吊重機已按裝配時,經証時是否預備吊該重量,0 no 1 yes
+		CheckedDate          *time.Time             `json:"checkedDate"`
+		LiftingWorkers       []PermitCommonWorker   `json:"liftingWorkers"`
+		LiftingEligibles     []PermitCommonEligible `json:"liftingEligibles"`
+		LiftingGears         []LiftingGear          `json:"liftingGears"`
+	}
+
 	EFPermit struct {
 		MasterPermit
 		LiftingWorkers        []EFLiftingWorker `json:"liftingWorkers"`
@@ -542,6 +566,29 @@ type (
 		OwnerId        *string             `json:"ownerId"`
 		CertExpiryDate *string             `json:"certExpiryDate"`
 		PermitLiftId   intstring.IntString `json:"permitLiftId"`
+	}
+
+	PermitCommonWorker struct {
+		model.Model
+		WorkerType           string     `json:"workerType"`
+		WorkerName           *string    `json:"workerName"`
+		WorkerCertNo         *string    `json:"workerCertNo"`
+		WorkerCertExpiryDate *time.Time `json:"workerCertExpiryDate"`
+		WorkerRiggerPhotoUrl *string    `json:"workerRiggerPhotoUrl"`
+		WorkerSignature      []byte     `json:"workerSignature"`
+		// PermitLiftId         intstring.IntString `json:"permitLiftId"`
+		PermitMasterId intstring.IntString `json:"permitMasterId"`
+	}
+	PermitCommonEligible struct {
+		model.Model
+		SubmitterType      string              `json:"submitterType"`
+		SubmitterName      string              `json:"submitterName"`
+		SubmittedAt        *time.Time          `json:"submittedAt"`
+		SubmitterPosition  string              `json:"submitterPosition"`
+		SubmitterSignature []byte              `json:"submitterSignature"`
+		Seq                intstring.IntString `json:"seq"`
+		HasVerifiedAbove   *bool               `json:"hasVerifiedAbove"`
+		PermitMasterId     intstring.IntString `json:"permitMasterId"`
 	}
 
 	EFLiftingGear struct {
