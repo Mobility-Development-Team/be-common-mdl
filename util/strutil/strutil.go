@@ -21,6 +21,14 @@ func StrOrEmpty(str *string) string {
 	return StrOrDefault(str, "")
 }
 
+// PtrOrDefault 返回指针指向的值，若指针为nil则返回默认值
+func PtrOrDefault[T any](ptr *T, defaultVal string) string {
+	if ptr != nil {
+		return fmt.Sprintf("%v", *ptr)
+	}
+	return defaultVal
+}
+
 // StrOrEmpty returns the string pointed by a string pointer str,
 // if str is nil, return defaultStr instead
 func StrOrDefault(str *string, defaultStr string) string {

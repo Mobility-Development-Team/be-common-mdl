@@ -563,6 +563,7 @@ type (
 		LgType         *string             `json:"lgType"`
 		LgTypeRemark   *string             `json:"lgTypeRemark"` // TODO to be removed
 		LgMark         *string             `json:"lgMark"`
+		LgSwl          *string             `json:"lgSwl"`
 		OwnerId        *string             `json:"ownerId"`
 		CertExpiryDate *string             `json:"certExpiryDate"`
 		PermitLiftId   intstring.IntString `json:"permitLiftId"`
@@ -575,7 +576,8 @@ type (
 		WorkerCertNo         *string    `json:"workerCertNo"`
 		WorkerCertExpiryDate *time.Time `json:"workerCertExpiryDate"`
 		WorkerRiggerPhotoUrl *string    `json:"workerRiggerPhotoUrl"`
-		WorkerSignature      []byte     `json:"workerSignature"`
+		WorkerSignature      *string    `json:"workerSignature"`
+		HasVerifiedAbove     *bool      `json:"hasVerifiedAbove"`
 		// PermitLiftId         intstring.IntString `json:"permitLiftId"`
 		PermitMasterId intstring.IntString `json:"permitMasterId"`
 	}
@@ -585,7 +587,7 @@ type (
 		SubmitterName      string              `json:"submitterName"`
 		SubmittedAt        *time.Time          `json:"submittedAt"`
 		SubmitterPosition  string              `json:"submitterPosition"`
-		SubmitterSignature []byte              `json:"submitterSignature"`
+		SubmitterSignature *string             `json:"submitterSignature"`
 		Seq                intstring.IntString `json:"seq"`
 		HasVerifiedAbove   *bool               `json:"hasVerifiedAbove"`
 		PermitMasterId     intstring.IntString `json:"permitMasterId"`
