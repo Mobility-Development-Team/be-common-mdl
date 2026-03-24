@@ -7,9 +7,9 @@ import (
 	"strconv"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
-	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -30,7 +30,7 @@ const (
 // Setting isSimple to ture skip preloading of some fields, setting it to false ensures the appointment is fully populated.
 // However, the nested fields inside the sitewalk object is never fully populated
 func FindUserPendingAppointments(tk string, userRefKey string, isSimple bool) ([]Appointment, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().
 		SetAuthToken(tk).
 		SetQueryParam("isSimple", strconv.FormatBool(isSimple)).
@@ -61,7 +61,7 @@ type GetAllTasksCriteria struct {
 }
 
 func GetSitePlanBySiteWalkId(tk string, siteWalkId intstring.IntString) (*SitePlanDisplay, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().
 		SetAuthToken(tk).
 		SetBody(map[string]interface{}{
@@ -91,7 +91,7 @@ func GetLatestFollowUpTasksByParentRefIds(tk string, taskParentRefIds ...intstri
 	if len(taskParentRefIds) == 0 {
 		return map[intstring.IntString]*FollowUpTaskDisplay{}, nil
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().
 		SetAuthToken(tk).
 		SetBody(map[string]interface{}{
@@ -123,7 +123,7 @@ func GetAllTasks(tk string, cri GetAllTasksCriteria) ([]TaskDisplay, error) {
 	if cri.SiteWalkId == nil && cri.ContractId == nil && cri.SearchType == "" {
 		return nil, errors.New("invalid parameters: no search constraint")
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().
 		SetAuthToken(tk).
 		SetBody(cri).
@@ -156,7 +156,7 @@ func GetSiteWalkDetail(tk string, siteWalkId intstring.IntString) (*SiteWalk, er
 	resp := struct {
 		Payload *SiteWalk `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getSiteWalkInfo, apis.V().GetString(apiInspectionMdlUrlBase), siteWalkId))
 	if err != nil {
 		return nil, err
@@ -175,7 +175,7 @@ func RegisterAttachment(tk string, attachment Attachment) (interface{}, error) {
 	resp := struct {
 		Payload interface{} `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).
 		SetBody(attachment).
 		Post(fmt.Sprintf(registerAttachment, apis.V().GetString(apiInspectionMdlUrlBase)))
@@ -196,7 +196,7 @@ func GetSiteWalkActivityLog(tk string, siteWalkId, checklistId *intstring.IntStr
 	resp := struct {
 		Payload []ActivityLog `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().
 		SetAuthToken(tk).
 		SetBody(struct {
@@ -226,7 +226,7 @@ func FindManyTaskByParentId(tk string, parentId, parentGroupId *intstring.IntStr
 	resp := struct {
 		Payload map[intstring.IntString]interface{} `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"parentId":      parentId,

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
@@ -62,7 +63,7 @@ func CreateWorkflow(tk string, action WorkFlowCreateParam) (*WorkflowView, error
 			Payload *WorkflowView `json:"payload"`
 		}
 	)
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		action,
 	).Post(fmt.Sprintf(createWorkflow, apis.V().GetString(apiWorkflowMdlUrlBase)))
@@ -86,7 +87,7 @@ func GetLatestWorkflowTask(tk, workflowUuid string) (*WorkflowView, error) {
 			Payload []WorkflowView `json:"payload"`
 		}
 	)
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string]string{
 		"workflowUuid": workflowUuid,
 	}).Post(fmt.Sprintf(getLatestWorkflow, apis.V().GetString(apiWorkflowMdlUrlBase)))
@@ -119,7 +120,8 @@ func SubmitWorkflowAction(tk string, actions []WorkflowActionParam) (map[string]
 		response.Response
 		Payload map[string][]ActionView `json:"payload"`
 	}
-	client := resty.New()
+	client := common.NewResty()
+
 	result, err := client.R().
 		SetAuthToken(tk).
 		SetBody(actions).

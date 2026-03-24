@@ -8,11 +8,11 @@ import (
 	"io"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
-	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -71,7 +71,7 @@ type CloneMediaParams struct {
 }
 
 func GetManySimpleMedia(tk string, body map[string]interface{}) ([]model.SimpleMediaItems, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getMediaManySimple, apis.V().GetString(apiMediaMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetManySimpleMedia]", "err:", err)
@@ -90,7 +90,7 @@ func GetManySimpleMedia(tk string, body map[string]interface{}) ([]model.SimpleM
 }
 
 func GetMedia(tk string, body map[string]interface{}) ([]model.MediaParam, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getMediaMany, apis.V().GetString(apiMediaMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetMedia]", "err:", err)
@@ -109,7 +109,7 @@ func GetMedia(tk string, body map[string]interface{}) ([]model.MediaParam, error
 }
 
 func GetUsersFirebaseToken(tk string, body map[string]string) (*model.UsersFirebaseToken, error) {
-	client := resty.New()
+	client := common.NewResty()
 	url := apis.V().GetString(apiMediaMdlUrlBase)
 	result, err := client.R().SetAuthToken(tk).SetQueryParams(body).Get(fmt.Sprintf(getNoAuthUsersFirebaseToken, url))
 	if err != nil {
@@ -129,7 +129,7 @@ func GetUsersFirebaseToken(tk string, body map[string]string) (*model.UsersFireb
 }
 
 func GetMediaByRefId(tk string, refId ...string) (map[string]model.MediaParam, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string][]string{
 		"ids": refId,
 	}).Post(fmt.Sprintf(getMediaManyByRefId, apis.V().GetString(apiMediaMdlUrlBase)))
@@ -150,7 +150,7 @@ func GetMediaByRefId(tk string, refId ...string) (map[string]model.MediaParam, e
 }
 
 func GetMediaBatches(tk string, batchId ...string) (map[string][]model.MediaParam, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string][]string{
 		"batchIds": batchId,
 	}).Post(fmt.Sprintf(getBatchMany, apis.V().GetString(apiMediaMdlUrlBase)))
@@ -315,7 +315,7 @@ func CloneMediaToBatch(tk string, batchId string, media []model.MediaParam, scop
 	if len(optOpts) > 0 {
 		opts = &optOpts[0]
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(struct {
 		BatchId string             `json:"batchId"`
 		Media   []model.MediaParam `json:"media"`
@@ -349,7 +349,7 @@ func (s Scope) AddTaskActionTypeRestriction(value string) Scope {
 }
 
 func UploadSitePlanPicture(tk string, fileName string, imgBytes []byte) (*string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetHeader("Content-Type", "multipart/form-data;charset=UTF-8").
 		SetFileReader("file", fileName, bytes.NewReader(imgBytes)).
 		Post(fmt.Sprintf(uploadSitePlanPicture, apis.V().GetString(apiMediaMdlUrlBase)))
@@ -371,7 +371,7 @@ func UploadSitePlanPicture(tk string, fileName string, imgBytes []byte) (*string
 // If publish mode is false  fileName will be used as file name instead
 // If publish mode is true, the fileName specified would be ignored by the media module
 func UploadReport(tk string, file io.Reader, reportType string, contractId intstring.IntString, fileName string, publish bool) (string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	var resp struct {
 		Payload string `json:"payload"`
 	}
@@ -404,7 +404,7 @@ func UploadReport(tk string, file io.Reader, reportType string, contractId intst
 
 // UploadFile Uploads permit reference doc
 func UploadFile(tk string, fileBytes []byte, fileName string, reportType string, contractId intstring.IntString) (string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	var resp struct {
 		Payload string `json:"payload"`
 	}
@@ -435,7 +435,7 @@ func GetFileKeys(tk string, urls []string) (map[string]string, error) {
 	resp := struct {
 		Payload map[string]string `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"urls": urls,

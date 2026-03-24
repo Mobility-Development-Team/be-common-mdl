@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
-	"github.com/go-resty/resty/v2"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 )
 
 const (
@@ -19,7 +19,7 @@ func GetAllUnsafeCasesForMyTasks(tk string, criteria UnsafeCaseCriteria) ([]*Uns
 	resp := struct {
 		Payload []*UnsafeCase `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"criteria": criteria,
@@ -48,7 +48,7 @@ func GetAllSimpleWorkerProfile(tk string, criteria WorkerSimpleProfileCriteria) 
 			Profiles []*WorkerSimpleProfile `json:"profiles"`
 		} `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(criteria).Post(
 		fmt.Sprintf(getAllSimpleWorkerProfile, apis.V().GetString(apiLabourWorkerMgtMdlUrlBase)),
 	)

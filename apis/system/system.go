@@ -6,11 +6,11 @@ import (
 	"fmt"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
-	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -34,7 +34,7 @@ func GetAllContracts(tk string, projectId *string, contractId ...intstring.IntSt
 			Id intstring.IntString `json:"id"`
 		} `json:"payload"`
 	}
-	client := resty.New()
+	client := common.NewResty()
 	req := map[string]interface{}{
 		"contractIds": append([]intstring.IntString{}, contractId...),
 	}
@@ -71,7 +71,7 @@ func GetOneContract(tk string, contractId intstring.IntString) (*model.Contract,
 			Payload *model.Contract `json:"payload"`
 		}
 	)
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneContract, apis.V().GetString(apiSystemMdlUrlBase), contractId))
 	if err != nil {
 		logger.Error("[GetOneContract]", "err:", err)
@@ -89,7 +89,7 @@ func GetManyPartiesById(tk string, ids ...intstring.IntString) ([]*model.PartyIn
 		response.Response
 		Payload []*model.PartyInfo `json:"payload"`
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"ids": ids,
@@ -113,7 +113,7 @@ func GetClientPartyByContractIds(tk string, contractIds []intstring.IntString) (
 		response.Response
 		Payload map[intstring.IntString]*ContractParty `json:"payload"`
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"contractIds": contractIds,
@@ -141,7 +141,7 @@ func GetContractUserByUids(tk string, contractId intstring.IntString, uids ...in
 		response.Response
 		Payload map[intstring.IntString]*partyInfoWithType `json:"payload"`
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"contractId": contractId,
@@ -163,7 +163,7 @@ func GetContractUserByUids(tk string, contractId intstring.IntString, uids ...in
 
 func GetLocations(tk string, body map[string]interface{}) (map[intstring.IntString]*model.Location, error) {
 	urlPath := getAllLocations + "?showAsMap=true"
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(urlPath, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
 		logger.Error("[GetLocations]", "err:", err)
@@ -213,7 +213,7 @@ func ShouldGetOneContract(tk string, contractId *intstring.IntString) model.Cont
 }
 
 func GetSupportInfo() (map[string]string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().Get(fmt.Sprintf(getSupportInfo, apis.V().GetString(apiSystemMdlUrlBase)))
 	if err != nil {
 		return nil, err
@@ -236,7 +236,7 @@ func GetContractParties(tk string, contractId intstring.IntString) (map[string]C
 	resp := struct {
 		Payload map[string]ContractParty `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getContractParties, apis.V().GetString(apiSystemMdlUrlBase), contractId))
 	if err != nil {
 		return nil, err

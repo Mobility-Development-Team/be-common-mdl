@@ -7,10 +7,10 @@ import (
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/apis/core"
 	"github.com/Mobility-Development-Team/be-common-mdl/apis/user"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -120,7 +120,7 @@ func CreateNotifications(tk string, notifications ...*Notification) error {
 }
 
 func createOneOrManyNotifications(tk string, body interface{}) error {
-	client := resty.New()
+	client := common.NewResty()
 	// Set retries (base on legor requiremnt since duplicate notifications)
 	// client.
 	// 	SetRetryCount(5).

@@ -60,7 +60,9 @@ func TestGetAllContracts(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetAllContracts(tk)
+			projectId := "1"
+			contractId := intstring.IntString(1)
+			got, err := GetAllContracts(tk, &projectId, contractId)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetAllContracts() error = %v, wantErr %v", err, tt.wantErr)
 				return

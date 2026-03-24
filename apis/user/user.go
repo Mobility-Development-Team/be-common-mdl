@@ -9,13 +9,13 @@ import (
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
 	"github.com/Mobility-Development-Team/be-common-mdl/apis/auth"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/model"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 	"github.com/Mobility-Development-Team/be-common-mdl/util/apiutil"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-resty/resty/v2"
 	logger "github.com/sirupsen/logrus"
 )
 
@@ -78,7 +78,7 @@ func GetCurrentUserInfoFromContext(c *gin.Context) (*model.UserInfo, error) {
 
 func GetAllUserInfoAsMap(tk string, body map[string]interface{}) (map[string]model.UserInfo, error) {
 	urlPath := getAllUserInfo + "?showAsMap=true"
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(urlPath, apis.V().GetString(apiUserMdlUrlBase)))
 	if err != nil {
 		return map[string]model.UserInfo{}, err
@@ -95,7 +95,7 @@ func GetAllUserInfoAsMap(tk string, body map[string]interface{}) (map[string]mod
 }
 
 func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.UserInfo, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getAllUserInfo, apis.V().GetString(apiUserMdlUrlBase)))
 	if err != nil {
 		return []model.UserInfo{}, err
@@ -115,7 +115,7 @@ func GetAllUserInfo(tk string, body map[string]interface{}) ([]model.UserInfo, e
 }
 
 func GetAllGroupInfo(tk string, body map[string]interface{}) ([]model.GroupInfo, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getAllGroupInfo, apis.V().GetString(apiUserMdlUrlBase)))
 	if err != nil {
 		return []model.GroupInfo{}, err
@@ -138,7 +138,7 @@ func GetUsersByIds(tk string, ids []intstring.IntString, userKeyRefs []string) (
 	if len(ids) == 0 && len(userKeyRefs) == 0 {
 		return []model.UserInfo{}, nil
 	}
-	client := resty.New()
+	client := common.NewResty()
 	body := map[string]interface{}{
 		"ids":         ids,
 		"userKeyRefs": userKeyRefs,
@@ -192,7 +192,7 @@ func GetUsersByGroupDetails(tk string, groupName *string, contractId, partyId *i
 	if nil == groupName || nil == contractId || nil == partyId {
 		return []model.UserInfo{}, nil // Nothing specified, returns nil user
 	}
-	client := resty.New()
+	client := common.NewResty()
 	body := map[string]interface{}{
 		"groupName":  groupName,
 		"contractId": contractId,
@@ -223,7 +223,7 @@ func GetUserSignatures(tk string, ids []intstring.IntString) (map[intstring.IntS
 	if len(ids) == 0 {
 		return map[intstring.IntString]string{}, nil
 	}
-	client := resty.New()
+	client := common.NewResty()
 	body := map[string]interface{}{
 		"ids": ids,
 	}

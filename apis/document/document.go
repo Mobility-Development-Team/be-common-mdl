@@ -6,10 +6,9 @@ import (
 	"net/http"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
 	logger "github.com/sirupsen/logrus"
-
-	"github.com/go-resty/resty/v2"
 )
 
 const (
@@ -49,7 +48,7 @@ func GenerateSiteWalkAdmin(tk string, siteWalkId intstring.IntString) (string, e
 }
 
 func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId intstring.IntString, contractId intstring.IntString) (string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	var resp struct {
 		Payload struct {
 			Url string `json:"url"`
@@ -88,7 +87,7 @@ func GenerateTaskFollowUpReport(tk string, params FollowUpReportInfo, taskId int
 }
 
 func generateReportSiteWalk(tk, apiPath string, id intstring.IntString, publish bool) (string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	var resp struct {
 		Payload struct {
 			Url string `json:"url"`
@@ -178,7 +177,7 @@ func GenerateCDV2Report(tk string, permitMasterId intstring.IntString) (string, 
 }
 
 func generatePermitType(tk string, apiPath string, permitMasterId intstring.IntString, publish bool) (string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	var resp struct {
 		Payload struct {
 			Url string `json:"url"`
@@ -213,7 +212,7 @@ func GenerateDocReport(tk string, reportId intstring.IntString) (string, error) 
 }
 
 func generateDoc(tk, apiPath string, reportId intstring.IntString, publish bool) (string, error) {
-	client := resty.New()
+	client := common.NewResty()
 	var resp struct {
 		Payload struct {
 			Url string `json:"url"`

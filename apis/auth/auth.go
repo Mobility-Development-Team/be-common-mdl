@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/model/pagination"
 	"github.com/Mobility-Development-Team/be-common-mdl/response"
 	"github.com/Mobility-Development-Team/be-common-mdl/util/apiutil"
@@ -114,7 +115,7 @@ func NewTokenVerifierInterceptor(invalidHeaderMsg, invalidTokenMsg response.Mess
 }
 
 func GetTokenInfo(c *gin.Context, tk string) (TokenInfoResp, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getTokenInfo, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil {
 		return TokenInfoResp{}, err
@@ -130,7 +131,7 @@ func GetTokenInfo(c *gin.Context, tk string) (TokenInfoResp, error) {
 }
 
 func CreateAuthUser(c *gin.Context, body map[string]interface{}) (*resty.Response, error) {
-	client := resty.New()
+	client := common.NewResty()
 	tk, _ := apiutil.ParseBearerAuth(c)
 	v, _ := apiutil.ParseCustAuthExt(c, "")
 	result, err := client.R().SetAuthToken(tk).SetHeader(apiutil.HeaderCustom, fmt.Sprintf("%s%s", apiutil.AuthHeaderPrefixBasic, v)).
@@ -144,7 +145,7 @@ func CreateAuthUser(c *gin.Context, body map[string]interface{}) (*resty.Respons
 }
 
 func CreateAuthUserV2(c *gin.Context, body map[string]interface{}) (map[string]interface{}, error) {
-	client := resty.New()
+	client := common.NewResty()
 	tk, _ := apiutil.ParseBearerAuth(c)
 	v, _ := apiutil.ParseCustAuthExt(c, "")
 	result, err := client.R().SetAuthToken(tk).SetHeader(apiutil.HeaderCustom, fmt.Sprintf("%s%s", apiutil.AuthHeaderPrefixBasic, v)).
@@ -176,7 +177,7 @@ func GetTokenInfoFromContext(c *gin.Context) (TokenInfoResp, error) {
 }
 
 func ValidateEMatToken(c *gin.Context, tk string) (*ValidateEmatTokenResp, error) {
-	client := resty.New()
+	client := common.NewResty()
 	url := strings.TrimSpace(fmt.Sprintf(validateEmatTokenWithTk, apis.V().GetString(apiAuthMdlUrlBase)))
 	result, err := client.R().SetHeaders(map[string]string{
 		AuthHeaderCust: fmt.Sprintf("%s %s", AuthorizationBearer, tk),
@@ -208,7 +209,7 @@ func parseCustomAuthHeader(c *gin.Context, prefix string) (string, bool) {
 }
 
 func FindAuthUserIdentities(tk string, body map[string]interface{}) (AuthUserMaster, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(findIdentitiesByUserKey, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return AuthUserMaster{}, errors.New(result.String())
@@ -220,7 +221,7 @@ func FindAuthUserIdentities(tk string, body map[string]interface{}) (AuthUserMas
 }
 
 func ValidateExternalByIdentity(tk, phoneNo, email string) (*ValidateExternalResp, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
 		"phoneNo": phoneNo,
 		"email":   email,
@@ -239,7 +240,7 @@ func ValidateExternalByIdentity(tk, phoneNo, email string) (*ValidateExternalRes
 }
 
 func LinkUserWithOneIdentity(tk string, body map[string]interface{}) error {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Patch(fmt.Sprintf(linkUserWithIdentity, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return errors.New(result.String())
@@ -248,7 +249,7 @@ func LinkUserWithOneIdentity(tk string, body map[string]interface{}) error {
 }
 
 func UnlinkUserWithOneIdentity(tk string, body map[string]interface{}) error {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Patch(fmt.Sprintf(unlinkUserWithIdentity, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return errors.New(result.String())
@@ -257,7 +258,7 @@ func UnlinkUserWithOneIdentity(tk string, body map[string]interface{}) error {
 }
 
 func ResetUserIdentityCredential(tk string, body map[string]interface{}) error {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Patch(fmt.Sprintf(resetUserIdentityCredential, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return errors.New(result.String())
@@ -279,7 +280,7 @@ func UpdateAuthUserLockStatus(tk string, userRefKey string, lock bool, isActive 
 			"isActive": isActive,
 		}
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(updateAuthUserlockStatus, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return errors.New(result.String())
@@ -291,7 +292,7 @@ func UpdateAuthUserDeviceRegisterAttempt(tk string, userRefKey string) error {
 	body := map[string]interface{}{
 		"userKey": userRefKey,
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(updateDeviceIdRegisterAttempt, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return errors.New(result.String())
@@ -318,7 +319,7 @@ func historyBody(useRefKey string, p *pagination.Pagination) interface{} {
 }
 
 func FindAllUserLoginHistory(tk string, userRefKey string, p *pagination.Pagination) (interface{}, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(historyBody(userRefKey, p)).Post(fmt.Sprintf(findAllLoginHistory, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return nil, errors.New(result.String())
@@ -335,7 +336,7 @@ func FindAllUserLoginHistory(tk string, userRefKey string, p *pagination.Paginat
 }
 
 func GetAuthStatusByUserRefKeys(tk string, userRefKeys []string) (map[string]*AuthUserMaster, error) {
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(map[string]interface{}{
 		"userRefKeys": userRefKeys,
 	}).Post(fmt.Sprintf(getManyUserLockInfo, apis.V().GetString(apiAuthMdlUrlBase)))
@@ -356,7 +357,7 @@ func UpdateInactiveAcc(tk string, userRefKey []string) (interface{}, error) {
 	body := map[string]interface{}{
 		"userRefKey": userRefKey,
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(body).Post(fmt.Sprintf(getUserInactive, apis.V().GetString(apiAuthMdlUrlBase)))
 	if err != nil || result.StatusCode() != 200 {
 		return nil, errors.New(result.String())

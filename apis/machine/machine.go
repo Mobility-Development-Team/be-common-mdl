@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/Mobility-Development-Team/be-common-mdl/apis"
+	"github.com/Mobility-Development-Team/be-common-mdl/common"
 	"github.com/Mobility-Development-Team/be-common-mdl/types/intstring"
-	"github.com/go-resty/resty/v2"
 )
 
 const (
@@ -38,7 +38,7 @@ func GetOneLA(tk string, criteria LA, isSimple bool) (*LA, error) {
 	if isSimple {
 		uri += "?isSimple=true"
 	}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(criteria).Post(fmt.Sprintf(uri, apis.V().GetString(apiMachineMdlUrlBase)))
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func GetOnePlantPermit(tk string, permitMasterId intstring.IntString) (*PlantPer
 	resp := struct {
 		Payload *PlantPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOnePlantPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func GetOneNCAPermit(tk string, permitMasterId intstring.IntString) (*NCAPermit,
 	resp := struct {
 		Payload *NCAPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneNCAPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -95,7 +95,7 @@ func GetAllPermits(tk string, userRefKey string, criteria PermitCriteria, opt Ge
 	resp := struct {
 		Payload []*MasterPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"criteria": criteria,
@@ -122,7 +122,7 @@ func GetOneHotworkPermit(tk string, permitMasterId intstring.IntString) (*Hotwor
 	resp := struct {
 		Payload *HotworkPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneHotworkPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -141,7 +141,7 @@ func GetOnePermitToDig(tk string, permitMasterId intstring.IntString) (*EXPermit
 	resp := struct {
 		Payload *EXPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneEXPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -160,7 +160,7 @@ func GetOneELPermit(tk string, permitMasterId intstring.IntString) (*ELPermit, e
 	resp := struct {
 		Payload *ELPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneELPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -179,7 +179,7 @@ func GetOneELV2Permit(tk string, permitMasterId intstring.IntString) (*ELV2Permi
 	resp := struct {
 		Payload *ELV2Permit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneELV2Permit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -198,7 +198,7 @@ func GetOnePITChecklist(tk string, permitMasterId intstring.IntString) (*PITChec
 	resp := struct {
 		Payload *PITChecklist `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getPITChecklist, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -218,7 +218,7 @@ func GetOneCSPermit(tk string, permitMasterId intstring.IntString) (*ConfinedSpa
 	resp := struct {
 		Payload *ConfinedSpacePermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCSPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -237,7 +237,7 @@ func GetOneLSPermit(tk string, permitMasterId intstring.IntString) (*LSPermit, e
 	resp := struct {
 		Payload *LSPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneLSPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -256,7 +256,7 @@ func GetOneTaskRelatedPITChecklist(tk string, parentGroupId, parentId intstring.
 	resp := struct {
 		Payload interface{} `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"parentId": parentId,
@@ -281,7 +281,7 @@ func GetAllAppointmentsForMyTask(tk string, criteria PermitApptCriteria) ([]Perm
 	resp := struct {
 		Payload []PermitAppointment `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).SetBody(
 		map[string]interface{}{
 			"criteria": criteria,
@@ -306,7 +306,7 @@ func GetOneLDPermit(tk string, permitMasterId intstring.IntString) (*LDPermit, e
 	resp := struct {
 		Payload *LDPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneLadderPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -325,7 +325,7 @@ func GetOneEFPermit(tk string, permitMasterId intstring.IntString) (*EFPermit, e
 	resp := struct {
 		Payload *EFPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneEFPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -344,7 +344,7 @@ func GetOneCDPermit(tk string, permitMasterId intstring.IntString) (*CDPermit, e
 	resp := struct {
 		Payload *CDPermit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCDPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
@@ -363,7 +363,7 @@ func GetOneCDV2Permit(tk string, permitMasterId intstring.IntString) (*CDV2Permi
 	resp := struct {
 		Payload *CDV2Permit `json:"payload"`
 	}{}
-	client := resty.New()
+	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneCDV2Permit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
