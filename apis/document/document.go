@@ -24,6 +24,7 @@ const (
 	generateEXReport         = "%s/documents/machine/permits/ex/report/generate"
 	generateELReport         = "%s/documents/machine/permits/el/report/generate"
 	generateELV2Report       = "%s/documents/machine/permits/elv2/report/generate"
+	generateEL1090Report     = "%s/documents/machine/permits/el1090/report/generate"
 	generatePCReport         = "%s/documents/machine/permits/pc/report/generate"
 	generatePCCertificate    = "%s/documents/machine/permits/pc/cert/generate"
 	generateCSReport         = "%s/documents/machine/permits/cs/report/generate"
@@ -146,6 +147,10 @@ func GenerateELReport(tk string, permitMasterId intstring.IntString) (string, er
 
 func GenerateELV2Report(tk string, permitMasterId intstring.IntString) (string, error) {
 	return generatePermitType(tk, generateELV2Report, permitMasterId, true)
+}
+
+func GenerateEL1090Report(tk string, permitMasterId intstring.IntString) (string, error) {
+	return generatePermitType(tk, generateEL1090Report, permitMasterId, true)
 }
 
 func GeneratePCReport(tk string, permitMasterId intstring.IntString) (string, error) {

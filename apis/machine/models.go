@@ -558,6 +558,52 @@ type (
 		PermitLiftId         intstring.IntString `json:"permitLiftId"`
 	}
 
+	EL1090Permit struct {
+		MasterPermit
+		CertExpiryDate       string              `json:"certExpiryDate"`
+		WorkDurationFromDate string              `json:"workDurationFromDate"`
+		WorkDurationFromTime string              `json:"workDurationFromTime"`
+		WorkDurationToDate   string              `json:"workDurationToDate"`
+		WorkDurationToTime   string              `json:"workDurationToTime"`
+		WorkLocation         *string             `json:"workLocation"`
+		CraneType            *string             `json:"craneType"`
+		CraneTypeRemark      *string             `json:"craneTypeRemark"`
+		CraneSerialNo        *string             `json:"craneSerialNo"`
+		Applicant            *ApplicantDisplay   `json:"applicant"`
+		LiftingWorkers       []EL1090LiftingWorker `json:"liftingWorkers"`
+		LiftingGears         []EL1090LiftingGear   `json:"liftingGears"`
+		Materials            []EL1090Material      `json:"materials"`
+	}
+	EL1090LiftingWorker struct {
+		model.Model
+		WorkerType           string              `json:"workerType"`
+		WorkerName           *string             `json:"workerName"`
+		WorkerCertNo         *string             `json:"workerCertNo"`
+		WorkerCertExpiryDate *string             `json:"workerCertExpiryDate"`
+		WorkerRiggerPhotoUrl *string             `json:"workerRiggerPhotoUrl"`
+		PermitLiftId         intstring.IntString `json:"permitLiftId"`
+	}
+	EL1090LiftingGear struct {
+		model.Model
+		LgType         *string             `json:"lgType"`
+		LgTypeRemark   *string             `json:"lgTypeRemark"`
+		LgMark         *string             `json:"lgMark"`
+		LgSwl          *float64            `json:"lgSwl"`
+		LgRadiusM      *float64            `json:"lgRadiusM"`
+		LgCapacityT    *float64            `json:"lgCapacityT"`
+		CertExpiryDate *string             `json:"certExpiryDate"`
+		PermitLiftId   intstring.IntString `json:"permitLiftId"`
+	}
+	EL1090Material struct {
+		model.Model
+		MaterialType string              `json:"materialType"`
+		IsSelected   bool                `json:"isSelected"`
+		MaxWeightT   *float64            `json:"maxWeightT"`
+		Description  *string             `json:"description"`
+		Seq          int                 `json:"seq"`
+		PermitLiftId intstring.IntString `json:"permitLiftId"`
+	}
+
 	LiftingGear struct {
 		model.Model
 		LgType         *string             `json:"lgType"`

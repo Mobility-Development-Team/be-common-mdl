@@ -18,6 +18,7 @@ const (
 	getOneEXPermit                = "%s/permits/ex/%s"
 	getOneELPermit                = "%s/permits/el/%s"
 	getOneELV2Permit              = "%s/permits/elv2/%s"
+	getOneEL1090Permit            = "%s/permits/el1090/%s"
 	getOneEFPermit                = "%s/permits/ef/%s"
 	getOneLA                      = "%s/plant/equip/LA/detail"
 	getAllPermits                 = "%s/permits/internal/all"
@@ -308,6 +309,25 @@ func GetOneLDPermit(tk string, permitMasterId intstring.IntString) (*LDPermit, e
 	}{}
 	client := common.NewResty()
 	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneLadderPermit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
+	if err != nil {
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("machine module returned status code: %d", result.StatusCode())
+	}
+	err = json.Unmarshal(result.Body(), &resp)
+	if err != nil {
+		return nil, err
+	}
+	return resp.Payload, err
+}
+
+func GetOneEL1090Permit(tk string, permitMasterId intstring.IntString) (*EL1090Permit, error) {
+	resp := struct {
+		Payload *EL1090Permit `json:"payload"`
+	}{}
+	client := common.NewResty()
+	result, err := client.R().SetAuthToken(tk).Get(fmt.Sprintf(getOneEL1090Permit, apis.V().GetString(apiMachineMdlUrlBase), permitMasterId))
 	if err != nil {
 		return nil, err
 	}
