@@ -560,19 +560,23 @@ type (
 
 	EL1090Permit struct {
 		MasterPermit
-		CertExpiryDate       string              `json:"certExpiryDate"`
-		WorkDurationFromDate string              `json:"workDurationFromDate"`
-		WorkDurationFromTime string              `json:"workDurationFromTime"`
-		WorkDurationToDate   string              `json:"workDurationToDate"`
-		WorkDurationToTime   string              `json:"workDurationToTime"`
-		WorkLocation         *string             `json:"workLocation"`
-		CraneType            *string             `json:"craneType"`
-		CraneTypeRemark      *string             `json:"craneTypeRemark"`
-		CraneSerialNo        *string             `json:"craneSerialNo"`
-		Applicant            *ApplicantDisplay   `json:"applicant"`
+		CertExpiryDate       string                `json:"certExpiryDate"`
+		WorkDurationFromDate string                `json:"workDurationFromDate"`
+		WorkDurationFromTime string                `json:"workDurationFromTime"`
+		WorkDurationToDate   string                `json:"workDurationToDate"`
+		WorkDurationToTime   string                `json:"workDurationToTime"`
+		WorkLocation         *string               `json:"workLocation"`
+		CraneType            *string               `json:"craneType"`
+		CraneTypeRemark      *string               `json:"craneTypeRemark"`
+		CraneSerialNo        *string               `json:"craneSerialNo"`
+		SwlRadiusT           *string               `json:"swlRadiusT"`
+		SwlRadius2T          *string               `json:"swlRadius2T"`
+		SwlCapacityM         *string               `json:"swlCapacityM"`
+		SwlCapacity2M        *string               `json:"swlCapacity2M"`
+		Applicant            *ApplicantDisplay     `json:"applicant"`
 		LiftingWorkers       []EL1090LiftingWorker `json:"liftingWorkers"`
 		LiftingGears         []EL1090LiftingGear   `json:"liftingGears"`
-		Materials            []EL1090Material      `json:"materials"`
+		// materials handled via checklist template
 	}
 	EL1090LiftingWorker struct {
 		model.Model
@@ -594,15 +598,7 @@ type (
 		CertExpiryDate *string             `json:"certExpiryDate"`
 		PermitLiftId   intstring.IntString `json:"permitLiftId"`
 	}
-	EL1090Material struct {
-		model.Model
-		MaterialType string              `json:"materialType"`
-		IsSelected   bool                `json:"isSelected"`
-		MaxWeightT   *float64            `json:"maxWeightT"`
-		Description  *string             `json:"description"`
-		Seq          int                 `json:"seq"`
-		PermitLiftId intstring.IntString `json:"permitLiftId"`
-	}
+	// EL1090 materials handled via checklist template
 
 	LiftingGear struct {
 		model.Model
