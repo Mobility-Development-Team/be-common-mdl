@@ -45,6 +45,7 @@ const (
 	ReportTypeHotworkPermitReport = "hwPermitReport"
 	ReportTypeEXPermitReport      = "exPermitReport"
 	ReportTypeELPermitReport      = "elPermitReport"
+	ReportTypeEL1090PermitReport  = "el1090PermitReport"
 	ReportTypePCPermitCert        = "pcPermitCert"
 	ReportTypePCPermitReport      = "pcPermitReport"
 	ReportTypeCSPermitReport      = "csPermitReport"
