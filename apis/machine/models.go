@@ -374,6 +374,8 @@ type (
 		Response              string                     `json:"response"`
 		ItemNameEn            string                     `json:"itemNameEn"`
 		ItemNameZh            string                     `json:"itemNameZh"`
+		IsAugmentField        bool                       `json:"isAugmentField"`
+		AugmentName           *string                    `json:"augmentName"`
 		ResponsedBy           intstring.IntString        `json:"responsedBy"`
 		TemplateItemRefId     intstring.IntString        `json:"templateItemRefId"`
 		PermitChecklistId     intstring.IntString        `json:"permitChecklistId"`
@@ -569,10 +571,10 @@ type (
 		CraneType            *string               `json:"craneType"`
 		CraneTypeRemark      *string               `json:"craneTypeRemark"`
 		CraneSerialNo        *string               `json:"craneSerialNo"`
-		SwlRadiusT           *string               `json:"swlRadiusT"`
-		SwlRadius2T          *string               `json:"swlRadius2T"`
-		SwlCapacityM         *string               `json:"swlCapacityM"`
-		SwlCapacity2M        *string               `json:"swlCapacity2M"`
+		SwlRadius            *string               `json:"swlRadius"`
+		SwlRadius2           *string               `json:"swlRadius2"`
+		SwlCapacity          *string               `json:"swlCapacity"`
+		SwlCapacity2         *string               `json:"swlCapacity2"`
 		Applicant            *ApplicantDisplay     `json:"applicant"`
 		LiftingWorkers       []EL1090LiftingWorker `json:"liftingWorkers"`
 		LiftingGears         []EL1090LiftingGear   `json:"liftingGears"`
