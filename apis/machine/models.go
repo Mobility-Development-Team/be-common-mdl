@@ -591,14 +591,15 @@ type (
 	}
 	EL1090LiftingGear struct {
 		model.Model
-		LgType         *string             `json:"lgType"`
-		LgTypeRemark   *string             `json:"lgTypeRemark"`
-		LgMark         *string             `json:"lgMark"`
-		LgSwl          *float64            `json:"lgSwl"`
-		LgRadiusM      *float64            `json:"lgRadiusM"`
-		LgCapacityT    *float64            `json:"lgCapacityT"`
-		CertExpiryDate *string             `json:"certExpiryDate"`
-		PermitLiftId   intstring.IntString `json:"permitLiftId"`
+		LgType          *string             `json:"lgType"`
+		LgTypeRemark    *string             `json:"lgTypeRemark"`
+		LgMark          *string             `json:"lgMark"`
+		LgSwl           *float64            `json:"lgSwl"`
+		LgRadiusM       *float64            `json:"lgRadiusM"`
+		LgCapacityT     *float64            `json:"lgCapacityT"`
+		SafeWorkingLoad *float64            `json:"safeWorkingLoad"`
+		CertExpiryDate  *string             `json:"certExpiryDate"`
+		PermitLiftId    intstring.IntString `json:"permitLiftId"`
 	}
 	// EL1090 materials handled via checklist template
 
