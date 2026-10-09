@@ -206,6 +206,7 @@ type (
 		Status           string   `json:"status" gorm:"default:ACTIVE"`
 		ProjectIdRef     string   `json:"projectIdRef" gorm:"<-:create"`
 		DashboardUrl     *string  `json:"dashboardUrl"`
+		ContractLogo     *string  `json:"contractLogo"`
 	}
 
 	CorePartyInfo struct {
