@@ -207,6 +207,11 @@ type (
 		ProjectIdRef     string   `json:"projectIdRef" gorm:"<-:create"`
 		DashboardUrl     *string  `json:"dashboardUrl"`
 		ContractLogo     *string  `json:"contractLogo"`
+
+		PermitExpiryAlertEnabled   string  `json:"permitExpiryAlertEnabled"`
+		PermitExpiryAlertEmails    *string `json:"permitExpiryAlertEmails"`
+		PermitExpiryAlertStartTime *string `json:"permitExpiryAlertStartTime"`
+		PermitExpiryAlertEndTime   *string `json:"permitExpiryAlertEndTime"`
 	}
 
 	CorePartyInfo struct {
