@@ -214,6 +214,28 @@ type (
 		PermitExpiryAlertEndTime   *string `json:"permitExpiryAlertEndTime"`
 	}
 
+	// SimpleContract is the flat contract payload returned by the simple
+	// contract endpoint. It intentionally avoids embedding Model more than
+	// once so the id is unambiguous.
+	SimpleContract struct {
+		Id                         intstring.IntString `json:"id" gorm:"column:id"`
+		ContractNo                 string              `json:"contractNo" gorm:"column:contract_no"`
+		ContractDesc               *string             `json:"contractDesc" gorm:"column:contract_desc"`
+		Address                    *string             `json:"address" gorm:"column:address"`
+		AddressLatitude            *float64            `json:"addressLatitude" gorm:"column:address_latitude"`
+		AddressLongitude           *float64            `json:"addressLongitude" gorm:"column:address_longitude"`
+		BusinessUnit               *string             `json:"businessUnit" gorm:"column:business_unit"`
+		Status                     string              `json:"status" gorm:"column:status"`
+		ProjectIdRef               string              `json:"projectIdRef" gorm:"column:project_id_ref"`
+		DashboardUrl               *string             `json:"dashboardUrl" gorm:"column:dashboard_url"`
+		ContractLogo               *string             `json:"contractLogo" gorm:"column:contract_logo"`
+		IsExtraSend                string              `json:"isExtraSend" gorm:"column:is_extra_send"`
+		PermitExpiryAlertEnabled   string              `json:"permitExpiryAlertEnabled" gorm:"column:permit_expiry_alert_enabled"`
+		PermitExpiryAlertEmails    *string             `json:"permitExpiryAlertEmails" gorm:"column:permit_expiry_alert_emails"`
+		PermitExpiryAlertStartTime *string             `json:"permitExpiryAlertStartTime" gorm:"column:permit_expiry_alert_start_time"`
+		PermitExpiryAlertEndTime   *string             `json:"permitExpiryAlertEndTime" gorm:"column:permit_expiry_alert_end_time"`
+	}
+
 	CorePartyInfo struct {
 		Model
 		Id            intstring.IntString `json:"id"`

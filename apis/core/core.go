@@ -27,6 +27,7 @@ const (
 	getAllUserInfo          = "%s/users/all"
 	getOneContract          = "%s/contracts/%s"
 	getAllContracts         = "%s/contracts/all"
+	getAllSimpleContracts   = "%s/contracts/simple/all"
 	getManyContractMapUsers = "%s/contracts/users/map"
 	getContractIdsUserMap   = "%s/contracts/users/map/contractIds"
 	getSupportInfo          = "%s/support/info"
@@ -229,6 +230,37 @@ func GetAllContracts(tk string, projectId *string, contractIds ...intstring.IntS
 		})
 	}
 	return output, nil
+}
+
+// GetAllSimpleContracts returns the flat contract payload used by background
+// jobs. Unlike GetAllContracts it does not join views or preload parties, so
+// the contract id is always present and no unrelated fields are returned.
+func GetAllSimpleContracts(tk string, contractIds ...intstring.IntString) ([]model.SimpleContract, error) {
+	var resp struct {
+		response.Response
+		Payload struct {
+			Contracts  []model.SimpleContract `json:"contracts"`
+			TotalCount int                    `json:"totalCount"`
+		} `json:"payload"`
+	}
+	client := common.NewResty()
+	req := map[string]interface{}{
+		"contractIds": contractIds,
+	}
+	result, err := client.R().SetAuthToken(tk).SetBody(req).Post(
+		fmt.Sprintf(getAllSimpleContracts, apis.V().GetString(apiCoreMdlUrlBase)),
+	)
+	if err != nil {
+		logger.Error("[GetAllSimpleContracts] err: ", err)
+		return nil, err
+	}
+	if !result.IsSuccess() {
+		return nil, fmt.Errorf("core module returned status code: %d", result.StatusCode())
+	}
+	if err = json.Unmarshal(result.Body(), &resp); err != nil {
+		return nil, err
+	}
+	return resp.Payload.Contracts, nil
 }
 
 func GetManyContractMapUsers(tk string, req map[string]interface{}) ([]model.ContractToUserDetailMap, error) {
