@@ -234,8 +234,14 @@ func GetAllContracts(tk string, projectId *string, contractIds ...intstring.IntS
 
 // GetAllSimpleContracts returns the flat contract payload used by background
 // jobs. Unlike GetAllContracts it does not join views or preload parties, so
-// the contract id is always present and no unrelated fields are returned.
-func GetAllSimpleContracts(tk string, contractIds ...intstring.IntString) ([]model.SimpleContract, error) {
+// the contract id is always present and no unrelated fields are returned. An
+// empty permitExpiryAlertEnabled value disables the alert-state filter, while
+// an empty contractIds list returns every matching contract.
+func GetAllSimpleContracts(tk string, permitExpiryAlertEnabled string, contractIds ...intstring.IntString) ([]model.SimpleContract, error) {
+	return getSimpleContracts(tk, permitExpiryAlertEnabled, contractIds...)
+}
+
+func getSimpleContracts(tk, permitExpiryAlertEnabled string, contractIds ...intstring.IntString) ([]model.SimpleContract, error) {
 	var resp struct {
 		response.Response
 		Payload struct {
@@ -246,6 +252,9 @@ func GetAllSimpleContracts(tk string, contractIds ...intstring.IntString) ([]mod
 	client := common.NewResty()
 	req := map[string]interface{}{
 		"contractIds": contractIds,
+	}
+	if permitExpiryAlertEnabled != "" {
+		req["permitExpiryAlertEnabled"] = permitExpiryAlertEnabled
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(req).Post(
 		fmt.Sprintf(getAllSimpleContracts, apis.V().GetString(apiCoreMdlUrlBase)),

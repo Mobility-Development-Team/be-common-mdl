@@ -16,6 +16,12 @@ import (
 	"gorm.io/gorm"
 )
 
+// Values stored in tbl_contract.permit_expiry_alert_enabled.
+const (
+	PermitExpiryAlertEnabledOn  = "on"
+	PermitExpiryAlertEnabledOff = "off"
+)
+
 type (
 	Model struct {
 		Id               intstring.IntString `gorm:"primaryKey" json:"id,omitempty"`
