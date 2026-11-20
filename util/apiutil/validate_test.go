@@ -55,6 +55,34 @@ func TestSummarizeValidationErrors(t *testing.T) {
 	}
 }
 
+type optionalPointerReq struct {
+	Name   string  `json:"name" binding:"required"`
+	Option *string `json:"option" binding:"omitempty,max=5"`
+}
+
+// TestOptionalPointerSkippedWhenNotSent locks in the validator behaviour that
+// optional pointer fields must use the omitempty prefix: without it a nil
+// pointer fails the "max" rule even though the client never sent the field.
+func TestOptionalPointerSkippedWhenNotSent(t *testing.T) {
+	v := validator.New()
+	v.SetTagName("binding")
+
+	// Not sent -> stays nil -> no failure.
+	if err := v.Struct(optionalPointerReq{Name: "n"}); err != nil {
+		t.Errorf("nil optional pointer should be skipped: %v", err)
+	}
+	// Sent as empty string -> passes max.
+	empty := ""
+	if err := v.Struct(optionalPointerReq{Name: "n", Option: &empty}); err != nil {
+		t.Errorf("empty string should pass omitempty,max: %v", err)
+	}
+	// Sent too long -> fails max.
+	long := "abcdef"
+	if err := v.Struct(optionalPointerReq{Name: "n", Option: &long}); err == nil {
+		t.Error("expected the 6-character value to fail max=5")
+	}
+}
+
 type bindSampleEmbedded struct {
 	Inner string `json:"inner" binding:"required"`
 }
