@@ -238,10 +238,18 @@ func GetAllContracts(tk string, projectId *string, contractIds ...intstring.IntS
 // empty permitExpiryAlertEnabled value disables the alert-state filter, while
 // an empty contractIds list returns every matching contract.
 func GetAllSimpleContracts(tk string, permitExpiryAlertEnabled string, contractIds ...intstring.IntString) ([]model.SimpleContract, error) {
-	return getSimpleContracts(tk, permitExpiryAlertEnabled, contractIds...)
+	return getSimpleContracts(tk, permitExpiryAlertEnabled, nil, contractIds...)
 }
 
-func getSimpleContracts(tk, permitExpiryAlertEnabled string, contractIds ...intstring.IntString) ([]model.SimpleContract, error) {
+// GetAllSimpleContractsByProjectRefs returns the flat contract payload of the
+// contracts whose project_id_ref matches any of the given project codes. It
+// is the project-code lookup for background jobs that are configured per
+// project (e.g. the HSK CDE permit push).
+func GetAllSimpleContractsByProjectRefs(tk string, projectIdRefs []string) ([]model.SimpleContract, error) {
+	return getSimpleContracts(tk, "", projectIdRefs)
+}
+
+func getSimpleContracts(tk, permitExpiryAlertEnabled string, projectIdRefs []string, contractIds ...intstring.IntString) ([]model.SimpleContract, error) {
 	var resp struct {
 		response.Response
 		Payload struct {
@@ -255,6 +263,9 @@ func getSimpleContracts(tk, permitExpiryAlertEnabled string, contractIds ...ints
 	}
 	if permitExpiryAlertEnabled != "" {
 		req["permitExpiryAlertEnabled"] = permitExpiryAlertEnabled
+	}
+	if len(projectIdRefs) > 0 {
+		req["projectIdRefs"] = projectIdRefs
 	}
 	result, err := client.R().SetAuthToken(tk).SetBody(req).Post(
 		fmt.Sprintf(getAllSimpleContracts, apis.V().GetString(apiCoreMdlUrlBase)),
